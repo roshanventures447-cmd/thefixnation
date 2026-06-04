@@ -1,0 +1,1100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Fix Nation - Furniture Assembly & Carpenter Services</title>
+  <meta name="description" content="Book furniture assembly, carpenter repair, wall mount, office setup, and seller installation jobs with The Fix Nation.">
+  <style>
+    :root {
+      --ink: #101828;
+      --muted: #667085;
+      --line: #e4e9f0;
+      --soft: #f3f9ff;
+      --soft-green: #e9f6ff;
+      --green: #1ea7ff;
+      --deep: #0b2a46;
+      --gold: #f3b63f;
+      --blue: #2563eb;
+      --white: #ffffff;
+      --shadow: 0 24px 70px rgba(16, 24, 40, .12);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: Inter, "Segoe UI", Arial, sans-serif;
+      color: var(--ink);
+      background: var(--white);
+      font-size: 15px;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+    button, input, select, textarea { font: inherit; }
+    .container { width: min(1200px, calc(100% - 32px)); margin: 0 auto; }
+
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      background: #f7fbff;
+      border-top: 1px solid #edf1f5;
+      border-bottom: 1px solid #cfe3f5;
+      box-shadow: 0 2px 12px rgba(30, 117, 190, .07);
+    }
+    .nav .container {
+      min-height: 82px;
+      display: grid;
+      grid-template-columns: 230px 160px minmax(260px, 1fr) auto;
+      align-items: center;
+      gap: 28px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 900;
+    }
+    .brand-badge {
+      width: 58px;
+      height: 58px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #1fb6ff, #1473e6);
+      color: #fff;
+      display: grid;
+      place-items: center;
+      font-size: 20px;
+      box-shadow: 0 10px 22px rgba(31, 134, 230, .22);
+    }
+    .brand span span { color: #138de7; }
+    .brand small { display: block; color: #98a2b3; font-size: 11px; margin-top: 2px; font-weight: 650; }
+    .city-select {
+      height: 48px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: #fff;
+      color: #475467;
+      padding: 0 15px;
+      outline: 0;
+      box-shadow: 0 8px 18px rgba(16,24,40,.035);
+    }
+    .search {
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 16px;
+      background: var(--white);
+      box-shadow: 0 10px 26px rgba(16,24,40,.05);
+    }
+    .search input {
+      border: 0;
+      outline: 0;
+      width: 100%;
+      color: var(--ink);
+      background: transparent;
+    }
+    .nav-actions { display: flex; gap: 24px; align-items: center; white-space: nowrap; }
+    .chip {
+      border: 0;
+      background: transparent;
+      border-radius: 0;
+      padding: 8px 0;
+      font-weight: 650;
+      font-size: 14px;
+      color: #667085;
+    }
+    .chip.primary {
+      color: #126da8;
+      background: transparent;
+      border-color: transparent;
+      box-shadow: none;
+      font-weight: 750;
+    }
+    .cart-icon {
+      color: #667085;
+      font-size: 18px;
+      line-height: 1;
+      padding: 8px 0;
+    }
+
+    .home-stage {
+      background: #eeeeee;
+      border-bottom: 1px solid #cfd7df;
+      padding: 22px 0 42px;
+    }
+    .promo-banner {
+      width: min(1040px, 100%);
+      margin: 0 auto 48px;
+      height: 210px;
+      border: 1px solid #cbd9e6;
+      background: linear-gradient(90deg, rgba(235,247,255,.96) 0%, rgba(219,241,255,.92) 100%);
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 10px 28px rgba(16,24,40,.08);
+    }
+    .promo-slide {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      grid-template-columns: 250px 220px minmax(0, 1fr);
+      align-items: center;
+      gap: 28px;
+      padding: 24px 44px 30px 28px;
+      opacity: 0;
+      transform: translateX(24px);
+      animation: promoSlide 15s infinite;
+    }
+    .promo-slide:nth-child(2) { animation-delay: 5s; }
+    .promo-slide:nth-child(3) { animation-delay: 10s; }
+    @keyframes promoSlide {
+      0% { opacity: 0; transform: translateX(24px); }
+      5% { opacity: 1; transform: translateX(0); }
+      30% { opacity: 1; transform: translateX(0); }
+      35% { opacity: 0; transform: translateX(-24px); }
+      100% { opacity: 0; transform: translateX(-24px); }
+    }
+    .promo-photo {
+      width: 190px;
+      height: 142px;
+      border-radius: 18px;
+      object-fit: cover;
+      border: 1px solid rgba(18,109,168,.18);
+      box-shadow: 0 10px 22px rgba(16,24,40,.12);
+      justify-self: center;
+    }
+    .price-tag {
+      width: 205px;
+      border-radius: 18px;
+      background: #fff;
+      border: 1px solid #d5dce5;
+      box-shadow: 0 12px 24px rgba(16,24,40,.12);
+      text-align: center;
+      overflow: hidden;
+    }
+    .price-tag span {
+      display: block;
+      padding: 9px 10px;
+      background: #ff7a1a;
+      color: #fff;
+      font-size: 17px;
+      font-weight: 850;
+      white-space: nowrap;
+    }
+    .price-tag strong {
+      display: block;
+      padding: 13px 10px 14px;
+      color: #ef6c16;
+      font-size: 36px;
+      line-height: 1;
+    }
+    .promo-title h1 {
+      margin: 0;
+      color: #102044;
+      font-size: clamp(30px, 3.4vw, 44px);
+      line-height: 1.06;
+      letter-spacing: .5px;
+      text-transform: uppercase;
+      max-width: 560px;
+    }
+    .promo-title p {
+      margin: 6px 0 14px;
+      color: #64748b;
+      font-size: 16px;
+      line-height: 1.35;
+      font-weight: 700;
+      max-width: 520px;
+    }
+    .promo-points {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 30px;
+      color: #ff7a1a;
+      font-size: 16px;
+      font-weight: 850;
+    }
+    .promo-dots {
+      position: absolute;
+      left: 50%;
+      bottom: 10px;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 7px;
+      z-index: 4;
+    }
+    .promo-dots span {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: rgba(18,109,168,.26);
+      animation: promoDot 15s infinite;
+    }
+    .promo-dots span:nth-child(2) { animation-delay: 5s; }
+    .promo-dots span:nth-child(3) { animation-delay: 10s; }
+    @keyframes promoDot {
+      0%, 34% { background: #1ea7ff; transform: scale(1.3); }
+      35%, 100% { background: rgba(18,109,168,.26); transform: scale(1); }
+    }
+    .services-home {
+      width: min(1080px, 100%);
+      margin: 0 auto;
+    }
+    .services-home h2 {
+      margin: 0 0 32px;
+      font-size: 24px;
+      font-weight: 500;
+      color: #111827;
+    }
+    .home-category-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 28px;
+      align-items: start;
+    }
+    .home-service-card {
+      background: #fff;
+      border: 1px solid #d9dee6;
+      border-radius: 5px;
+      overflow: hidden;
+      text-align: center;
+      color: #111827;
+      min-height: 178px;
+      position: relative;
+      box-shadow: 0 4px 12px rgba(16,24,40,.05);
+      transition: transform .18s ease, box-shadow .18s ease;
+    }
+    .home-service-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 24px rgba(16,24,40,.12);
+    }
+    .home-service-card:before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 18px;
+      height: 18px;
+      background: #2448b8;
+      clip-path: polygon(0 0, 100% 0, 0 100%);
+      z-index: 2;
+    }
+    .home-service-card img {
+      width: 100%;
+      height: 132px;
+      object-fit: cover;
+      display: block;
+    }
+    .home-service-card strong {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      padding: 6px 8px;
+      font-size: 13px;
+      line-height: 1.2;
+      font-weight: 650;
+    }
+    .hero {
+      background:
+        linear-gradient(90deg, rgba(255,255,255,1) 0%, rgba(255,255,255,.92) 48%, rgba(255,255,255,.35) 70%),
+        url("https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1800&q=80") center right / cover no-repeat;
+      border-bottom: 1px solid var(--line);
+    }
+    .hero .container {
+      min-height: 480px;
+      display: grid;
+      grid-template-columns: 1fr 390px;
+      align-items: center;
+      gap: 30px;
+      padding: 54px 0;
+    }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 13px;
+      border-radius: 999px;
+      background: var(--soft-green);
+      color: #126da8;
+      font-weight: 950;
+      font-size: 13px;
+    }
+    .eyebrow:before {
+      content: "";
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 0 6px rgba(30,167,255,.16);
+    }
+    h1 {
+      max-width: 720px;
+      margin: 18px 0 18px;
+      font-size: clamp(42px, 6vw, 72px);
+      line-height: .94;
+      letter-spacing: 0;
+    }
+    h1 span { color: var(--green); }
+    .lead {
+      max-width: 630px;
+      color: #475467;
+      font-size: 18px;
+      line-height: 1.75;
+      font-weight: 650;
+      margin: 0;
+    }
+    .hero-cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 26px; }
+    .btn {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 15px 20px;
+      background: var(--white);
+      font-weight: 900;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .btn.primary { background: var(--deep); color: #fff; border-color: var(--deep); }
+    .trust-row { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+    .trust {
+      background: rgba(255,255,255,.88);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 13px 15px;
+      font-weight: 850;
+      box-shadow: 0 12px 28px rgba(16,24,40,.06);
+    }
+    .trust small { display: block; color: var(--muted); font-size: 12px; margin-top: 3px; font-weight: 600; }
+
+    .quote-card {
+      background: rgba(255,255,255,.94);
+      border: 1px solid rgba(255,255,255,.9);
+      border-radius: 26px;
+      box-shadow: var(--shadow);
+      padding: 22px;
+    }
+    .quote-card .quick-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .quick {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 12px;
+      background: #fff;
+    }
+    .quick strong { display: block; font-size: 18px; }
+    .quick small { color: var(--muted); font-weight: 600; }
+    .quote-card h2 { margin: 0 0 8px; font-size: 26px; }
+    .quote-card p { margin: 0 0 18px; color: var(--muted); line-height: 1.55; font-weight: 600; }
+    .quote-form { display: grid; gap: 12px; }
+    .quote-form label { display: block; font-size: 12px; font-weight: 850; text-transform: uppercase; margin-bottom: 6px; letter-spacing: .02em; }
+    .quote-form input, .quote-form select {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 13px 14px;
+      outline: 0;
+      background: #fff;
+    }
+    .quote-form button {
+      border: 0;
+      border-radius: 14px;
+      padding: 14px;
+      background: var(--green);
+      color: #fff;
+      font-weight: 850;
+      cursor: pointer;
+    }
+
+    .section { padding: 70px 0; }
+    .section.soft { background: var(--soft); }
+    .section.dark { background: var(--deep); color: #fff; }
+    .section-head {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 22px;
+      margin-bottom: 28px;
+    }
+    .tag { color: var(--green); font-size: 13px; font-weight: 850; text-transform: uppercase; letter-spacing: .04em; }
+    h2 { margin: 8px 0 0; font-size: clamp(30px, 4vw, 48px); line-height: 1.05; }
+    .section-head p { max-width: 470px; margin: 0; color: var(--muted); line-height: 1.65; font-weight: 600; }
+    .dark .section-head p { color: #b5c9bf; }
+
+    .marketplace {
+      display: grid;
+      grid-template-columns: 252px 1fr 350px;
+      gap: 18px;
+      align-items: start;
+    }
+    .category-rail, .cart-panel {
+      position: sticky;
+      top: 96px;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      padding: 16px;
+      box-shadow: 0 16px 42px rgba(16,24,40,.06);
+    }
+    .category-rail h3, .cart-panel h3 { margin: 0 0 12px; }
+    .cat {
+      display: grid;
+      grid-template-columns: 50px 1fr;
+      align-items: center;
+      gap: 10px;
+      padding: 10px;
+      border-radius: 15px;
+      color: #344054;
+      font-weight: 850;
+    }
+    .cat.active, .cat:hover { background: var(--soft-green); color: #126da8; }
+    .cat img {
+      width: 50px;
+      height: 50px;
+      object-fit: cover;
+      border-radius: 13px;
+    }
+
+    .service-list { display: grid; gap: 14px; }
+    .service-card {
+      display: grid;
+      grid-template-columns: 146px 1fr auto;
+      gap: 18px;
+      align-items: center;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      padding: 14px;
+      box-shadow: 0 14px 34px rgba(16,24,40,.06);
+    }
+    .service-card img {
+      width: 146px;
+      height: 112px;
+      object-fit: cover;
+      border-radius: 16px;
+      background: #eef2f6;
+    }
+    .rating { color: #126da8; font-size: 13px; font-weight: 800; }
+    .meta-line {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 9px;
+    }
+    .mini-tag {
+      border-radius: 999px;
+      padding: 6px 8px;
+      background: var(--soft);
+      color: #475467;
+      font-size: 12px;
+      font-weight: 750;
+    }
+    .service-card h3 { margin: 7px 0 8px; font-size: 20px; }
+    .service-card p { margin: 0; color: var(--muted); line-height: 1.55; font-weight: 600; }
+    .price { font-weight: 850; margin-top: 10px; }
+    .add {
+      border: 1px solid var(--green);
+      color: var(--green);
+      background: #fff;
+      border-radius: 999px;
+      padding: 11px 18px;
+      font-weight: 850;
+      cursor: pointer;
+    }
+
+    .cart-panel {
+      padding: 20px;
+    }
+    .cart-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+    }
+    .cart-count {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: var(--deep);
+      color: #fff;
+      display: grid;
+      place-items: center;
+      font-weight: 950;
+    }
+    .cart-box {
+      border-radius: 18px;
+      background: var(--soft);
+      padding: 16px;
+      margin: 12px 0;
+      color: #344054;
+      font-weight: 700;
+      line-height: 1.6;
+    }
+    .cart-item {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      padding: 13px 0;
+      border-bottom: 1px solid var(--line);
+    }
+    .cart-item strong { display: block; font-size: 14px; }
+    .cart-item small { display: block; color: var(--muted); margin-top: 4px; font-weight: 600; }
+    .total-row {
+      display: flex;
+      justify-content: space-between;
+      margin: 14px 0;
+      font-weight: 950;
+    }
+    .cart-panel .btn { width: 100%; background: var(--green); border-color: var(--green); color: #fff; }
+
+    .real-strip {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-top: 28px;
+    }
+    .real-card {
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: #fff;
+      padding: 18px;
+      box-shadow: 0 12px 30px rgba(16,24,40,.05);
+    }
+    .real-card strong { display: block; font-size: 20px; margin-bottom: 6px; }
+    .real-card span { color: var(--muted); font-weight: 600; line-height: 1.5; }
+
+    .partner-choice-section {
+      display: none;
+      background: var(--deep);
+      color: #fff;
+      min-height: calc(100vh - 82px);
+      padding: 70px 0;
+    }
+    .partner-choice-section:target {
+      display: block;
+    }
+    body:has(.partner-choice-section:target) main,
+    body:has(.partner-choice-section:target) footer {
+      display: none;
+    }
+    .partner-choice-head {
+      text-align: center;
+      max-width: 760px;
+      margin: 0 auto 36px;
+      position: relative;
+    }
+    .partner-choice-head h1 {
+      margin: 10px 0 12px;
+      max-width: none;
+      color: #fff;
+      font-size: clamp(36px, 5vw, 58px);
+      line-height: 1.05;
+    }
+    .partner-choice-head p {
+      color: #d8ecff;
+      line-height: 1.7;
+      font-weight: 600;
+      margin: 0;
+    }
+    .partner-close {
+      position: absolute;
+      top: -26px;
+      right: 0;
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.18);
+      color: #fff;
+      text-decoration: none;
+      font-weight: 950;
+    }
+    .partner-choice-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 22px;
+    }
+    .partner-option {
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 28px;
+      background: rgba(255,255,255,.07);
+      padding: 30px;
+      min-height: 420px;
+      box-shadow: 0 28px 70px rgba(0,0,0,.22);
+    }
+    .partner-option .option-icon {
+      width: 58px;
+      height: 58px;
+      border-radius: 18px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, #fff, #dff4ff);
+      color: var(--blue);
+      font-size: 20px;
+      font-weight: 950;
+      margin-bottom: 22px;
+    }
+    .partner-option h2 {
+      color: #fff;
+      margin: 0 0 10px;
+      font-size: 32px;
+    }
+    .partner-option p {
+      color: #c8d9e6;
+      line-height: 1.7;
+      font-weight: 600;
+      margin: 0 0 22px;
+    }
+    .partner-option ul {
+      margin: 0 0 24px;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 12px;
+    }
+    .partner-option li {
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 14px;
+      padding: 12px 14px;
+      background: rgba(255,255,255,.06);
+      font-weight: 750;
+    }
+    .partner-option .btn {
+      width: 100%;
+      border-color: #fff;
+      background: #fff;
+      color: var(--deep);
+    }
+    .seller-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+    .partner-logos {
+      margin-top: 22px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+    .partner-logo {
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 16px;
+      padding: 16px;
+      background: rgba(255,255,255,.06);
+      color: #fff;
+      font-weight: 950;
+      text-align: center;
+    }
+
+    .scope {
+      display: grid;
+      grid-template-columns: .8fr 1.2fr;
+      gap: 18px;
+      align-items: stretch;
+      margin-top: 24px;
+    }
+    .scope-card {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: 0 14px 38px rgba(16,24,40,.06);
+    }
+    .scope-card img {
+      width: 100%;
+      height: 260px;
+      object-fit: cover;
+      display: block;
+    }
+    .scope-card div { padding: 22px; }
+    .scope-card h3 { margin: 0 0 10px; font-size: 24px; }
+    .scope-card p { margin: 0; color: var(--muted); line-height: 1.65; font-weight: 600; }
+    .seller-card {
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 24px;
+      padding: 28px;
+      min-height: 340px;
+    }
+    .seller-card h3 { margin: 0 0 12px; font-size: 26px; }
+    .seller-card p { color: #c8d9e6; line-height: 1.7; font-weight: 600; }
+    .terms {
+      display: grid;
+      gap: 12px;
+      margin-top: 22px;
+    }
+    .term {
+      background: rgba(255,255,255,.07);
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 16px;
+      padding: 15px;
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      color: #e8f5ee;
+      font-weight: 750;
+    }
+    .term span { color: var(--gold); }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+    }
+    .step {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      padding: 24px;
+      box-shadow: 0 14px 34px rgba(16,24,40,.06);
+    }
+    .step b {
+      display: grid;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: var(--deep);
+      color: #fff;
+      margin-bottom: 18px;
+    }
+    .step h3 { margin: 0 0 8px; }
+    .step p { margin: 0; color: var(--muted); line-height: 1.55; font-weight: 600; }
+
+    .area-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      align-items: stretch;
+    }
+    .area-panel {
+      border-radius: 26px;
+      padding: 32px;
+      background:
+        linear-gradient(90deg, rgba(11,42,70,.92), rgba(11,42,70,.58)),
+        url("https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=1200&q=80") center / cover;
+      color: #fff;
+      min-height: 380px;
+      display: flex;
+      flex-direction: column;
+      justify-content: end;
+      box-shadow: var(--shadow);
+    }
+    .area-panel h2 { color: #fff; }
+    .area-panel p { color: #d8ecff; line-height: 1.65; font-weight: 600; }
+    .review-list { display: grid; gap: 14px; }
+    .review {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 20px;
+    }
+    .review strong { display: block; margin-bottom: 6px; }
+    .review p { margin: 0; color: var(--muted); line-height: 1.6; font-weight: 600; }
+
+    footer {
+      background: #0b2a46;
+      color: #d8ecff;
+      padding: 34px 0;
+      font-weight: 650;
+    }
+    footer .container {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 1100px) {
+      .nav .container { grid-template-columns: 1fr auto; gap: 14px; }
+      .city-select { display: none; }
+      .search { display: none; }
+      .hero .container, .marketplace, .seller-grid, .area-grid { grid-template-columns: 1fr; }
+      .partner-choice-grid { grid-template-columns: 1fr; }
+      .category-rail, .cart-panel { position: static; }
+      .steps { grid-template-columns: repeat(2, 1fr); }
+      .real-strip, .partner-logos, .scope { grid-template-columns: 1fr 1fr; }
+      .home-category-grid { grid-template-columns: repeat(3, 1fr); }
+      .promo-banner { min-height: 390px; }
+      .promo-banner { height: 430px; }
+      .promo-slide { grid-template-columns: 1fr; text-align: center; justify-items: center; gap: 14px; padding: 22px; }
+      .promo-photo { width: 180px; height: 120px; }
+      .promo-title h1 { font-size: 30px; }
+    }
+    @media (max-width: 720px) {
+      .notice .container { display: block; padding: 9px 0; }
+      .nav-actions .chip:nth-child(3), .nav-actions .chip:nth-child(4), .cart-icon { display: none; }
+      .hero .container { min-height: auto; padding: 38px 0; }
+      .service-card { grid-template-columns: 1fr; }
+      .service-card img { width: 100%; height: 190px; }
+      .steps { grid-template-columns: 1fr; }
+      .real-strip, .partner-logos, .scope, .quote-card .quick-row { grid-template-columns: 1fr; }
+      .home-category-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+      .promo-points { display: grid; gap: 8px; font-size: 15px; }
+      .section { padding: 54px 0; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="container">
+      <a class="brand" href="#">
+        <span class="brand-badge">TF</span>
+        <span>The <span>Fix</span> Nation<small>Furniture Assembly & Home Installation</small></span>
+      </a>
+      <select class="city-select" aria-label="Select city">
+        <option>Indore</option>
+        <option>Bhopal</option>
+        <option>Ujjain</option>
+        <option>Dewas</option>
+      </select>
+      <div class="search">
+        <input placeholder="Search services here">
+      </div>
+      <div class="nav-actions">
+        <a class="cart-icon" href="#services" aria-label="Cart">Cart</a>
+        <a class="chip" href="#">Home</a>
+        <a class="chip primary" href="#become-partner">Become Partner</a>
+        <a class="chip" href="#">My Profile</a>
+        <a class="chip" href="#">Login / Sign Up</a>
+      </div>
+    </div>
+  </nav>
+
+  <section class="partner-choice-section" id="become-partner">
+    <div class="container">
+      <div class="partner-choice-head">
+        <a class="partner-close" href="#" aria-label="Close partner options">x</a>
+        <span class="tag">Become Partner</span>
+        <h1>Choose how you want to work with The Fix Nation.</h1>
+        <p>Workers can join to receive service jobs. Brands and sellers can join to manage repeat installation work with clear payment and job proof rules.</p>
+      </div>
+      <div class="partner-choice-grid">
+        <article class="partner-option">
+          <div class="option-icon">WK</div>
+          <h2>Join as Worker</h2>
+          <p>For carpenters, electricians, AC technicians, plumbers, cleaners and repair professionals who want verified service jobs.</p>
+          <ul>
+            <li>Receive jobs by city and service skill</li>
+            <li>Share completion photo after job</li>
+            <li>Payment rules confirmed before assignment</li>
+            <li>Build regular work history with the platform</li>
+          </ul>
+          <a class="btn" href="#book">Apply as Worker</a>
+        </article>
+        <article class="partner-option">
+          <div class="option-icon">BR</div>
+          <h2>Join as Brand</h2>
+          <p>For furniture sellers, online sellers, appliance dealers, offices and local brands that need repeat installation support.</p>
+          <ul>
+            <li>Wallet, security deposit or approved weekly billing</li>
+            <li>Technician assignment with job details</li>
+            <li>Service proof and weekly job records</li>
+            <li>Bulk installation and city-wise service planning</li>
+          </ul>
+          <a class="btn" href="#book">Apply as Brand</a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <main>
+    <section class="home-stage" id="book">
+      <div class="container">
+        <div class="promo-banner" aria-label="Featured services slider">
+          <div class="promo-slide">
+            <img class="promo-photo" src="https://images.unsplash.com/photo-1588613253835-b2337144a705?auto=format&fit=crop&w=500&q=80" alt="Furniture installation">
+            <div class="price-tag"><span>Furniture Assembly</span><strong>Rs 299</strong></div>
+            <div class="promo-title">
+              <h1>Furniture Installation</h1>
+              <p>Professional assembly, repair and fitting support</p>
+              <div class="promo-points"><span>🛠 Slot-based service</span><span>👷 Trained technicians</span></div>
+            </div>
+          </div>
+          <div class="promo-slide">
+            <img class="promo-photo" src="https://images.unsplash.com/photo-1621905252507-b35492cc74b4?auto=format&fit=crop&w=500&q=80" alt="AC repair and installation">
+            <div class="price-tag"><span>AC Service</span><strong>Rs 499</strong></div>
+            <div class="promo-title">
+              <h1>AC Repair & Installation</h1>
+              <p>AC installation, servicing and basic inspection support</p>
+              <div class="promo-points"><span>❄ Cooling check</span><span>👷 Skilled technicians</span></div>
+            </div>
+          </div>
+          <div class="promo-slide">
+            <img class="promo-photo" src="https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=500&q=80" alt="Electrician service">
+            <div class="price-tag"><span>Electrician Visit</span><strong>Rs 199</strong></div>
+            <div class="promo-title">
+              <h1>Electrician Service</h1>
+              <p>Switch, wiring, fitting and minor electrical repair support</p>
+              <div class="promo-points"><span>⚡ Safe process</span><span>🧰 Service proof</span></div>
+            </div>
+          </div>
+          <div class="promo-dots"><span></span><span></span><span></span></div>
+        </div>
+
+        <div class="services-home">
+          <h2>List of Services</h2>
+          <div class="home-category-grid">
+            <a class="home-service-card" href="#services"><img src="https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=500&q=80" alt="Cleaning Services"><strong>Cleaning Services</strong></a>
+            <a class="home-service-card" href="#services"><img src="https://images.unsplash.com/photo-1588943211346-0908a1fb0b01?auto=format&fit=crop&w=500&q=80" alt="Electronics repair"><strong>Electronics & Appliances Repair</strong></a>
+            <a class="home-service-card" href="#services"><img src="https://images.unsplash.com/photo-1621905252507-b35492cc74b4?auto=format&fit=crop&w=500&q=80" alt="Carpenter"><strong>Plumber, Electrician, Carpenter</strong></a>
+            <a class="home-service-card" href="#services"><img src="https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=500&q=80" alt="Interior service"><strong>Painting, Interior and Civil</strong></a>
+            <a class="home-service-card" href="#services"><img src="https://images.unsplash.com/photo-1558981285-6f0c94958bb6?auto=format&fit=crop&w=500&q=80" alt="Bike repair"><strong>Bike Repair & Services</strong></a>
+            <a class="home-service-card" href="#services"><img src="https://images.unsplash.com/photo-1600585153490-76fb20a32601?auto=format&fit=crop&w=500&q=80" alt="Packers movers"><strong>Packers & Movers</strong></a>
+            <a class="home-service-card" href="#services"><img src="https://images.unsplash.com/photo-1635453057642-2c0a48a0ea1e?auto=format&fit=crop&w=500&q=80" alt="Pest control"><strong>Pest Control</strong></a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="hero">
+      <div class="container">
+        <div>
+          <span class="eyebrow">Doorstep service with clear booking process</span>
+          <h1>Book carpenter and furniture assembly <span>with confidence.</span></h1>
+          <p class="lead">The Fix Nation helps customers and furniture sellers arrange reliable installation support for beds, wardrobes, curtains, wall mounts, minor repairs and office furniture setup.</p>
+          <div class="hero-cta">
+            <a class="btn primary" href="#services">View Services</a>
+            <a class="btn" href="#become-partner">Become Partner</a>
+          </div>
+          <div class="trust-row">
+            <div class="trust">Clear estimate<small>shared before visit confirmation</small></div>
+            <div class="trust">Service proof<small>photo and completion note available</small></div>
+            <div class="trust">Indore launch<small>expanding city by city</small></div>
+          </div>
+        </div>
+
+        <aside class="quote-card">
+          <h2>Request a service callback</h2>
+          <p>Share the job type and city. Our team will confirm availability, estimated charges and payment terms.</p>
+          <div class="quick-row">
+            <div class="quick"><strong>Quick</strong><small>callback during working hours</small></div>
+            <div class="quick"><strong>Transparent</strong><small>visit rules explained upfront</small></div>
+          </div>
+          <form class="quote-form">
+            <div><label>Name</label><input placeholder="Your name"></div>
+            <div><label>Phone</label><input placeholder="Mobile number"></div>
+            <div><label>Service</label><select><option>Furniture Assembly</option><option>Wardrobe / Bed Installation</option><option>Wall Mount / Curtain Rod</option><option>Seller Partnership</option></select></div>
+            <div><label>City</label><input placeholder="Indore / your city"></div>
+            <button type="button">Request Callback</button>
+          </form>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section soft" id="services">
+      <div class="container">
+        <div class="section-head">
+          <div><span class="tag">Service menu</span><h2>Choose the service you need.</h2></div>
+          <p>Select a category, compare the basic service scope, and request a callback before the technician visit is confirmed.</p>
+        </div>
+        <div class="real-strip">
+          <div class="real-card"><strong>Indore</strong><span>first service city with doorstep booking support</span></div>
+          <div class="real-card"><strong>Proof</strong><span>completion image can be collected for partner jobs</span></div>
+          <div class="real-card"><strong>Payment</strong><span>new jobs need confirmed payment terms</span></div>
+          <div class="real-card"><strong>Partners</strong><span>weekly billing only after clean history</span></div>
+        </div>
+
+        <div class="marketplace">
+          <aside class="category-rail">
+            <h3>Categories</h3>
+            <a class="cat active" href="#"><img src="https://images.unsplash.com/photo-1588613253835-b2337144a705?auto=format&fit=crop&w=200&q=80" alt="Furniture">Furniture</a>
+            <a class="cat" href="#"><img src="https://images.unsplash.com/photo-1618220179428-22790b461013?auto=format&fit=crop&w=200&q=80" alt="Wardrobe">Wardrobe</a>
+            <a class="cat" href="#"><img src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=200&q=80" alt="Office">Office</a>
+            <a class="cat" href="#"><img src="https://images.unsplash.com/photo-1572981779307-38b8cabb2407?auto=format&fit=crop&w=200&q=80" alt="Fixing">Minor fixing</a>
+          </aside>
+
+          <div class="service-list">
+            <article class="service-card">
+              <img src="https://images.unsplash.com/photo-1588613253835-b2337144a705?auto=format&fit=crop&w=600&q=80" alt="Bed assembly">
+              <div><span class="rating">Popular home service</span><h3>Bed and table assembly</h3><p>Assembly support for beds, study tables, dining tables, shoe racks and flat-pack furniture.</p><div class="meta-line"><span class="mini-tag">60-120 min</span><span class="mini-tag">Basic tools</span><span class="mini-tag">Service proof</span></div><div class="price">Starts Rs. 299</div></div>
+              <button class="add">Add</button>
+            </article>
+            <article class="service-card">
+              <img src="https://images.unsplash.com/photo-1618220179428-22790b461013?auto=format&fit=crop&w=600&q=80" alt="Wardrobe installation">
+              <div><span class="rating">Best for new furniture</span><h3>Wardrobe and cabinet fitting</h3><p>Wardrobe, cabinet, drawers, hinges, handles and storage unit fitting support.</p><div class="meta-line"><span class="mini-tag">2-4 hours</span><span class="mini-tag">Photos needed</span><span class="mini-tag">Heavy item support</span></div><div class="price">Starts Rs. 499</div></div>
+              <button class="add">Add</button>
+            </article>
+            <article class="service-card">
+              <img src="https://images.unsplash.com/photo-1572981779307-38b8cabb2407?auto=format&fit=crop&w=600&q=80" alt="Wall mount service">
+              <div><span class="rating">Quick visit</span><h3>Curtain rod and wall mount</h3><p>Curtain rods, shelves, brackets, mirrors, hooks, drill and hang jobs for homes.</p><div class="meta-line"><span class="mini-tag">Drilling</span><span class="mini-tag">Minor fixing</span><span class="mini-tag">Slot based</span></div><div class="price">Starts Rs. 199</div></div>
+              <button class="add">Add</button>
+            </article>
+            <article class="service-card">
+              <img src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=600&q=80" alt="Office furniture setup">
+              <div><span class="rating">Bulk job friendly</span><h3>Office furniture setup</h3><p>Workstations, office chairs, conference tables, storage cabinets and multi-unit setup.</p><div class="meta-line"><span class="mini-tag">Bulk quote</span><span class="mini-tag">Team visit</span><span class="mini-tag">Business billing</span></div><div class="price">Custom quote</div></div>
+              <button class="add">Add</button>
+            </article>
+          </div>
+
+          <aside class="cart-panel">
+            <div class="cart-head"><h3>Your booking</h3><span class="cart-count">2</span></div>
+            <div class="cart-item"><div><strong>Bed / table assembly</strong><small>Estimated service item</small></div><b>Rs. 299+</b></div>
+            <div class="cart-item"><div><strong>Wardrobe installation</strong><small>Photos required for quote</small></div><b>Rs. 499+</b></div>
+            <div class="cart-box">Final amount depends on product size, location, extra drilling and number of technicians required.</div>
+            <div class="total-row"><span>Visit confirmation</span><span>Callback first</span></div>
+            <a class="btn" href="#book">Continue to callback</a>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <div><span class="tag">How it works</span><h2>Simple for homes, structured for sellers.</h2></div>
+        </div>
+        <div class="steps">
+          <article class="step"><b>1</b><h3>Share details</h3><p>Service type, city, address, product photos, order details and preferred slot.</p></article>
+          <article class="step"><b>2</b><h3>Confirm estimate</h3><p>Advance, wallet, security deposit or approved weekly billing is confirmed first.</p></article>
+          <article class="step"><b>3</b><h3>Assign technician</h3><p>Technician receives job details and visits within the confirmed service slot.</p></article>
+          <article class="step"><b>4</b><h3>Close with proof</h3><p>Completion photo and customer confirmation can be recorded for clean billing.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section soft">
+      <div class="container area-grid">
+        <div class="area-panel">
+          <span class="tag">Service area</span>
+          <h2>Launching in Indore, expanding city by city.</h2>
+          <p>The Fix Nation starts with furniture assembly and seller jobs in Indore, then expands to Bhopal, Ujjain, Dewas and other cities as technician supply becomes stable.</p>
+        </div>
+        <div class="review-list">
+          <div class="review"><strong>Furniture buyer</strong><p>Wardrobe installation was planned with a clear slot and estimate before the visit.</p></div>
+          <div class="review"><strong>Local seller</strong><p>Weekly job records and service proof make installation follow-up easier.</p></div>
+          <div class="review"><strong>Office setup</strong><p>Multiple workstations can be managed through one structured service flow.</p></div>
+        </div>
+      </div>
+      <div class="container scope">
+        <article class="scope-card">
+          <img src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=900&q=80" alt="Home furniture service">
+          <div><h3>For home customers</h3><p>Book common furniture and fixing jobs with a clear estimate and callback process.</p></div>
+        </article>
+        <article class="scope-card">
+          <img src="https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=1100&q=80" alt="Office furniture service">
+          <div><h3>For sellers and offices</h3><p>Use one installation partner flow for repeat jobs, service proof, weekly records and clean billing.</p></div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <span>The Fix Nation by Roshan Ventures</span>
+      <span>Furniture Assembly - Carpenter Repair - Seller Installation</span>
+      <span>thefixnation.com</span>
+    </div>
+  </footer>
+</body>
+</html>
+
