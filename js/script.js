@@ -1,6 +1,6 @@
 ﻿document.addEventListener('DOMContentLoaded', () => {
   const searchInput = document.querySelector('.search input');
-  const serviceCards = Array.from(document.querySelectorAll('.home-service-card, .service-card'));
+  const serviceCards = Array.from(document.querySelectorAll('.home-service-card, .service-card, .info-card'));
 
   if (searchInput) {
     searchInput.addEventListener('input', () => {

@@ -38,7 +38,7 @@
     .nav .container {
       min-height: 82px;
       display: grid;
-      grid-template-columns: 230px 160px minmax(260px, 1fr) auto;
+      grid-template-columns: 245px 160px minmax(260px, 1fr) auto;
       align-items: center;
       gap: 28px;
     }
@@ -47,6 +47,34 @@
       align-items: center;
       gap: 12px;
       font-weight: 900;
+    }
+    .brand-name {
+      display: block;
+      color: #10263d;
+      font-size: 19px;
+      line-height: 1.05;
+      letter-spacing: 0;
+      white-space: nowrap;
+    }
+    .brand-name span {
+      color: #ff6b00;
+    }
+    .brand-name small {
+      display: block;
+      margin-top: 4px;
+      color: #6b7d90;
+      font-size: 11px;
+      font-weight: 750;
+      letter-spacing: .02em;
+    }
+    .brand-logo {
+      width: 56px;
+      height: 56px;
+      border-radius: 14px;
+      object-fit: contain;
+      border: 1px solid #d7e6f2;
+      box-shadow: 0 10px 22px rgba(15, 118, 189, .18);
+      background: #fff;
     }
     .brand-badge {
       width: 58px;
@@ -105,6 +133,14 @@
       border-color: transparent;
       box-shadow: none;
       font-weight: 750;
+    }
+    .whatsapp-chip {
+      border-radius: 999px;
+      padding: 11px 16px;
+      background: #16a34a;
+      color: #fff;
+      font-weight: 850;
+      box-shadow: 0 12px 24px rgba(22,163,74,.18);
     }
     .cart-icon {
       color: #667085;
@@ -383,6 +419,15 @@
     }
     .quick strong { display: block; font-size: 18px; }
     .quick small { color: var(--muted); font-weight: 600; }
+    .contact-lines {
+      display: grid;
+      gap: 8px;
+      margin: 0 0 16px;
+    }
+    .contact-lines a {
+      color: #0f76bd;
+      font-weight: 800;
+    }
     .quote-card h2 { margin: 0 0 8px; font-size: 26px; }
     .quote-card p { margin: 0 0 18px; color: var(--muted); line-height: 1.55; font-weight: 600; }
     .quote-form { display: grid; gap: 12px; }
@@ -794,16 +839,111 @@
     .review p { margin: 0; color: var(--muted); line-height: 1.6; font-weight: 600; }
 
     footer {
-      background: #0b2a46;
-      color: #d8ecff;
-      padding: 34px 0;
-      font-weight: 650;
+      background: #f7fafc;
+      color: #52657a;
+      padding: 46px 0 28px;
+      font-weight: 500;
+      border-top: 1px solid #dbe8f1;
     }
-    footer .container {
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 1.15fr 1.15fr 1fr;
+      gap: 54px;
+      align-items: start;
+    }
+    .footer-col h3 {
+      margin: 0 0 22px;
+      color: #10263d;
+      font-size: 19px;
+      line-height: 1.1;
+      font-weight: 800;
+      position: relative;
+    }
+    .footer-col h3:after {
+      content: "";
+      display: block;
+      width: 46px;
+      height: 4px;
+      margin-top: 8px;
+      border-radius: 999px;
+      background: #3b82f6;
+    }
+    .footer-col a {
+      display: block;
+      color: #52657a;
+      font-size: 15px;
+      line-height: 1.45;
+      margin: 0 0 15px;
+    }
+    .footer-col a:hover {
+      color: #0f76bd;
+    }
+    .footer-contact {
+      display: grid;
+      gap: 10px;
+      margin: 0 0 17px;
+      color: #52657a;
+      font-size: 15px;
+      line-height: 1.45;
+    }
+    .footer-contact a {
+      margin: 0;
+      color: #0f76bd;
+      font-weight: 800;
+    }
+    .social-row {
       display: flex;
+      gap: 18px;
+      align-items: center;
+      margin-top: 6px;
+    }
+    .social-icon {
+      width: 24px;
+      height: 24px;
+      display: grid;
+      place-items: center;
+      border-radius: 6px;
+      color: #fff !important;
+      font-size: 13px !important;
+      font-weight: 900;
+      margin: 0 !important;
+      line-height: 1;
+    }
+    .social-icon.instagram { background: linear-gradient(135deg, #f58529, #dd2a7b, #515bd4); }
+    .social-icon.facebook { background: #1877f2; }
+    .social-icon.x { background: #111827; }
+    .social-icon.youtube { background: #ff0000; }
+    .social-icon.linkedin { background: #0a66c2; }
+    .footer-cities {
+      margin-top: 32px;
+      color: #667085;
+      font-size: 12px;
+      line-height: 2.1;
+    }
+    .footer-cities strong {
+      color: #111827;
+      font-weight: 800;
+    }
+    .footer-cities a {
+      color: #52657a;
+      margin-right: 13px;
+      white-space: nowrap;
+    }
+    .footer-bottom {
+      display: flex;
+      align-items: center;
       justify-content: space-between;
-      gap: 16px;
-      flex-wrap: wrap;
+      gap: 18px;
+      margin-top: 32px;
+      padding-top: 22px;
+      border-top: 1px solid #e4ebf2;
+      color: #667085;
+      font-size: 12px;
+      line-height: 1.7;
+    }
+    .made-india {
+      color: #52657a;
+      white-space: nowrap;
     }
 
     @media (max-width: 1100px) {
@@ -848,7 +988,7 @@
     }
     .nav .container {
       min-height: 74px;
-      grid-template-columns: 250px 145px minmax(260px, 1fr) auto;
+      grid-template-columns: 245px 145px minmax(260px, 1fr) auto;
       gap: 18px;
     }
     .brand-badge {
@@ -878,6 +1018,11 @@
       background: #0f76bd;
       color: #fff;
       box-shadow: 0 12px 24px rgba(15, 118, 189, .18);
+    }
+    .whatsapp-chip {
+      background: #16a34a;
+      color: #fff;
+      box-shadow: 0 12px 24px rgba(22,163,74,.2);
     }
     .home-stage {
       background:
@@ -1092,8 +1237,8 @@
         #0c263f;
     }
     footer {
-      background: #0c263f;
-      color: #d7e9f5;
+      background: #f7fafc;
+      color: #52657a;
     }
     @media (max-width: 900px) {
       .promo-banner {
@@ -1115,3 +1260,55 @@
         width: 180px;
       }
     }
+    @media (max-width: 1100px) {
+      .footer-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 34px;
+      }
+    }
+    @media (max-width: 720px) {
+      footer {
+        padding: 36px 0 24px;
+      }
+      .footer-grid {
+        grid-template-columns: 1fr;
+        gap: 22px;
+      }
+      .footer-col h3 {
+        margin-bottom: 16px;
+      }
+      .footer-bottom {
+        display: grid;
+      }
+      .made-india {
+        white-space: normal;
+      }
+      .social-row {
+        flex-wrap: wrap;
+      }
+    }
+/* Inner pages */
+.page-main { background: #f6f9fc; }
+.page-hero { padding: 70px 0 34px; background: linear-gradient(135deg, #eef8ff 0%, #ffffff 72%); border-bottom: 1px solid #dbe8f1; }
+.page-hero .container { display: grid; grid-template-columns: minmax(0, 1fr) 330px; gap: 42px; align-items: end; }
+.page-hero h1 { margin: 12px 0 14px; font-size: clamp(38px, 5vw, 62px); line-height: 1; max-width: 780px; }
+.page-hero p { color: #40566d; font-size: 17px; line-height: 1.75; font-weight: 600; margin: 0; max-width: 760px; }
+.page-contact-card { background: #fff; border: 1px solid #d7e4ee; border-radius: 20px; padding: 22px; box-shadow: 0 18px 42px rgba(15,44,72,.08); }
+.page-contact-card strong { display: block; color: #10263d; font-size: 18px; margin-bottom: 12px; }
+.page-contact-card a { display: block; color: #0f76bd; font-weight: 850; margin-top: 9px; }
+.content-section { padding: 54px 0 72px; }
+.content-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+.content-grid.two { grid-template-columns: repeat(2, 1fr); }
+.info-card { background: #fff; border: 1px solid #d7e4ee; border-radius: 18px; padding: 22px; box-shadow: 0 14px 34px rgba(15,44,72,.06); }
+.info-card h2, .info-card h3 { margin: 0 0 10px; color: #10263d; font-size: 24px; line-height: 1.2; }
+.info-card p, .info-card li { color: #52657a; line-height: 1.65; font-weight: 600; }
+.info-card ul { margin: 12px 0 0; padding-left: 20px; }
+.page-form { display: grid; gap: 12px; }
+.page-form input, .page-form select, .page-form textarea { width: 100%; border: 1px solid #d6e3ee; border-radius: 10px; padding: 13px 14px; background: #fff; outline: 0; }
+.page-form textarea { min-height: 120px; resize: vertical; }
+.page-form button { border: 0; border-radius: 10px; padding: 14px; background: #0f76bd; color: #fff; font-weight: 850; cursor: pointer; }
+.status-row { display: grid; gap: 12px; }
+.status-item { display: flex; justify-content: space-between; gap: 14px; border: 1px solid #d7e4ee; border-radius: 14px; padding: 14px; background: #fff; color: #52657a; font-weight: 700; }
+.status-item b { color: #10263d; }
+.blog-card small, .pill { display: inline-flex; border-radius: 999px; padding: 6px 10px; background: #e9f6ff; color: #0f76bd; font-weight: 850; font-size: 12px; margin-bottom: 10px; }
+@media (max-width: 900px) { .page-hero .container, .content-grid, .content-grid.two { grid-template-columns: 1fr; } }
