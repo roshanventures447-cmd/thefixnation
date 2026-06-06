@@ -22,15 +22,28 @@
         <span class="brand-name">The <span>Fix</span> Nation<small>Trusted Home Services</small></span>
       </a>
       <select class="city-select" aria-label="Select city">
-        <option>Indore</option><option>Bhopal</option><option>Ujjain</option><option>Dewas</option>
+        <option>Indore</option>
+        <option>Bhopal</option>
+        <option>Ujjain</option>
+        <option>Dewas</option>
       </select>
-      <div class="search"><input placeholder="Search services here"></div>
+      <div class="search">
+        <input placeholder="Search services here">
+      </div>
       <div class="nav-actions">
-        <a class="cart-icon" href="services.html" aria-label="Cart">Cart</a>
-        <a class="chip" href="index.html">Home</a>
-        <a class="chip primary" href="brand.html">Become Partner</a>
-        <a class="chip" href="bookings.html">My Profile</a>
-        <a class="chip" href="contact.html">Login / Sign Up</a>
+        <a class="chip" href="index.html#why-us">Why Us</a>
+        <div class="nav-dropdown">
+          <a class="chip" href="index.html#services">We Assemble</a>
+          <div class="assemble-menu" aria-label="We assemble services">
+            <a href="index.html#services"><span>Furniture installation</span><small>Beds, tables, wardrobes and flat-pack products</small></a>
+            <a href="index.html#services"><span>AC installation and repair</span><small>AC fitting, service visit and basic repair support</small></a>
+            <a href="index.html#services"><span>Furniture repair</span><small>Hinges, drawers, handles and minor carpenter fixes</small></a>
+            <a href="index.html#services"><span>TV installation</span><small>TV mounting and bracket fitting support</small></a>
+            <a href="index.html#services"><span>Electrician</span><small>Switches, fittings and minor electrical work</small></a>
+          </div>
+        </div>
+        <a class="chip" href="about.html">About Us</a>
+        <a class="chip" href="index.html#become-partner">Become a Pro</a>
         <a class="whatsapp-chip" href="https://wa.me/919407840541" target="_blank" rel="noopener">WhatsApp</a>
       </div>
     </div>
@@ -42,7 +55,7 @@
         <aside class="page-contact-card"><strong>Need quick help?</strong><a href="tel:+919407840541">+91 9407840541</a><a href="mailto:roshanventures447@gmail.com">roshanventures447@gmail.com</a><a class="btn primary" href="https://wa.me/919407840541" target="_blank" rel="noopener">Chat on WhatsApp</a></aside>
       </div>
     </section>
-    <section class="content-section"><div class="container"><div class="content-grid two"><article class="info-card"><h2>Worker requirements</h2><ul><li>Valid phone number and city</li><li>Service skill and experience details</li><li>Ability to share job completion proof</li><li>Clear communication with customer/team</li></ul></article><article class="info-card"><h2>Apply as worker</h2><form class="page-form"><input placeholder="Full name"><input placeholder="Phone number"><input placeholder="City"><select><option>Carpenter</option><option>Electrician</option><option>AC Technician</option><option>Plumber</option><option>Cleaner</option></select><textarea placeholder="Experience and tools available"></textarea><button type="button">Submit Worker Profile</button></form></article></div></div></section>
+    <section class="content-section"><div class="container"><div class="content-grid two"><article class="info-card"><h2>Worker requirements</h2><ul><li>Valid mobile number and service city</li><li>Primary skill, experience and tools details</li><li>Ability to share job completion photo or visit proof</li><li>Clear communication with customer and team</li></ul><p>We assign work only after service scope, visit rules and payment process are clearly confirmed.</p></article><article class="info-card"><h2>Apply as worker</h2><form class="page-form lead-form light-form" data-lead-form="worker"><input name="name" required placeholder="Full name"><input name="phone" required inputmode="tel" placeholder="Phone number"><input name="city" required placeholder="City / working area"><select name="skill" required><option value="">Select primary skill</option><option>Furniture installation</option><option>Furniture repair</option><option>AC installation and repair</option><option>TV installation</option><option>Electrician</option></select><select name="experience" required><option value="">Experience</option><option>0-1 year</option><option>1-3 years</option><option>3-5 years</option><option>5+ years</option></select><textarea name="message" placeholder="Tools available, service timing and previous work details"></textarea><button type="submit">Submit Worker Profile</button><p class="form-status" aria-live="polite"></p></form></article></div></div></section>
   </main>
   <footer>
     <div class="container">
@@ -121,9 +134,11 @@
       </div>
     </div>
   </footer>
+  <script src="js/lead-config.js"></script>
   <script src="js/script.js"></script>
 </body>
 </html>
+
 
 
 

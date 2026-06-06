@@ -32,11 +32,19 @@
         <input placeholder="Search services here">
       </div>
       <div class="nav-actions">
-        <a class="cart-icon" href="services.html" aria-label="Cart">Cart</a>
-        <a class="chip" href="index.html">Home</a>
-        <a class="chip primary" href="brand.html">Become Partner</a>
-        <a class="chip" href="bookings.html">My Profile</a>
-        <a class="chip" href="contact.html">Login / Sign Up</a>
+        <a class="chip" href="index.html#why-us">Why Us</a>
+        <div class="nav-dropdown">
+          <a class="chip" href="index.html#services">We Assemble</a>
+          <div class="assemble-menu" aria-label="We assemble services">
+            <a href="index.html#services"><span>Furniture installation</span><small>Beds, tables, wardrobes and flat-pack products</small></a>
+            <a href="index.html#services"><span>AC installation and repair</span><small>AC fitting, service visit and basic repair support</small></a>
+            <a href="index.html#services"><span>Furniture repair</span><small>Hinges, drawers, handles and minor carpenter fixes</small></a>
+            <a href="index.html#services"><span>TV installation</span><small>TV mounting and bracket fitting support</small></a>
+            <a href="index.html#services"><span>Electrician</span><small>Switches, fittings and minor electrical work</small></a>
+          </div>
+        </div>
+        <a class="chip" href="about.html">About Us</a>
+        <a class="chip" href="index.html#become-partner">Become a Pro</a>
         <a class="whatsapp-chip" href="https://wa.me/919407840541" target="_blank" rel="noopener">WhatsApp</a>
       </div>
     </div>
@@ -52,7 +60,7 @@
           <article class='info-card'><h2>Who should join</h2><p>Amazon sellers, Flipkart sellers, D2C furniture brands, office furniture dealers, local showrooms and bulk installation partners.</p></article>
           <article class='info-card'><h2>Service proof</h2><p>Completion photo, issue remark, customer availability note and job status can be recorded so support teams have clean proof.</p></article>
           <article class='info-card'><h2>Start safely</h2><p>New partners should begin with advance wallet or deposit. Weekly billing can be enabled only after stable work and payment history.</p></article>
-    </div><div class='page-cta'><a class='btn primary' href='https://wa.me/919407840541'>Talk to partner team</a><a class='btn' href='services.html'>View services</a></div></div></section>
+    </div><div class="page-form-wrap"><h2>Submit brand enquiry</h2><p>Share your job volume and city requirement. We will discuss coverage, proof format, payment model and onboarding process.</p><form class="page-form lead-form light-form" data-lead-form="brand"><input name="businessName" required placeholder="Business / brand name"><input name="name" required placeholder="Contact person"><input name="phone" required inputmode="tel" placeholder="Phone number"><input name="email" type="email" placeholder="Email address"><input name="cities" required placeholder="Target cities"><select name="monthlyJobs" required><option value="">Monthly installation jobs</option><option>1-10 jobs</option><option>10-50 jobs</option><option>50-200 jobs</option><option>200+ jobs</option></select><select name="billing" required><option value="">Preferred billing model</option><option>Advance wallet</option><option>Security deposit</option><option>Weekly billing after approval</option><option>Need discussion</option></select><textarea name="message" placeholder="Products, installation scope, reporting need and expected TAT"></textarea><button type="submit">Submit Brand Enquiry</button><p class="form-status" aria-live="polite"></p></form></div><div class='page-cta'><a class='btn primary' href='https://wa.me/919407840541'>Talk to partner team</a><a class='btn' href='services.html'>View services</a></div></div></section>
   </main>
 <footer>
     <div class="container">
@@ -131,8 +139,10 @@
       </div>
     </div>
   </footer>
+  <script src="js/lead-config.js"></script>
   <script src="js/script.js"></script>
 </body>
 </html>
+
 
 

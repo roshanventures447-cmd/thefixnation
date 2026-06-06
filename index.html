@@ -47,11 +47,19 @@
         <input placeholder="Search services here">
       </div>
       <div class="nav-actions">
-        <a class="cart-icon" href="#services" aria-label="Cart">Cart</a>
-        <a class="chip" href="#">Home</a>
-        <a class="chip primary" href="#become-partner">Become Partner</a>
-        <a class="chip" href="#">My Profile</a>
-        <a class="chip" href="#">Login / Sign Up</a>
+        <a class="chip" href="#why-us">Why Us</a>
+        <div class="nav-dropdown">
+          <a class="chip" href="#services">We Assemble</a>
+          <div class="assemble-menu" aria-label="We assemble services">
+            <a href="#services"><span>Furniture installation</span><small>Beds, tables, wardrobes and flat-pack products</small></a>
+            <a href="#services"><span>AC installation and repair</span><small>AC fitting, service visit and basic repair support</small></a>
+            <a href="#services"><span>Furniture repair</span><small>Hinges, drawers, handles and minor carpenter fixes</small></a>
+            <a href="#services"><span>TV installation</span><small>TV mounting and bracket fitting support</small></a>
+            <a href="#services"><span>Electrician</span><small>Switches, fittings and minor electrical work</small></a>
+          </div>
+        </div>
+        <a class="chip" href="about.html">About Us</a>
+        <a class="chip" href="#become-partner">Become a Pro</a>
         <a class="whatsapp-chip" href="https://wa.me/919407840541" target="_blank" rel="noopener">WhatsApp</a>
       </div>
     </div>
@@ -69,26 +77,46 @@
         <article class="partner-option">
           <div class="option-icon">WK</div>
           <h2>Join as Worker</h2>
-          <p>For carpenters, electricians, AC technicians, plumbers, cleaners and repair professionals who want verified service jobs.</p>
-          <ul>
-            <li>Receive jobs by city and service skill</li>
-            <li>Share completion photo after job</li>
-            <li>Payment rules confirmed before assignment</li>
-            <li>Build regular work history with the platform</li>
-          </ul>
-          <a class="btn" href="#book">Apply as Worker</a>
+          <p>For carpenters, electricians, AC technicians and fitting professionals who want verified city-wise service jobs with clear scope, visit proof and payment rules.</p>
+          <form class="lead-form partner-form" data-lead-form="worker">
+            <div class="form-grid two">
+              <label>Full name<input name="name" required placeholder="Your full name"></label>
+              <label>Mobile number<input name="phone" required inputmode="tel" placeholder="10 digit mobile number"></label>
+            </div>
+            <div class="form-grid two">
+              <label>Primary skill<select name="skill" required><option value="">Select skill</option><option>Furniture installation</option><option>Furniture repair</option><option>AC installation and repair</option><option>TV installation</option><option>Electrician</option></select></label>
+              <label>Experience<select name="experience" required><option value="">Select experience</option><option>0-1 year</option><option>1-3 years</option><option>3-5 years</option><option>5+ years</option></select></label>
+            </div>
+            <label>Service city / area<input name="city" required placeholder="Example: Indore, Vijay Nagar"></label>
+            <label>Tools and availability<textarea name="message" placeholder="Mention tools, daily availability, and type of jobs you can handle"></textarea></label>
+            <button class="btn submit-btn" type="submit">Submit worker profile</button>
+            <p class="form-note">Our team will verify service skill, city coverage and job rules before assigning work.</p>
+            <p class="form-status" aria-live="polite"></p>
+          </form>
         </article>
         <article class="partner-option">
           <div class="option-icon">BR</div>
           <h2>Join as Brand</h2>
-          <p>For furniture sellers, online sellers, appliance dealers, offices and local brands that need repeat installation support.</p>
-          <ul>
-            <li>Wallet, security deposit or approved weekly billing</li>
-            <li>Technician assignment with job details</li>
-            <li>Service proof and weekly job records</li>
-            <li>Bulk installation and city-wise service planning</li>
-          </ul>
-          <a class="btn" href="#book">Apply as Brand</a>
+          <p>For ecommerce sellers, furniture brands, appliance dealers and offices that need repeat installation support with assignment, proof, issue notes and weekly reports.</p>
+          <form class="lead-form partner-form" data-lead-form="brand">
+            <div class="form-grid two">
+              <label>Business name<input name="businessName" required placeholder="Company / store name"></label>
+              <label>Contact person<input name="name" required placeholder="Your name"></label>
+            </div>
+            <div class="form-grid two">
+              <label>Mobile number<input name="phone" required inputmode="tel" placeholder="Business contact number"></label>
+              <label>Email<input name="email" type="email" placeholder="Business email"></label>
+            </div>
+            <div class="form-grid two">
+              <label>Monthly jobs<select name="monthlyJobs" required><option value="">Select volume</option><option>1-10 jobs</option><option>10-50 jobs</option><option>50-200 jobs</option><option>200+ jobs</option></select></label>
+              <label>Billing preference<select name="billing" required><option value="">Select billing</option><option>Advance wallet</option><option>Security deposit</option><option>Weekly billing after approval</option><option>Need discussion</option></select></label>
+            </div>
+            <label>Target cities<input name="cities" required placeholder="Example: Indore, Bhopal, Mumbai, Delhi"></label>
+            <label>Service requirement<textarea name="message" placeholder="Products, installation type, expected TAT, issue handling requirement"></textarea></label>
+            <button class="btn submit-btn" type="submit">Submit brand enquiry</button>
+            <p class="form-note">We will discuss city coverage, proof format, payment process and onboarding steps.</p>
+            <p class="form-status" aria-live="polite"></p>
+          </form>
         </article>
       </div>
     </div>
@@ -132,10 +160,10 @@
           <h2>Installation categories for ecommerce sellers</h2>
           <div class="home-category-grid">
             <a class="home-service-card" href="#services"><img src="https://images.unsplash.com/photo-1588613253835-b2337144a705?auto=format&fit=crop&w=500&q=80" alt="Furniture assembly service"><strong>Furniture Assembly</strong></a>
-            <a class="home-service-card" href="#services"><img src="https://images.unsplash.com/photo-1618220179428-22790b461013?auto=format&fit=crop&w=500&q=80" alt="Wardrobe installation"><strong>Wardrobe Installation</strong></a>
-            <a class="home-service-card" href="#services"><img src="https://images.unsplash.com/photo-1572981779307-38b8cabb2407?auto=format&fit=crop&w=500&q=80" alt="Carpenter fitting"><strong>Carpenter Fitting</strong></a>
-            <a class="home-service-card" href="#services"><img src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=500&q=80" alt="Office furniture setup"><strong>Office Furniture Setup</strong></a>
-            <a class="home-service-card" href="#services"><img src="https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=500&q=80" alt="Bulk installation"><strong>Bulk Seller Jobs</strong></a>
+            <a class="home-service-card" href="#services"><img src="https://images.unsplash.com/photo-1621905252507-b35492cc74b4?auto=format&fit=crop&w=500&q=80" alt="AC installation and repair"><strong>AC Installation & Repair</strong></a>
+            <a class="home-service-card" href="#services"><img src="https://images.unsplash.com/photo-1618220179428-22790b461013?auto=format&fit=crop&w=500&q=80" alt="Furniture repair"><strong>Furniture Repair</strong></a>
+            <a class="home-service-card" href="#services"><img src="https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?auto=format&fit=crop&w=500&q=80" alt="TV installation"><strong>TV Installation</strong></a>
+            <a class="home-service-card" href="#services"><img src="https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=500&q=80" alt="Electrician"><strong>Electrician</strong></a>
           </div>
         </div>
       </div>
@@ -160,7 +188,7 @@
 
         <aside class="quote-card">
           <h2>Request seller callback</h2>
-          <p>Share product type, monthly job volume and target cities. Our team will explain technician assignment, proof format, visit rules and billing flow before onboarding.</p>
+          <p>Share your requirement and our team will call back with the right service flow, estimated visit process and next steps. No hidden commitment before confirmation.</p>
           <div class="contact-lines">
             <a href="tel:+919407840541">Call: +91 9407840541</a>
             <a href="mailto:roshanventures447@gmail.com">Email: roshanventures447@gmail.com</a>
@@ -169,18 +197,25 @@
             <div class="quick"><strong>Seller flow</strong><small>built for repeat ecommerce orders</small></div>
             <div class="quick"><strong>Proof first</strong><small>photos and notes after job closure</small></div>
           </div>
-          <form class="quote-form">
-            <div><label>Name</label><input placeholder="Your name"></div>
-            <div><label>Phone</label><input placeholder="Mobile number"></div>
-            <div><label>Service</label><select><option>Ecommerce Seller Partnership</option><option>Furniture Assembly</option><option>Wardrobe / Bed Installation</option><option>Office Furniture Setup</option></select></div>
-            <div><label>Coverage</label><input placeholder="Target cities / Pan India"></div>
-            <button type="button">Request Callback</button>
+          <form class="quote-form lead-form" data-lead-form="customer">
+            <div class="form-grid two">
+              <div><label>Name</label><input name="name" required placeholder="Your name"></div>
+              <div><label>Phone</label><input name="phone" required inputmode="tel" placeholder="Mobile number"></div>
+            </div>
+            <div class="form-grid two">
+              <div><label>Service</label><select name="service" required><option value="">Select service</option><option>Furniture installation</option><option>AC installation and repair</option><option>Furniture repair</option><option>TV installation</option><option>Electrician</option><option>Seller / brand partnership</option></select></div>
+              <div><label>City</label><input name="city" required placeholder="Service city"></div>
+            </div>
+            <div><label>Requirement</label><input name="message" placeholder="Example: Bed assembly, wardrobe fitting, AC service"></div>
+            <div><label>Preferred callback time</label><select name="callbackTime"><option>Any time today</option><option>Morning</option><option>Afternoon</option><option>Evening</option></select></div>
+            <button type="submit">Request Callback</button>
+            <p class="form-status" aria-live="polite"></p>
           </form>
         </aside>
       </div>
     </section>
 
-    <section class="section seller-focus">
+    <section class="section seller-focus" id="why-us">
       <div class="container">
         <div class="section-head">
           <div>
@@ -246,30 +281,35 @@
           <div class="service-list">
             <article class="service-card">
               <img src="https://images.unsplash.com/photo-1588613253835-b2337144a705?auto=format&fit=crop&w=600&q=80" alt="Bed assembly">
-              <div><span class="rating">High-volume seller job</span><h3>Bed and table assembly</h3><p>Assembly support for beds, study tables, dining tables, shoe racks and flat-pack furniture after customer delivery.</p><div class="meta-line"><span class="mini-tag">60-120 min</span><span class="mini-tag">Basic tools</span><span class="mini-tag">Service proof</span></div><div class="price">Seller pricing after scope</div></div>
+              <div><span class="rating">High-volume seller job</span><h3>Furniture installation</h3><p>Assembly support for beds, tables, wardrobes, shoe racks and flat-pack furniture after customer delivery.</p><div class="meta-line"><span class="mini-tag">60-120 min</span><span class="mini-tag">Basic tools</span><span class="mini-tag">Service proof</span></div><div class="price">Seller pricing after scope</div></div>
               <button class="add">Add</button>
             </article>
             <article class="service-card">
-              <img src="https://images.unsplash.com/photo-1618220179428-22790b461013?auto=format&fit=crop&w=600&q=80" alt="Wardrobe installation">
-              <div><span class="rating">Best for furniture brands</span><h3>Wardrobe and cabinet fitting</h3><p>Wardrobe, cabinet, drawers, hinges, handles and storage unit fitting support with product-photo assessment.</p><div class="meta-line"><span class="mini-tag">2-4 hours</span><span class="mini-tag">Photos needed</span><span class="mini-tag">Heavy item support</span></div><div class="price">Custom quote</div></div>
+              <img src="https://images.unsplash.com/photo-1621905252507-b35492cc74b4?auto=format&fit=crop&w=600&q=80" alt="AC installation and repair">
+              <div><span class="rating">Home service support</span><h3>AC installation and repair</h3><p>AC fitting, basic inspection, servicing visit and repair coordination for customer locations.</p><div class="meta-line"><span class="mini-tag">Slot based</span><span class="mini-tag">Technician visit</span><span class="mini-tag">Issue notes</span></div><div class="price">Custom quote</div></div>
               <button class="add">Add</button>
             </article>
             <article class="service-card">
-              <img src="https://images.unsplash.com/photo-1572981779307-38b8cabb2407?auto=format&fit=crop&w=600&q=80" alt="Wall mount service">
-              <div><span class="rating">Add-on support</span><h3>Wall mount and minor fitting</h3><p>Curtain rods, shelves, brackets, mirrors, hooks, drill and hang jobs attached to customer orders.</p><div class="meta-line"><span class="mini-tag">Drilling</span><span class="mini-tag">Minor fixing</span><span class="mini-tag">Slot based</span></div><div class="price">Custom quote</div></div>
+              <img src="https://images.unsplash.com/photo-1618220179428-22790b461013?auto=format&fit=crop&w=600&q=80" alt="Furniture repair">
+              <div><span class="rating">Repair friendly</span><h3>Furniture repair</h3><p>Hinges, drawers, handles, shelves, minor alignment and carpenter repair support.</p><div class="meta-line"><span class="mini-tag">Photos needed</span><span class="mini-tag">Carpenter</span><span class="mini-tag">Parts note</span></div><div class="price">Custom quote</div></div>
               <button class="add">Add</button>
             </article>
             <article class="service-card">
-              <img src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=600&q=80" alt="Office furniture setup">
-              <div><span class="rating">Bulk job friendly</span><h3>Office furniture setup</h3><p>Workstations, office chairs, conference tables, storage cabinets and multi-unit dealer setup.</p><div class="meta-line"><span class="mini-tag">Bulk quote</span><span class="mini-tag">Team visit</span><span class="mini-tag">Business billing</span></div><div class="price">Custom quote</div></div>
+              <img src="https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?auto=format&fit=crop&w=600&q=80" alt="TV installation">
+              <div><span class="rating">Quick install</span><h3>TV installation</h3><p>TV wall mounting, bracket fitting and basic setup support with clear visit scope.</p><div class="meta-line"><span class="mini-tag">Wall mount</span><span class="mini-tag">Drilling</span><span class="mini-tag">Slot based</span></div><div class="price">Custom quote</div></div>
+              <button class="add">Add</button>
+            </article>
+            <article class="service-card">
+              <img src="https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=600&q=80" alt="Electrician service">
+              <div><span class="rating">Electrical support</span><h3>Electrician</h3><p>Switches, fittings, wiring checks and minor electrical work for homes and seller customers.</p><div class="meta-line"><span class="mini-tag">Safety first</span><span class="mini-tag">Minor repair</span><span class="mini-tag">Visit proof</span></div><div class="price">Custom quote</div></div>
               <button class="add">Add</button>
             </article>
           </div>
 
-          <aside class="cart-panel">
-            <div class="cart-head"><h3>Your booking</h3><span class="cart-count">2</span></div>
-            <div class="cart-item"><div><strong>Seller installation job</strong><small>Product photos and city needed</small></div><b>Quote</b></div>
-            <div class="cart-item"><div><strong>Weekly partner billing</strong><small>After approved onboarding</small></div><b>Report</b></div>
+          <aside class="cart-panel is-hidden" aria-live="polite">
+            <div class="cart-head"><h3>Selected service</h3><button class="cart-close" type="button" aria-label="Close booking panel">x</button></div>
+            <div class="cart-item"><div><strong id="selected-service-name">Seller installation job</strong><small id="selected-service-note">Product photos and city needed</small></div><b>Quote</b></div>
+            <div class="cart-item"><div><strong>Next step</strong><small>Share city, product photo and customer slot</small></div><b>Callback</b></div>
             <div class="cart-box">Final amount depends on product size, location, extra drilling, customer availability and number of technicians required.</div>
             <div class="total-row"><span>Visit confirmation</span><span>Callback first</span></div>
             <a class="btn" href="#book">Continue to callback</a>
@@ -410,6 +450,7 @@
       </div>
     </div>
   </footer>
+  <script src="js/lead-config.js"></script>
   <script src="js/script.js"></script>
 </body>
 </html>
