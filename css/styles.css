@@ -1,4 +1,4 @@
-﻿:root {
+:root {
       --ink: #101828;
       --muted: #667085;
       --line: #e4e9f0;
@@ -391,7 +391,7 @@
     .hero {
       background:
         linear-gradient(90deg, rgba(255,255,255,1) 0%, rgba(255,255,255,.92) 48%, rgba(255,255,255,.35) 70%),
-        url("https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1800&q=80") center right / cover no-repeat;
+        url("../img/5b4f4efc527d320f.avif") center right / cover no-repeat;
       border-bottom: 1px solid var(--line);
     }
     .hero .container {
@@ -1101,7 +1101,7 @@
       padding: 32px;
       background:
         linear-gradient(90deg, rgba(11,42,70,.92), rgba(11,42,70,.58)),
-        url("https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=1200&q=80") center / cover;
+        url("../img/7caa480aeeee1089.avif") center / cover;
       color: #fff;
       min-height: 380px;
       display: flex;
@@ -1423,7 +1423,7 @@
     .hero {
       background:
         linear-gradient(90deg, rgba(247,251,255,.98) 0%, rgba(247,251,255,.95) 46%, rgba(247,251,255,.55) 72%),
-        url("https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1800&q=80") center right / cover no-repeat;
+        url("../img/5b4f4efc527d320f.avif") center right / cover no-repeat;
     }
     .hero .container {
       min-height: 520px;
