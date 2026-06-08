@@ -38,6 +38,10 @@ Example:
 window.FIX_NATION_LEADS = {
   all: "https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec",
   customer: "",
-  worker: ""
+  worker: "https://script.google.com/macros/s/YOUR_WORKER_DEPLOYMENT_ID/exec"
 };
 ```
+
+Current configured endpoints:
+- Customer callback: `https://script.google.com/macros/s/AKfycbzu5QACPONhQjj2HuTvUM10qNTWiLu0OBsqLi_Ca4KyMtv1py0cdZkIoQChZf8938EpJg/exec`
+- Worker / Join a Pro: `https://script.google.com/macros/s/AKfycbwd9nG7596gM4sjHcTVGI9w9ghURHLnedtThJj0f_QfdpH1-nmQeaiP8tgSokCAe08SjQ/exec`

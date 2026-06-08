@@ -4,5 +4,5 @@ window.FIX_NATION_LEADS = {
 
   // Optional: use separate Web App URLs per form type.
   customer: "",
-  worker: ""
+  worker: "https://script.google.com/macros/s/AKfycbwd9nG7596gM4sjHcTVGI9w9ghURHLnedtThJj0f_QfdpH1-nmQeaiP8tgSokCAe08SjQ/exec"
 };
