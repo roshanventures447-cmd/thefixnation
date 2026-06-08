@@ -1,6 +1,51 @@
 ﻿document.addEventListener('DOMContentLoaded', () => {
   const searchInput = document.querySelector('.search input');
   const serviceCards = Array.from(document.querySelectorAll('.home-service-card, .service-card, .info-card'));
+  const citySelects = Array.from(document.querySelectorAll('.city-select, .city-service-select'));
+  const selectedCityLabels = Array.from(document.querySelectorAll('[data-selected-city]'));
+  const cityInputs = Array.from(document.querySelectorAll('input[name="city"]'));
+  const footerCityLinks = Array.from(document.querySelectorAll('.footer-cities a'));
+
+  const setSelectedCity = (city) => {
+    if (!city) return;
+    citySelects.forEach((select) => {
+      const hasOption = Array.from(select.options).some((option) => option.value === city || option.textContent === city);
+      if (hasOption) select.value = city;
+    });
+    selectedCityLabels.forEach((label) => {
+      label.textContent = city;
+    });
+    cityInputs.forEach((input) => {
+      if (!input.value || input.dataset.citySynced === 'true') {
+        input.value = city;
+        input.dataset.citySynced = 'true';
+      }
+    });
+    footerCityLinks.forEach((link) => {
+      link.classList.toggle('is-active', link.textContent.trim() === city);
+    });
+    localStorage.setItem('fixNationSelectedCity', city);
+  };
+
+  citySelects.forEach((select) => {
+    select.addEventListener('change', () => setSelectedCity(select.value));
+  });
+
+  cityInputs.forEach((input) => {
+    input.addEventListener('input', () => {
+      input.dataset.citySynced = input.value ? 'false' : 'true';
+    });
+  });
+
+  footerCityLinks.forEach((link) => {
+    link.addEventListener('click', (event) => {
+      event.preventDefault();
+      setSelectedCity(link.textContent.trim());
+      document.querySelector('.city-service-panel')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+  });
+
+  setSelectedCity(localStorage.getItem('fixNationSelectedCity') || citySelects[0]?.value || 'Indore');
 
   if (searchInput) {
     searchInput.addEventListener('input', () => {
@@ -84,6 +129,7 @@
           });
           if (status) status.textContent = 'Details submitted. Our team will connect shortly.';
           form.reset();
+          setSelectedCity(localStorage.getItem('fixNationSelectedCity') || citySelects[0]?.value || 'Indore');
         } else {
           const savedLeads = JSON.parse(localStorage.getItem('fixNationDemoLeads') || '[]');
           savedLeads.push(payload);
