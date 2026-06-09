@@ -6,3 +6,9 @@ window.FIX_NATION_LEADS = {
   customer: "",
   worker: "https://script.google.com/macros/s/AKfycbwd9nG7596gM4sjHcTVGI9w9ghURHLnedtThJj0f_QfdpH1-nmQeaiP8tgSokCAe08SjQ/exec"
 };
+
+window.FIX_NATION_PAYMENT = {
+  bookingFee: 49,
+  upiId: "9165867685-5@ybl",
+  payeeName: "The Fix Nation"
+};

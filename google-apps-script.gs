@@ -14,6 +14,10 @@ const HEADERS = [
   'skill',
   'experience',
   'callbackTime',
+  'bookingId',
+  'bookingFee',
+  'paymentStatus',
+  'paymentNote',
   'message'
 ];
 
@@ -51,9 +55,20 @@ function getLeadSheet_(formType) {
 
   if (sheet.getLastRow() === 0) {
     sheet.appendRow(HEADERS);
+  } else {
+    ensureHeaders_(sheet);
   }
 
   return sheet;
+}
+
+function ensureHeaders_(sheet) {
+  const existingHeaders = sheet.getRange(1, 1, 1, Math.max(sheet.getLastColumn(), 1)).getValues()[0];
+  HEADERS.forEach((header) => {
+    if (existingHeaders.indexOf(header) === -1) {
+      sheet.getRange(1, sheet.getLastColumn() + 1).setValue(header);
+    }
+  });
 }
 
 function parsePayload_(e) {

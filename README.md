@@ -45,3 +45,11 @@ window.FIX_NATION_LEADS = {
 Current configured endpoints:
 - Customer callback: `https://script.google.com/macros/s/AKfycbzu5QACPONhQjj2HuTvUM10qNTWiLu0OBsqLi_Ca4KyMtv1py0cdZkIoQChZf8938EpJg/exec`
 - Worker / Join a Pro: `https://script.google.com/macros/s/AKfycbwd9nG7596gM4sjHcTVGI9w9ghURHLnedtThJj0f_QfdpH1-nmQeaiP8tgSokCAe08SjQ/exec`
+
+Booking payment flow:
+- UPI ID: `9165867685-5@ybl`
+- Booking confirmation charge: `Rs 49`
+- Customer form generates a Booking ID.
+- Details are saved to Google Sheet with `paymentStatus: Pending verification`.
+- UPI button opens payment with Booking ID in the payment note.
+- Redeploy the customer Apps Script after updating `google-apps-script.gs` so the new booking/payment columns are saved.

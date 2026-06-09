@@ -1,22 +1,63 @@
-﻿<?xml version='1.0' encoding='UTF-8'?>
-<urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>
-  <url><loc>https://thefixnation.com/</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://thefixnation.com/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
   <url><loc>https://thefixnation.com/about.html</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://thefixnation.com/services.html</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://thefixnation.com/brand.html</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://thefixnation.com/worker.html</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://thefixnation.com/professionals.html</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://thefixnation.com/contact.html</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://thefixnation.com/blogs.html</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://thefixnation.com/ecommerce-furniture-installation.html</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://thefixnation.com/pan-india-carpenter-service.html</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://thefixnation.com/furniture-installation-for-online-sellers.html</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://thefixnation.com/seller-installation-partner.html</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://thefixnation.com/terms.html</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://thefixnation.com/privacy.html</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://thefixnation.com/refund.html</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://thefixnation.com/career.html</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://thefixnation.com/bookings.html</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://thefixnation.com/career.html</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://thefixnation.com/contact.html</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://thefixnation.com/ecommerce-furniture-installation.html</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://thefixnation.com/furniture-assembly-repair-amritsar.html</loc><changefreq>weekly</changefreq><priority>0.75</priority></url>
+  <url><loc>https://thefixnation.com/furniture-assembly-repair-balotra.html</loc><changefreq>weekly</changefreq><priority>0.75</priority></url>
+  <url><loc>https://thefixnation.com/furniture-assembly-repair-bangalore.html</loc><changefreq>weekly</changefreq><priority>0.75</priority></url>
+  <url><loc>https://thefixnation.com/furniture-assembly-repair-berhampur.html</loc><changefreq>weekly</changefreq><priority>0.75</priority></url>
+  <url><loc>https://thefixnation.com/furniture-assembly-repair-bhagalpur.html</loc><changefreq>weekly</changefreq><priority>0.75</priority></url>
+  <url><loc>https://thefixnation.com/furniture-assembly-repair-bhopal.html</loc><changefreq>weekly</changefreq><priority>0.75</priority></url>
+  <url><loc>https://thefixnation.com/furniture-assembly-repair-bhubaneswar.html</loc><changefreq>weekly</changefreq><priority>0.75</priority></url>
+  <url><loc>https://thefixnation.com/furniture-assembly-repair-chennai.html</loc><changefreq>weekly</changefreq><priority>0.75</priority></url>
+  <url><loc>https://thefixnation.com/furniture-assembly-repair-chhindwara.html</loc><changefreq>weekly</changefreq><priority>0.75</priority></url>
+  <url><loc>https://thefixnation.com/furniture-assembly-repair-coimbatore.html</loc><changefreq>weekly</changefreq><priority>0.75</priority></url>
+  <url><loc>https://thefixnation.com/furniture-assembly-repair-dehradun.html</loc><changefreq>weekly</changefreq><priority>0.75</priority></url>
+  <url><loc>https://thefixnation.com/furniture-assembly-repair-dhanbad.html</loc><changefreq>weekly</changefreq><priority>0.75</priority></url>
+  <url><loc>https://thefixnation.com/furniture-assembly-repair-ernakulam.html</loc><changefreq>weekly</changefreq><priority>0.75</priority></url>
+  <url><loc>https://thefixnation.com/furniture-assembly-repair-gorakhpur.html</loc><changefreq>weekly</changefreq><priority>0.75</priority></url>
+  <url><loc>https://thefixnation.com/furniture-assembly-repair-gurugram.html</loc><changefreq>weekly</changefreq><priority>0.75</priority></url>
+  <url><loc>https://thefixnation.com/furniture-assembly-repair-guwahati.html</loc><changefreq>weekly</changefreq><priority>0.75</priority></url>
+  <url><loc>https://thefixnation.com/furniture-assembly-repair-gwalior.html</loc><changefreq>weekly</changefreq><priority>0.75</priority></url>
+  <url><loc>https://thefixnation.com/furniture-assembly-repair-hyderabad.html</loc><changefreq>weekly</changefreq><priority>0.75</priority></url>
+  <url><loc>https://thefixnation.com/furniture-assembly-repair-jaipur.html</loc><changefreq>weekly</changefreq><priority>0.75</priority></url>
+  <url><loc>https://thefixnation.com/furniture-assembly-repair-jamshedpur.html</loc><changefreq>weekly</changefreq><priority>0.75</priority></url>
+  <url><loc>https://thefixnation.com/furniture-assembly-repair-kadapa.html</loc><changefreq>weekly</changefreq><priority>0.75</priority></url>
+  <url><loc>https://thefixnation.com/furniture-assembly-repair-kalyan.html</loc><changefreq>weekly</changefreq><priority>0.75</priority></url>
+  <url><loc>https://thefixnation.com/furniture-assembly-repair-kanpur.html</loc><changefreq>weekly</changefreq><priority>0.75</priority></url>
+  <url><loc>https://thefixnation.com/furniture-assembly-repair-kolkata.html</loc><changefreq>weekly</changefreq><priority>0.75</priority></url>
+  <url><loc>https://thefixnation.com/furniture-assembly-repair-lucknow.html</loc><changefreq>weekly</changefreq><priority>0.75</priority></url>
+  <url><loc>https://thefixnation.com/furniture-assembly-repair-mangaluru.html</loc><changefreq>weekly</changefreq><priority>0.75</priority></url>
+  <url><loc>https://thefixnation.com/furniture-assembly-repair-morena.html</loc><changefreq>weekly</changefreq><priority>0.75</priority></url>
+  <url><loc>https://thefixnation.com/furniture-assembly-repair-mumbai.html</loc><changefreq>weekly</changefreq><priority>0.75</priority></url>
+  <url><loc>https://thefixnation.com/furniture-assembly-repair-nagpur.html</loc><changefreq>weekly</changefreq><priority>0.75</priority></url>
+  <url><loc>https://thefixnation.com/furniture-assembly-repair-nellore.html</loc><changefreq>weekly</changefreq><priority>0.75</priority></url>
+  <url><loc>https://thefixnation.com/furniture-assembly-repair-pathankot.html</loc><changefreq>weekly</changefreq><priority>0.75</priority></url>
+  <url><loc>https://thefixnation.com/furniture-assembly-repair-patna.html</loc><changefreq>weekly</changefreq><priority>0.75</priority></url>
+  <url><loc>https://thefixnation.com/furniture-assembly-repair-pudupattinam.html</loc><changefreq>weekly</changefreq><priority>0.75</priority></url>
+  <url><loc>https://thefixnation.com/furniture-assembly-repair-pune.html</loc><changefreq>weekly</changefreq><priority>0.75</priority></url>
+  <url><loc>https://thefixnation.com/furniture-assembly-repair-raigarh.html</loc><changefreq>weekly</changefreq><priority>0.75</priority></url>
+  <url><loc>https://thefixnation.com/furniture-assembly-repair-rangareddy.html</loc><changefreq>weekly</changefreq><priority>0.75</priority></url>
+  <url><loc>https://thefixnation.com/furniture-assembly-repair-rishikesh.html</loc><changefreq>weekly</changefreq><priority>0.75</priority></url>
+  <url><loc>https://thefixnation.com/furniture-assembly-repair-thane.html</loc><changefreq>weekly</changefreq><priority>0.75</priority></url>
+  <url><loc>https://thefixnation.com/furniture-assembly-repair-udaipur.html</loc><changefreq>weekly</changefreq><priority>0.75</priority></url>
+  <url><loc>https://thefixnation.com/furniture-assembly-repair-vadodara.html</loc><changefreq>weekly</changefreq><priority>0.75</priority></url>
+  <url><loc>https://thefixnation.com/furniture-assembly-repair-varanasi.html</loc><changefreq>weekly</changefreq><priority>0.75</priority></url>
+  <url><loc>https://thefixnation.com/furniture-assembly-repair-visakhapatnam.html</loc><changefreq>weekly</changefreq><priority>0.75</priority></url>
+  <url><loc>https://thefixnation.com/furniture-installation-for-online-sellers.html</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://thefixnation.com/pan-india-carpenter-service.html</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://thefixnation.com/privacy.html</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://thefixnation.com/professionals.html</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://thefixnation.com/refund.html</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://thefixnation.com/reviews.html</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://thefixnation.com/seller-installation-partner.html</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://thefixnation.com/services.html</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://thefixnation.com/stories.html</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://thefixnation.com/terms.html</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://thefixnation.com/worker.html</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
 </urlset>
