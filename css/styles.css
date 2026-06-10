@@ -1764,6 +1764,349 @@
   min-height: 190px;
 }
 
+.booking-finder {
+  display: grid;
+  grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr);
+  gap: 22px;
+  align-items: center;
+  margin-top: 28px;
+  padding: 26px;
+  border: 1px solid rgba(15, 143, 122, .16);
+  border-radius: 28px;
+  background:
+    linear-gradient(135deg, rgba(255,255,255,.94), rgba(239,248,245,.9)),
+    radial-gradient(circle at 100% 0%, rgba(245,216,137,.18), transparent 34%);
+  box-shadow: 0 24px 60px rgba(7, 25, 39, .1);
+}
+
+.booking-start-panel {
+  display: grid;
+  grid-template-columns: minmax(0, .78fr) minmax(0, 1.22fr);
+  gap: 22px;
+  align-items: center;
+  margin: 28px 0;
+  padding: 26px;
+  border: 1px solid rgba(15,143,122,.18);
+  border-radius: 28px;
+  background:
+    linear-gradient(135deg, rgba(255,255,255,.96), rgba(239,248,245,.92)),
+    radial-gradient(circle at 100% 0%, rgba(245,216,137,.18), transparent 38%);
+  box-shadow: 0 24px 60px rgba(7,25,39,.1);
+}
+
+.booking-start-copy h2 {
+  margin: 8px 0 10px;
+  color: #0f1f2e;
+  font-size: clamp(28px, 3vw, 42px);
+  line-height: 1.04;
+}
+
+.booking-start-copy p,
+.booking-location-status,
+.cart-payment-status,
+.login-status {
+  margin: 0;
+  color: #607082;
+  font-weight: 750;
+  line-height: 1.55;
+}
+
+.booking-location-form {
+  display: grid;
+  grid-template-columns: minmax(150px, .62fr) minmax(220px, 1fr) auto;
+  gap: 12px;
+  align-items: end;
+}
+
+.booking-location-form label,
+.login-dialog label {
+  display: grid;
+  gap: 7px;
+  color: #2c3b4c;
+  font-size: 12px;
+  font-weight: 950;
+  letter-spacing: .03em;
+  text-transform: uppercase;
+}
+
+.booking-location-form input,
+.booking-location-form select,
+.login-dialog input {
+  width: 100%;
+  min-height: 52px;
+  border: 1px solid #dbe5ee;
+  border-radius: 16px;
+  background: #fff;
+  color: #0f1f2e;
+  padding: 0 15px;
+  outline: 0;
+  box-shadow: 0 12px 24px rgba(7,25,39,.05);
+}
+
+.booking-location-form .btn {
+  min-height: 52px;
+  white-space: nowrap;
+}
+
+.booking-location-status {
+  grid-column: 1 / -1;
+  font-size: 13px;
+}
+
+.booking-location-status.is-ready,
+.cart-payment-status.is-success,
+.login-status.is-success {
+  color: #0b8f4d;
+}
+
+.booking-location-status.is-error,
+.cart-payment-status.is-error,
+.login-status.is-error {
+  color: #b42318;
+}
+
+.marketplace.is-locked .add {
+  cursor: not-allowed;
+  border-color: #d7e0e8;
+  color: #8794a4;
+}
+
+.booking-pay-inline:disabled {
+  opacity: .62;
+  cursor: not-allowed;
+}
+
+.login-chip {
+  min-height: 42px;
+  border: 1px solid rgba(15,31,46,.12);
+  border-radius: 999px;
+  background: #fff;
+  color: #0f1f2e;
+  padding: 0 18px;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 8px 18px rgba(7,25,39,.06);
+}
+
+.login-chip.is-logged-in {
+  border-color: rgba(15,143,122,.24);
+  background: #edf8f4;
+  color: #0f8f7a;
+}
+
+.login-modal[hidden] {
+  display: none;
+}
+
+.login-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(7,25,39,.58);
+  backdrop-filter: blur(8px);
+}
+
+.login-dialog {
+  width: min(100%, 430px);
+  position: relative;
+  padding: 28px;
+  border: 1px solid rgba(255,255,255,.76);
+  border-radius: 28px;
+  background: rgba(255,255,255,.96);
+  box-shadow: 0 30px 80px rgba(7,25,39,.28);
+}
+
+.login-dialog img {
+  width: 58px;
+  height: 58px;
+  border-radius: 16px;
+  margin-bottom: 14px;
+}
+
+.login-dialog h2 {
+  margin: 8px 0 8px;
+  color: #0f1f2e;
+  font-size: 30px;
+  line-height: 1.06;
+}
+
+.login-dialog p {
+  margin: 0 0 18px;
+  color: #607082;
+  font-weight: 700;
+  line-height: 1.55;
+}
+
+.login-dialog form {
+  display: grid;
+  gap: 12px;
+}
+
+.login-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 34px;
+  height: 34px;
+  border: 0;
+  border-radius: 999px;
+  background: #edf4f8;
+  color: #0f1f2e;
+  font-weight: 950;
+  cursor: pointer;
+}
+
+.otp-row {
+  display: grid;
+  gap: 8px;
+}
+
+.otp-row small {
+  color: #607082;
+  font-weight: 800;
+}
+
+.booking-finder h2 {
+  margin: 8px 0 10px;
+  color: #0f1f2e;
+  font-size: clamp(28px, 3vw, 42px);
+  line-height: 1.04;
+}
+
+.booking-finder p {
+  margin: 0;
+  max-width: 560px;
+  color: #607082;
+  font-weight: 700;
+  line-height: 1.7;
+}
+
+.finder-actions {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.finder-card {
+  min-height: 148px;
+  display: grid;
+  align-content: space-between;
+  gap: 12px;
+  padding: 18px;
+  border: 1px solid rgba(219,229,238,.92);
+  border-radius: 22px;
+  background: rgba(255,255,255,.88);
+  box-shadow: 0 14px 34px rgba(7, 25, 39, .08);
+  transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+}
+
+.finder-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(15,143,122,.24);
+  box-shadow: 0 20px 44px rgba(7, 25, 39, .12);
+}
+
+.finder-card strong {
+  color: #0f1f2e;
+  font-size: 17px;
+  line-height: 1.2;
+}
+
+.finder-card small {
+  color: #607082;
+  font-weight: 750;
+  line-height: 1.45;
+}
+
+.booking-safety {
+  background:
+    linear-gradient(180deg, #ffffff, #f2f8fb),
+    radial-gradient(circle at 0% 30%, rgba(15,143,122,.08), transparent 34%);
+}
+
+.safety-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.safety-card {
+  min-height: 210px;
+  padding: 22px;
+  border: 1px solid rgba(219,229,238,.92);
+  border-radius: 24px;
+  background: rgba(255,255,255,.92);
+  box-shadow: 0 18px 42px rgba(7, 25, 39, .08);
+}
+
+.safety-card span {
+  display: inline-grid;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  margin-bottom: 18px;
+  border-radius: 14px;
+  background: #0f1f2e;
+  color: #f5d889;
+  font-size: 12px;
+  font-weight: 950;
+}
+
+.safety-card h3 {
+  margin: 0 0 9px;
+  color: #0f1f2e;
+  font-size: 20px;
+  line-height: 1.15;
+}
+
+.safety-card p {
+  margin: 0;
+  color: #607082;
+  font-weight: 700;
+  line-height: 1.6;
+}
+
+.city-detail-band .section-head {
+  margin-bottom: 22px;
+}
+
+.city-detail-band .info-card,
+.city-faq-section .info-card {
+  border-color: rgba(15, 143, 122, .14);
+  box-shadow: 0 18px 44px rgba(7, 25, 39, .08);
+}
+
+.city-detail-band .info-card h2 {
+  font-size: 23px;
+}
+
+.city-faq-section {
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.96), rgba(240,248,246,.92)),
+    radial-gradient(circle at 20% 0%, rgba(15,143,122,.08), transparent 34%);
+}
+
+.faq-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.faq-grid .info-card {
+  min-height: 0;
+}
+
+.faq-grid .info-card h3 {
+  font-size: 21px;
+}
+
+.faq-grid .info-card p {
+  margin-bottom: 0;
+}
+
 /* Premium refresh */
 :root {
   --ink: #111827;
@@ -2826,9 +3169,12 @@ footer h3,
   .partner-logos,
   .scope,
   .city-service-panel,
+  .booking-finder,
+  .booking-start-panel,
   .partner-choice-grid,
   .form-grid.two,
   .quote-card .quick-row,
+  .faq-grid,
   .footer-grid {
     grid-template-columns: 1fr;
   }
@@ -2938,8 +3284,30 @@ footer h3,
   }
 
   .city-service-list,
-  .city-service-summary {
+  .city-service-summary,
+  .finder-actions,
+  .safety-grid,
+  .booking-location-form {
     grid-template-columns: 1fr;
+  }
+
+  .booking-finder {
+    padding: 20px;
+    border-radius: 24px;
+  }
+
+  .booking-start-panel {
+    padding: 20px;
+    border-radius: 24px;
+  }
+
+  .booking-location-form .btn {
+    width: 100%;
+  }
+
+  .finder-card,
+  .safety-card {
+    min-height: 0;
   }
 
   .home-category-grid {
@@ -3056,4 +3424,32 @@ footer h3,
     width: 100%;
     justify-content: center;
   }
+}
+
+.promo-photo,
+.home-service-card img,
+.cat img,
+.service-card img {
+  object-fit: cover;
+  object-position: center;
+  filter: brightness(1.08) saturate(.82) contrast(.92);
+}
+
+.service-card img {
+  aspect-ratio: 4 / 3;
+  border: 1px solid rgba(219, 229, 238, .92);
+}
+
+.cat img {
+  object-position: center top;
+  filter: brightness(1.12) saturate(.78) contrast(.9);
+}
+
+.promo-photo {
+  filter: brightness(1.12) saturate(.78) contrast(.9);
+}
+
+.home-service-card:hover img,
+.service-card:hover img {
+  filter: brightness(1.05) saturate(.9) contrast(.96);
 }

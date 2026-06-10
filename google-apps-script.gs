@@ -10,6 +10,7 @@ const HEADERS = [
   'name',
   'phone',
   'city',
+  'address',
   'service',
   'skill',
   'experience',
