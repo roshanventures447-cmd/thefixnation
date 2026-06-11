@@ -100,7 +100,7 @@
         </div>
         <a class="chip" href="about.html">About Us</a>
         <a class="chip" href="#become-partner">Join a Pro</a>
-        <button class="login-chip" type="button" data-login-open>Login</button>
+        <a class="login-chip" href="bookings.html">My Bookings</a>
         <a class="whatsapp-chip" href="https://wa.me/919407840541" target="_blank" rel="noopener">WhatsApp</a>
       </div>
     </div>
@@ -245,8 +245,11 @@
             <label>Service address
               <input name="bookingAddress" required data-booking-address placeholder="House / flat, area, landmark">
             </label>
+            <label>Mobile number
+              <input name="bookingPhone" required data-booking-phone inputmode="tel" maxlength="10" autocomplete="tel" placeholder="10 digit mobile number">
+            </label>
             <button class="btn primary" type="submit">Continue to services</button>
-            <p class="booking-location-status" data-booking-location-status>City and address are required before adding a service.</p>
+            <p class="booking-location-status" data-booking-location-status>City, complete address and mobile number are required before adding a service.</p>
           </form>
         </section>
 
@@ -716,29 +719,6 @@
       </div>
     </div>
   </footer>
-
-  <div class="login-modal" data-login-modal hidden>
-    <div class="login-dialog" role="dialog" aria-modal="true" aria-labelledby="login-title">
-      <button class="login-close" type="button" data-login-close aria-label="Close login">x</button>
-      <img src="img/logo.png" alt="The Fix Nation logo">
-      <span class="tag">Secure booking login</span>
-      <h2 id="login-title">Continue with mobile number</h2>
-      <p>Login keeps your booking ID, city, address and Rs 49 confirmation payment connected in one flow.</p>
-      <form data-login-form>
-        <label>Mobile number
-          <input name="loginPhone" inputmode="tel" maxlength="10" placeholder="10 digit mobile number" required>
-        </label>
-        <div class="otp-row" data-otp-row hidden>
-          <label>OTP
-            <input name="loginOtp" inputmode="numeric" maxlength="4" placeholder="Enter 4 digit OTP">
-          </label>
-          <small data-demo-otp></small>
-        </div>
-        <button class="btn primary" type="submit" data-login-submit>Send OTP</button>
-        <p class="login-status" data-login-status aria-live="polite"></p>
-      </form>
-    </div>
-  </div>
 
   <script src="js/lead-config.js"></script>
   <script>

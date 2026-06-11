@@ -184,24 +184,13 @@
   const bookingLocationForm = document.querySelector('[data-booking-location-form]');
   const bookingCityInput = document.querySelector('[data-booking-city]');
   const bookingAddressInput = document.querySelector('[data-booking-address]');
+  const bookingPhoneInput = document.querySelector('[data-booking-phone]');
   const bookingLocationStatus = document.querySelector('[data-booking-location-status]');
   const cartAddressNote = document.querySelector('[data-cart-address-note]');
   const cartPaymentStatus = document.querySelector('[data-cart-payment-status]');
-  const loginModal = document.querySelector('[data-login-modal]');
-  const loginForm = document.querySelector('[data-login-form]');
-  const loginOpenButtons = Array.from(document.querySelectorAll('[data-login-open]'));
-  const loginClose = document.querySelector('[data-login-close]');
-  const otpRow = document.querySelector('[data-otp-row]');
-  const demoOtpLabel = document.querySelector('[data-demo-otp]');
-  const loginSubmit = document.querySelector('[data-login-submit]');
-  const loginStatus = document.querySelector('[data-login-status]');
-  const loginChip = document.querySelector('.login-chip');
   let selectedBookingService = '';
   let selectedBookingNote = '';
-  let bookingLocation = JSON.parse(localStorage.getItem('fixNationBookingLocation') || 'null') || { city: '', address: '' };
-  let customerSession = JSON.parse(localStorage.getItem('fixNationCustomerSession') || 'null') || null;
-  let loginOtp = '';
-  let pendingPaymentAfterLogin = false;
+  let bookingLocation = JSON.parse(localStorage.getItem('fixNationBookingLocation') || 'null') || { city: '', address: '', phone: '' };
 
   addButtons.forEach((button) => {
     button.addEventListener('click', () => {
@@ -254,84 +243,12 @@
     }
   };
 
-  const setLoginUi = () => {
-    if (!loginChip) return;
-    if (customerSession?.phone) {
-      loginChip.textContent = `Hi, ${customerSession.phone.slice(-4)}`;
-      loginChip.classList.add('is-logged-in');
-    } else {
-      loginChip.textContent = 'Login';
-      loginChip.classList.remove('is-logged-in');
-    }
-  };
-
-  const openLogin = () => {
-    if (!loginModal) return;
-    loginModal.hidden = false;
-    loginForm?.querySelector('input[name="loginPhone"]')?.focus();
-  };
-
-  const closeLoginModal = () => {
-    if (loginModal) loginModal.hidden = true;
-  };
-
-  loginOpenButtons.forEach((button) => button.addEventListener('click', openLogin));
-  loginClose?.addEventListener('click', closeLoginModal);
-  loginModal?.addEventListener('click', (event) => {
-    if (event.target === loginModal) closeLoginModal();
-  });
-
-  loginForm?.addEventListener('submit', (event) => {
-    event.preventDefault();
-    const phoneInput = loginForm.querySelector('input[name="loginPhone"]');
-    const otpInput = loginForm.querySelector('input[name="loginOtp"]');
-    const phone = (phoneInput?.value || '').replace(/\D/g, '').slice(-10);
-    if (phone.length !== 10) {
-      if (loginStatus) {
-        loginStatus.className = 'login-status is-error';
-        loginStatus.textContent = 'Enter a valid 10 digit mobile number.';
-      }
-      return;
-    }
-    if (!loginOtp) {
-      loginOtp = String(Math.floor(1000 + Math.random() * 9000));
-      if (otpRow) otpRow.hidden = false;
-      if (demoOtpLabel) demoOtpLabel.textContent = `Preview OTP: ${loginOtp}`;
-      if (loginSubmit) loginSubmit.textContent = 'Verify OTP';
-      if (loginStatus) {
-        loginStatus.className = 'login-status';
-        loginStatus.textContent = 'OTP sent. For preview, use the OTP shown above. Live SMS can be connected later.';
-      }
-      otpInput?.focus();
-      return;
-    }
-    if ((otpInput?.value || '').trim() !== loginOtp) {
-      if (loginStatus) {
-        loginStatus.className = 'login-status is-error';
-        loginStatus.textContent = 'Incorrect OTP. Check the preview OTP and try again.';
-      }
-      return;
-    }
-    customerSession = { phone, loggedInAt: new Date().toISOString() };
-    localStorage.setItem('fixNationCustomerSession', JSON.stringify(customerSession));
-    loginOtp = '';
-    if (otpRow) otpRow.hidden = true;
-    if (demoOtpLabel) demoOtpLabel.textContent = '';
-    if (loginSubmit) loginSubmit.textContent = 'Send OTP';
-    if (loginStatus) {
-      loginStatus.className = 'login-status is-success';
-      loginStatus.textContent = 'Login successful.';
-    }
-    setLoginUi();
-    closeLoginModal();
-    updateCartState();
-    if (pendingPaymentAfterLogin) {
-      pendingPaymentAfterLogin = false;
-      handleInlinePayment();
-    }
-  });
-
-  const isLocationReady = () => Boolean(bookingLocation.city && bookingLocation.address && bookingLocation.address.trim().length >= 8);
+  const isLocationReady = () => Boolean(
+    bookingLocation.city &&
+    bookingLocation.address &&
+    bookingLocation.address.trim().length >= 8 &&
+    /^\d{10}$/.test(bookingLocation.phone || '')
+  );
 
   const markLocationError = (message) => {
     if (bookingLocationStatus) {
@@ -343,6 +260,7 @@
   const syncBookingLocationToFields = () => {
     if (bookingCityInput && bookingLocation.city) bookingCityInput.value = bookingLocation.city;
     if (bookingAddressInput && bookingLocation.address) bookingAddressInput.value = bookingLocation.address;
+    if (bookingPhoneInput && bookingLocation.phone) bookingPhoneInput.value = bookingLocation.phone;
     if (bookingLocation.city) setSelectedCity(bookingLocation.city);
     const customerForm = document.querySelector('.quote-form[data-lead-form="customer"]');
     if (customerForm) {
@@ -360,21 +278,17 @@
     if (cartAddressNote) {
       cartAddressNote.textContent = locationReady
         ? `${bookingLocation.city}: ${bookingLocation.address}`
-        : 'City and address must be added before payment.';
+        : 'City, address and mobile number must be added before payment.';
     }
     if (bookingPayInline) {
       bookingPayInline.disabled = !(locationReady && selectedBookingService);
       if (!selectedBookingService) {
         bookingPayInline.textContent = 'Select a service';
-      } else if (!customerSession?.phone) {
-        bookingPayInline.textContent = 'Login and pay Rs 49';
-      } else {
-        bookingPayInline.textContent = 'Pay Rs 49 via UPI';
-      }
+      } else bookingPayInline.textContent = 'Pay Rs 49 via UPI';
     }
     if (bookingLocationStatus && locationReady) {
       bookingLocationStatus.className = 'booking-location-status is-ready';
-      bookingLocationStatus.textContent = `${bookingLocation.city} address added. Now choose a service below.`;
+      bookingLocationStatus.textContent = `${bookingLocation.city} details saved. Now choose a service below.`;
     }
   };
 
@@ -382,6 +296,7 @@
     event.preventDefault();
     const city = bookingCityInput?.value || '';
     const address = (bookingAddressInput?.value || '').trim();
+    const phone = (bookingPhoneInput?.value || '').replace(/\D/g, '').slice(-10);
     if (!cityServices[city]) {
       markLocationError('Select a confirmed service city.');
       return;
@@ -390,7 +305,11 @@
       markLocationError('Enter a complete house / area / landmark address.');
       return;
     }
-    bookingLocation = { city, address };
+    if (phone.length !== 10) {
+      markLocationError('Enter a valid 10 digit mobile number.');
+      return;
+    }
+    bookingLocation = { city, address, phone };
     localStorage.setItem('fixNationBookingLocation', JSON.stringify(bookingLocation));
     syncBookingLocationToFields();
     updateCartState();
@@ -451,12 +370,6 @@
       document.querySelector('.booking-start-panel')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
       return;
     }
-    if (!customerSession?.phone) {
-      pendingPaymentAfterLogin = true;
-      openLogin();
-      return;
-    }
-
     const endpoint = leadEndpoints.customer || leadEndpoints.all || leadEndpoints.googleSheetUrl;
     const bookingId = createBookingId();
     const payload = {
@@ -469,7 +382,8 @@
       paymentStatus: upiId ? 'Pending verification' : 'UPI ID pending',
       paymentNote: `${bookingId} booking confirmation`,
       name: '',
-      phone: customerSession.phone,
+      email: '',
+      phone: bookingLocation.phone,
       city: bookingLocation.city,
       address: bookingLocation.address,
       service: selectedBookingService,
@@ -519,7 +433,6 @@
   };
 
   syncBookingLocationToFields();
-  setLoginUi();
   updateCartState();
 
   const ensurePaymentBox = (form) => {

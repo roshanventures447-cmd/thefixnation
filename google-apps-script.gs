@@ -8,6 +8,7 @@ const HEADERS = [
   'source',
   'pageUrl',
   'name',
+  'email',
   'phone',
   'city',
   'address',
