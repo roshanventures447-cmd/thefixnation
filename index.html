@@ -3,7 +3,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Premium Furniture Assembly and Repair Booking | The Fix Nation</title>
-  <meta name="description" content="Book verified furniture assembly and repair callback with The Fix Nation. Pay Rs 49 booking confirmation, get city-wise carpenter support, and receive final quote after visit scope check.">
+  <meta name="description" content="Book furniture assembly and repair with city-wise carpenter support. Confirm your visit for Rs 49 and receive the final work quote after inspection.">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://thefixnation.com/">
   <meta property="og:title" content="Premium Furniture Assembly and Repair Booking | The Fix Nation">
@@ -11,6 +11,7 @@
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://thefixnation.com/">
   <meta property="og:image" content="https://thefixnation.com/img/logo.png">
+  <link rel="preload" as="image" href="img/service-bed-assembly.png" fetchpriority="high">
   <link rel="stylesheet" href="css/styles.css">
   <!-- Google tag (gtag.js) -->
   <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-D22JKWJGLT"></script>
@@ -27,11 +28,36 @@
     "@type": "HomeAndConstructionBusiness",
     "name": "The Fix Nation",
     "url": "https://thefixnation.com/",
-    "logo": "img/logo.png",
+    "@id": "https://thefixnation.com/#business",
+    "logo": "https://thefixnation.com/img/logo.png",
     "telephone": "+919407840541",
     "email": "roshanventures447@gmail.com",
     "areaServed": "India",
     "description": "Verified furniture assembly and repair booking support for customers with city-wise carpenter callback, Rs 49 booking confirmation and final quote after visit scope check."
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": "https://thefixnation.com/#organization",
+        "name": "The Fix Nation",
+        "url": "https://thefixnation.com/",
+        "logo": "https://thefixnation.com/img/logo.png",
+        "email": "roshanventures447@gmail.com",
+        "telephone": "+919407840541"
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://thefixnation.com/#website",
+        "url": "https://thefixnation.com/",
+        "name": "The Fix Nation",
+        "publisher": { "@id": "https://thefixnation.com/#organization" },
+        "inLanguage": "en-IN"
+      }
+    ]
   }
   </script>
 </head>
@@ -101,6 +127,7 @@
         <a class="chip" href="about.html">About Us</a>
         <a class="chip" href="#become-partner">Join a Pro</a>
         <a class="login-chip" href="bookings.html">My Bookings</a>
+        <a class="header-cart" href="#services" data-cart-trigger aria-label="Open booking cart">Cart <span data-cart-count>0</span></a>
         <a class="whatsapp-chip" href="https://wa.me/919407840541" target="_blank" rel="noopener">WhatsApp</a>
       </div>
     </div>
@@ -111,7 +138,7 @@
       <div class="partner-choice-head">
         <a class="partner-close" href="index.html" aria-label="Close partner options">x</a>
         <span class="tag">Join The Network</span>
-        <h1>Apply for verified service work with The Fix Nation.</h1>
+        <h2>Apply for verified service work with The Fix Nation.</h2>
         <p>Workers can join to receive service jobs. Brands and sellers can call directly for repeat installation work, payment flow and job proof discussion.</p>
       </div>
       <div class="partner-choice-grid">
@@ -128,7 +155,7 @@
               <label>Primary skill<select name="skill" required=""><option value="">Select skill</option><option>Furniture installation</option><option>Furniture repair</option><option>AC installation and repair</option><option>TV installation</option><option>Electrician</option></select></label>
               <label>Experience<select name="experience" required=""><option value="">Select experience</option><option>0-1 year</option><option>1-3 years</option><option>3-5 years</option><option>5+ years</option></select></label>
             </div>
-            <label>Service city / area<input name="city" required="" placeholder="Example: Indore, Vijay Nagar"></label>
+            <label>Service city / area<input name="city" required="" placeholder="Example: Hyderabad, Kukatpally"></label>
             <label>Tools and availability<textarea name="message" placeholder="Mention tools, daily availability, and type of jobs you can handle"></textarea></label>
             <button class="btn submit-btn" type="submit">Submit worker profile</button>
             <p class="form-note">Our team will verify service skill, city coverage and job rules before assigning work.</p>
@@ -154,31 +181,19 @@
       <div class="container">
         <div class="promo-banner" aria-label="Featured services slider">
           <div class="promo-slide">
-            <img class="promo-photo" src="img/service-bed-assembly.png" alt="The Fix Nation worker assembling a bed">
+            <img class="promo-photo" src="img/service-bed-assembly.png" alt="The Fix Nation worker assembling a bed" fetchpriority="high" decoding="async">
             <div class="price-tag"><span>Home Visit</span><strong>Rs 49</strong></div>
-            <div class="promo-title">
-              <h1>Furniture assembly</h1>
-              <p>Book a verified carpenter callback for beds, wardrobes, tables and flat-pack furniture</p>
-              <div class="promo-points"><span>Verified carpenter</span><span>Callback first</span></div>
-            </div>
+            <div class="promo-title"><h1>Furniture assembly</h1><p>Book a verified carpenter callback for beds, wardrobes, tables and flat-pack furniture</p><div class="promo-points"><span>Verified carpenter</span><span>Callback first</span></div></div>
           </div>
           <div class="promo-slide">
-            <img class="promo-photo" src="img/service-furniture-repair.png" alt="The Fix Nation worker repairing furniture">
+            <img class="promo-photo" src="img/service-furniture-repair.png" alt="The Fix Nation worker repairing furniture" loading="lazy" decoding="async">
             <div class="price-tag"><span>Repair Visit</span><strong>Quote</strong></div>
-            <div class="promo-title">
-              <h1>Furniture repair</h1>
-              <p>Get support for hinges, drawers, handles, alignment and minor carpenter fixes</p>
-              <div class="promo-points"><span>Scope check</span><span>Final charge on visit</span></div>
-            </div>
+            <div class="promo-title"><h2>Furniture repair</h2><p>Get support for hinges, drawers, handles, alignment and minor carpenter fixes</p><div class="promo-points"><span>Scope check</span><span>Final charge on visit</span></div></div>
           </div>
           <div class="promo-slide">
-            <img class="promo-photo" src="img/service-consultation.png" alt="The Fix Nation worker measuring furniture">
+            <img class="promo-photo" src="img/service-consultation.png" alt="The Fix Nation worker measuring furniture" loading="lazy" decoding="async">
             <div class="price-tag"><span>City Support</span><strong>India</strong></div>
-            <div class="promo-title">
-              <h1>Local carpenter support</h1>
-              <p>Select your city, share the requirement and get a clear callback before visit</p>
-              <div class="promo-points"><span>City-wise service</span><span>Transparent flow</span></div>
-            </div>
+            <div class="promo-title"><h2>Local carpenter support</h2><p>Select your city, share the requirement and get a clear callback before visit</p><div class="promo-points"><span>City-wise service</span><span>Transparent flow</span></div></div>
           </div>
           <div class="promo-dots"><span></span><span></span><span></span></div>
         </div>
@@ -256,7 +271,7 @@
         <section class="city-service-panel" aria-label="City service availability">
           <div>
             <span class="tag">Change city</span>
-            <h2>Services available in <span data-selected-city="">Indore</span></h2>
+            <h2>Services available in <span data-selected-city="">Amritsar</span></h2>
             <p>Select your city to see confirmed furniture assembly and repair support. Customer callback form will also use your selected city.</p>
           </div>
           <div class="city-picker-wrap">
@@ -317,7 +332,7 @@
         </section>
 
         <div class="services-home">
-          <h2>Furniture services in <span data-selected-city="">Indore</span></h2>
+          <h2>Furniture services in <span data-selected-city="">Amritsar</span></h2>
           <div class="home-category-grid">
             <a class="home-service-card" data-service="furniture" data-open-category="beds" href="#services"><img src="img/service-bed-assembly.png" alt="The Fix Nation worker assembling bed furniture"><strong>Bed Assembly</strong><small>Single, double, hydraulic and diwan beds</small></a>
             <a class="home-service-card" data-service="furniture" data-open-category="wardrobe" href="#services"><img src="img/service-wardrobe-assembly.png" alt="The Fix Nation worker assembling wardrobe furniture"><strong>Wardrobe Assembly</strong><small>Sliding, modular and panel fitting</small></a>
@@ -347,7 +362,7 @@
       <div class="container">
         <div>
           <span class="eyebrow">Furniture assembly and repair at your doorstep</span>
-          <h1>Book a verified carpenter <span>for furniture assembly and repair.</span></h1>
+          <h2>Book a verified carpenter <span>for furniture assembly and repair.</span></h2>
           <p class="lead">The Fix Nation helps customers book furniture assembly and repair visits with city-wise carpenter callback, Rs 49 booking confirmation and a final quote after the work scope is checked at your home.</p>
           <div class="hero-cta">
             <a class="btn primary" href="#book">Book Customer Callback</a>
@@ -488,18 +503,39 @@
           </div>
 
           <aside class="cart-panel is-hidden" aria-live="polite">
-            <div class="cart-head"><h3>Your booking</h3><button class="cart-close" type="button" aria-label="Close booking panel">x</button></div>
-            <div class="cart-item"><div><strong id="selected-service-name">Furniture service request</strong><small id="selected-service-note">City, furniture type and photos help us confirm faster</small></div><b>Quote</b></div>
-            <div class="cart-item"><div><strong>Booking confirmation</strong><small>Pay after details are submitted and Booking ID is generated</small></div><b>Rs 49</b></div>
+            <div class="cart-head"><div><small>Service cart</small><h3>Your booking <span class="cart-count" data-cart-count>0</span></h3></div><button class="cart-close" type="button" aria-label="Close booking panel">x</button></div>
+            <div class="cart-empty" data-cart-empty><strong>No service selected</strong><span>Use the Add button on any service.</span></div>
+            <div class="cart-service-items" data-cart-items></div>
+            <div class="cart-item"><div><strong>Booking confirmation</strong><small>One confirmation charge for the complete visit request</small></div><b>Rs 49</b></div>
             <div class="cart-item"><div><strong>Final carpenter charge</strong><small>Shared after product size, parts and work scope check</small></div><b>On visit</b></div>
             <div class="cart-box" data-cart-address-note>City and address must be added before payment.</div>
             <div class="total-row"><span>Amount payable now</span><span>Rs 49</span></div>
-            <button class="btn booking-pay-inline" type="button" disabled>Login and pay Rs 49</button>
+            <div class="payment-assurance"><span>Secure UPI intent</span><span>Unique Booking ID</span><span>Payment verification</span></div>
+            <button class="btn booking-pay-inline" type="button" disabled>Confirm booking and pay Rs 49</button>
             <p class="cart-payment-status" data-cart-payment-status aria-live="polite"></p>
           </aside>
         </div>
       </div>
     </section>
+
+    <div class="payment-modal" data-payment-modal hidden>
+      <div class="payment-modal-backdrop" data-payment-close></div>
+      <section class="payment-dialog" role="dialog" aria-modal="true" aria-labelledby="payment-title">
+        <button class="payment-dialog-close" type="button" data-payment-close aria-label="Close payment">x</button>
+        <span class="tag">Booking created</span>
+        <h2 id="payment-title">Complete Rs 49 booking payment.</h2>
+        <p>Your service request is saved. Use the exact Booking ID in the UPI note so our team can match the payment.</p>
+        <div class="payment-detail-grid">
+          <div><span>Amount</span><strong>Rs 49</strong></div>
+          <div><span>UPI ID</span><strong data-payment-upi>9165867685-5@ybl</strong><button type="button" data-copy-payment="upi">Copy</button></div>
+          <div><span>Booking ID</span><strong data-payment-booking-id>Generating...</strong><button type="button" data-copy-payment="booking">Copy</button></div>
+          <div><span>Status</span><strong>Pending verification</strong></div>
+        </div>
+        <a class="btn primary payment-open-upi" data-payment-link href="#">Open UPI app</a>
+        <a class="payment-track-link" href="bookings.html">Track this booking</a>
+        <p class="payment-dialog-note" data-payment-dialog-status>Do not close your UPI app until the transaction result is shown.</p>
+      </section>
+    </div>
 
     <section class="section">
       <div class="container">

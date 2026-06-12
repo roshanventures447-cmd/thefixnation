@@ -109,7 +109,21 @@
       </aside>
     </div>
   </section>
-  <section class="content-section"><div class="container status-row"><div class="status-item"><span>1. Callback requested</span><b>Open</b></div><div class="status-item"><span>2. Technician assignment</span><b>After confirmation</b></div><div class="status-item"><span>3. Visit proof</span><b>On completion</b></div></div></section>
+  <section class="content-section">
+    <div class="container booking-lookup-wrap">
+      <div class="booking-lookup-copy">
+        <span class="tag">Live lookup</span>
+        <h2>Track with your Booking ID.</h2>
+        <p>Enter the ID generated after booking. Payment remains pending verification until our team matches the UPI transaction.</p>
+      </div>
+      <form class="booking-status-form" data-booking-status-form>
+        <label for="booking-id">Booking ID</label>
+        <div><input id="booking-id" name="bookingId" placeholder="TFN-20260613-AB12" autocomplete="off" required><button class="btn primary" type="submit">Check status</button></div>
+        <output class="booking-status-result" data-booking-status-result aria-live="polite"><strong>Ready to check</strong><span>Your latest booking can also be found on this device.</span></output>
+      </form>
+    </div>
+    <div class="container status-row"><div class="status-item"><span>1. Callback requested</span><b>Open</b></div><div class="status-item"><span>2. Technician assignment</span><b>After confirmation</b></div><div class="status-item"><span>3. Visit proof</span><b>On completion</b></div></div>
+  </section>
 </main>
 
   <footer>

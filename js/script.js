@@ -165,7 +165,7 @@
     });
   });
 
-  setSelectedCity(localStorage.getItem('fixNationSelectedCity') || citySelects[0]?.value || 'Indore');
+  setSelectedCity(localStorage.getItem('fixNationSelectedCity') || citySelects[0]?.value || 'Amritsar');
 
   if (searchInput) {
     searchInput.addEventListener('input', () => {
@@ -177,8 +177,10 @@
   const marketplace = document.querySelector('.marketplace');
   const cartPanel = document.querySelector('.cart-panel');
   const closeCart = document.querySelector('.cart-close');
-  const selectedServiceName = document.querySelector('#selected-service-name');
-  const selectedServiceNote = document.querySelector('#selected-service-note');
+  const cartItems = document.querySelector('[data-cart-items]');
+  const cartEmpty = document.querySelector('[data-cart-empty]');
+  const cartCounts = Array.from(document.querySelectorAll('[data-cart-count]'));
+  const cartTrigger = document.querySelector('[data-cart-trigger]');
   const addButtons = Array.from(document.querySelectorAll('.add'));
   const bookingPayInline = document.querySelector('.booking-pay-inline');
   const bookingLocationForm = document.querySelector('[data-booking-location-form]');
@@ -188,9 +190,61 @@
   const bookingLocationStatus = document.querySelector('[data-booking-location-status]');
   const cartAddressNote = document.querySelector('[data-cart-address-note]');
   const cartPaymentStatus = document.querySelector('[data-cart-payment-status]');
-  let selectedBookingService = '';
-  let selectedBookingNote = '';
-  let bookingLocation = JSON.parse(localStorage.getItem('fixNationBookingLocation') || 'null') || { city: '', address: '', phone: '' };
+  const paymentModal = document.querySelector('[data-payment-modal]');
+  const paymentLink = document.querySelector('[data-payment-link]');
+  const paymentBookingId = document.querySelector('[data-payment-booking-id]');
+  const paymentUpi = document.querySelector('[data-payment-upi]');
+  const paymentDialogStatus = document.querySelector('[data-payment-dialog-status]');
+  let selectedServices = [];
+  try {
+    const savedServices = JSON.parse(localStorage.getItem('fixNationSelectedServices') || '[]');
+    selectedServices = Array.isArray(savedServices) ? savedServices : [];
+  } catch (error) {
+    selectedServices = [];
+  }
+  let bookingLocation = { city: '', address: '', phone: '' };
+  try {
+    bookingLocation = JSON.parse(localStorage.getItem('fixNationBookingLocation') || 'null') || bookingLocation;
+  } catch (error) {
+    localStorage.removeItem('fixNationBookingLocation');
+  }
+
+  const persistSelectedServices = () => localStorage.setItem('fixNationSelectedServices', JSON.stringify(selectedServices));
+
+  const renderCart = () => {
+    const count = selectedServices.length;
+    cartCounts.forEach((item) => { item.textContent = String(count); });
+    if (cartTrigger) cartTrigger.classList.toggle('has-items', count > 0);
+    if (cartEmpty) cartEmpty.hidden = count > 0;
+    if (cartItems) {
+      cartItems.innerHTML = selectedServices.map((service) => `
+        <div class="cart-service-item">
+          <div><strong>${service.name}</strong><small>${service.note}</small></div>
+          <button type="button" data-remove-service="${service.id}" aria-label="Remove ${service.name}">Remove</button>
+        </div>`).join('');
+    }
+    addButtons.forEach((button) => {
+      const card = button.closest('.service-card');
+      const id = card?.dataset.category || card?.dataset.bookingService || '';
+      const selected = selectedServices.some((service) => service.id === id);
+      button.textContent = selected ? 'Added' : 'Add';
+      button.classList.toggle('is-added', selected);
+      button.setAttribute('aria-pressed', selected ? 'true' : 'false');
+    });
+    persistSelectedServices();
+  };
+
+  cartItems?.addEventListener('click', (event) => {
+    const removeButton = event.target.closest('[data-remove-service]');
+    if (!removeButton) return;
+    selectedServices = selectedServices.filter((service) => service.id !== removeButton.dataset.removeService);
+    if (!selectedServices.length) {
+      cartPanel?.classList.add('is-hidden');
+      marketplace?.classList.remove('has-cart');
+    }
+    renderCart();
+    updateCartState();
+  });
 
   addButtons.forEach((button) => {
     button.addEventListener('click', () => {
@@ -202,22 +256,15 @@
       const card = button.closest('.service-card');
       const title = card?.querySelector('h3')?.textContent?.trim() || 'Selected service';
       const note = card?.querySelector('p')?.textContent?.trim() || 'Share city, product photo and customer slot.';
-      selectedBookingService = card?.dataset.bookingService || title;
-      selectedBookingNote = note;
-
-      if (selectedServiceName) selectedServiceName.textContent = title;
-      if (selectedServiceNote) {
-        selectedServiceNote.textContent = note.length > 88 ? `${note.slice(0, 85)}...` : note;
-      }
-
-      addButtons.forEach((item) => {
-        item.textContent = 'Add';
-        item.classList.remove('is-added');
-      });
-      button.textContent = 'Selected';
-      button.classList.add('is-added');
+      const id = card?.dataset.category || card?.dataset.bookingService || title;
+      const existing = selectedServices.some((service) => service.id === id);
+      selectedServices = existing
+        ? selectedServices.filter((service) => service.id !== id)
+        : [...selectedServices, { id, name: card?.dataset.bookingService || title, note: note.length > 88 ? `${note.slice(0, 85)}...` : note }];
       marketplace?.classList.add('has-cart');
-      cartPanel?.classList.remove('is-hidden');
+      if (selectedServices.length) cartPanel?.classList.remove('is-hidden');
+      else cartPanel?.classList.add('is-hidden');
+      renderCart();
       updateCartState();
 
       if (window.innerWidth < 1100) {
@@ -227,19 +274,19 @@
   });
 
   const applySelectedBookingToForm = () => {
-    if (!selectedBookingService) return;
+    if (!selectedServices.length) return;
     const customerForm = document.querySelector('.quote-form[data-lead-form="customer"]');
     if (!customerForm) return;
     const serviceSelect = customerForm.querySelector('select[name="service"]');
     const messageInput = customerForm.querySelector('input[name="message"], textarea[name="message"]');
     if (serviceSelect) {
-      const matchedOption = Array.from(serviceSelect.options).find((option) => option.textContent.trim() === selectedBookingService);
+      const matchedOption = Array.from(serviceSelect.options).find((option) => option.textContent.trim() === selectedServices[0].name);
       if (matchedOption) {
         serviceSelect.value = matchedOption.value || matchedOption.textContent;
       }
     }
     if (messageInput && !messageInput.value) {
-      messageInput.value = `${selectedBookingService}: ${selectedBookingNote}`;
+      messageInput.value = selectedServices.map((service) => service.name).join(', ');
     }
   };
 
@@ -281,10 +328,9 @@
         : 'City, address and mobile number must be added before payment.';
     }
     if (bookingPayInline) {
-      bookingPayInline.disabled = !(locationReady && selectedBookingService);
-      if (!selectedBookingService) {
-        bookingPayInline.textContent = 'Select a service';
-      } else bookingPayInline.textContent = 'Pay Rs 49 via UPI';
+      bookingPayInline.disabled = !(locationReady && selectedServices.length);
+      if (!selectedServices.length) bookingPayInline.textContent = 'Select at least one service';
+      else bookingPayInline.textContent = `Confirm ${selectedServices.length} service${selectedServices.length > 1 ? 's' : ''} and pay Rs 49`;
     }
     if (bookingLocationStatus && locationReady) {
       bookingLocationStatus.className = 'booking-location-status is-ready';
@@ -327,10 +373,14 @@
   closeCart?.addEventListener('click', () => {
     cartPanel?.classList.add('is-hidden');
     marketplace?.classList.remove('has-cart');
-    addButtons.forEach((button) => {
-      button.textContent = 'Add';
-      button.classList.remove('is-added');
-    });
+  });
+
+  cartTrigger?.addEventListener('click', (event) => {
+    if (!selectedServices.length) return;
+    event.preventDefault();
+    cartPanel?.classList.remove('is-hidden');
+    marketplace?.classList.add('has-cart');
+    document.querySelector('#services')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   });
 
   const leadEndpoints = window.FIX_NATION_LEADS || {};
@@ -346,6 +396,52 @@
     return `TFN-${stamp}-${random}`;
   };
 
+  const createSubmissionId = () => `SUB-${Date.now()}-${Math.random().toString(36).slice(2, 10).toUpperCase()}`;
+
+  const getPendingLeads = () => {
+    try {
+      const pending = JSON.parse(localStorage.getItem('fixNationPendingLeads') || '[]');
+      return Array.isArray(pending) ? pending : [];
+    } catch (error) {
+      localStorage.removeItem('fixNationPendingLeads');
+      return [];
+    }
+  };
+
+  const savePendingLeads = (leads) => localStorage.setItem('fixNationPendingLeads', JSON.stringify(leads.slice(-25)));
+
+  const queueLead = (endpoint, payload) => {
+    const pending = getPendingLeads().filter((item) => item.payload?.submissionId !== payload.submissionId);
+    pending.push({ endpoint, payload, queuedAt: new Date().toISOString() });
+    savePendingLeads(pending);
+  };
+
+  const submitLead = async (endpoint, payload) => {
+    if (!endpoint) throw new Error('Lead endpoint is not configured.');
+    queueLead(endpoint, payload);
+    await fetch(endpoint, {
+      method: 'POST',
+      mode: 'no-cors',
+      cache: 'no-store',
+      keepalive: true,
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(payload)
+    });
+    savePendingLeads(getPendingLeads().filter((item) => item.payload?.submissionId !== payload.submissionId));
+  };
+
+  const retryPendingLeads = async () => {
+    if (!navigator.onLine) return;
+    const pending = getPendingLeads();
+    for (const item of pending.slice(0, 5)) {
+      try {
+        await submitLead(item.endpoint, item.payload);
+      } catch (error) {
+        break;
+      }
+    }
+  };
+
   const createUpiLink = (bookingId) => {
     const params = new URLSearchParams({
       pa: upiId,
@@ -357,8 +453,38 @@
     return `upi://pay?${params.toString()}`;
   };
 
+  const showPaymentModal = (bookingId) => {
+    if (!paymentModal) return;
+    if (paymentBookingId) paymentBookingId.textContent = bookingId;
+    if (paymentUpi) paymentUpi.textContent = upiId;
+    if (paymentLink) paymentLink.href = createUpiLink(bookingId);
+    paymentModal.hidden = false;
+    document.body.classList.add('payment-modal-open');
+  };
+
+  document.querySelectorAll('[data-payment-close]').forEach((button) => {
+    button.addEventListener('click', () => {
+      if (paymentModal) paymentModal.hidden = true;
+      document.body.classList.remove('payment-modal-open');
+    });
+  });
+
+  document.querySelectorAll('[data-copy-payment]').forEach((button) => {
+    button.addEventListener('click', async () => {
+      const value = button.dataset.copyPayment === 'upi' ? paymentUpi?.textContent : paymentBookingId?.textContent;
+      if (!value) return;
+      try {
+        await navigator.clipboard.writeText(value.trim());
+        button.textContent = 'Copied';
+        if (paymentDialogStatus) paymentDialogStatus.textContent = `${button.dataset.copyPayment === 'upi' ? 'UPI ID' : 'Booking ID'} copied.`;
+      } catch (error) {
+        if (paymentDialogStatus) paymentDialogStatus.textContent = `Copy this value: ${value.trim()}`;
+      }
+    });
+  });
+
   const handleInlinePayment = async () => {
-    if (!selectedBookingService) {
+    if (!selectedServices.length) {
       if (cartPaymentStatus) {
         cartPaymentStatus.className = 'cart-payment-status is-error';
         cartPaymentStatus.textContent = 'Select a service first.';
@@ -373,6 +499,7 @@
     const endpoint = leadEndpoints.customer || leadEndpoints.all || leadEndpoints.googleSheetUrl;
     const bookingId = createBookingId();
     const payload = {
+      submissionId: createSubmissionId(),
       formType: 'customer',
       source: 'The Fix Nation website inline booking',
       pageUrl: window.location.href,
@@ -386,8 +513,9 @@
       phone: bookingLocation.phone,
       city: bookingLocation.city,
       address: bookingLocation.address,
-      service: selectedBookingService,
-      message: selectedBookingNote,
+      service: selectedServices.map((service) => service.name).join(' + '),
+      serviceCount: selectedServices.length,
+      message: selectedServices.map((service) => `${service.name}: ${service.note}`).join(' | '),
       callbackTime: 'Any time today'
     };
 
@@ -399,14 +527,7 @@
     if (bookingPayInline) bookingPayInline.disabled = true;
 
     try {
-      if (endpoint) {
-        await fetch(endpoint, {
-          method: 'POST',
-          mode: 'no-cors',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify(payload)
-        });
-      }
+      await submitLead(endpoint, payload);
       localStorage.setItem('fixNationLastBooking', JSON.stringify(payload));
       if (cartPaymentStatus) {
         cartPaymentStatus.className = 'cart-payment-status is-success';
@@ -414,15 +535,9 @@
       }
       if (bookingPayInline) {
         bookingPayInline.disabled = false;
-        bookingPayInline.textContent = 'Pay Rs 49 via UPI';
+        bookingPayInline.textContent = 'Open UPI payment';
       }
-      window.location.href = createUpiLink(bookingId);
-      window.setTimeout(() => {
-        if (cartPaymentStatus) {
-          cartPaymentStatus.className = 'cart-payment-status';
-          cartPaymentStatus.textContent = `If UPI app does not open, pay Rs ${bookingFee} to ${upiId} and use note: ${bookingId}`;
-        }
-      }, 700);
+      showPaymentModal(bookingId);
     } catch (error) {
       if (cartPaymentStatus) {
         cartPaymentStatus.className = 'cart-payment-status is-error';
@@ -433,6 +548,7 @@
   };
 
   syncBookingLocationToFields();
+  renderCart();
   updateCartState();
 
   const ensurePaymentBox = (form) => {
@@ -475,6 +591,8 @@
       const bookingIdLabel = form.querySelector('[data-booking-id]');
       const payload = Object.fromEntries(new FormData(form).entries());
       const bookingId = formType === 'customer' ? createBookingId() : '';
+      if (payload.website) return;
+      payload.submissionId = createSubmissionId();
       payload.formType = formType;
       payload.source = 'The Fix Nation website';
       payload.pageUrl = window.location.href;
@@ -484,6 +602,10 @@
         payload.bookingFee = bookingFee;
         payload.paymentStatus = upiId ? 'Pending verification' : 'UPI ID pending';
         payload.paymentNote = bookingId ? `${bookingId} booking confirmation` : '';
+      } else {
+        if (!payload.consent) payload.consent = 'Yes - submitted worker application';
+        payload.applicationId = `PRO-${Date.now()}-${Math.random().toString(36).slice(2, 6).toUpperCase()}`;
+        payload.leadStatus = 'Application received';
       }
 
       if (status) {
@@ -494,12 +616,7 @@
 
       try {
         if (endpoint) {
-          await fetch(endpoint, {
-            method: 'POST',
-            mode: 'no-cors',
-            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-            body: JSON.stringify(payload)
-          });
+          await submitLead(endpoint, payload);
           if (formType === 'customer') {
             if (status) status.textContent = `Details saved. Booking ID: ${bookingId}`;
             if (paymentBox) paymentBox.classList.add('is-ready');
@@ -524,10 +641,10 @@
                 : `Booking ID ${bookingId} generated. Add UPI ID in lead-config.js to activate payment button.`;
             }
           } else if (status) {
-            status.textContent = 'Details submitted. Our team will connect shortly.';
+            status.textContent = `Application submitted. Reference: ${payload.applicationId}. Our onboarding team will review it.`;
           }
           form.reset();
-          setSelectedCity(localStorage.getItem('fixNationSelectedCity') || citySelects[0]?.value || 'Indore');
+          setSelectedCity(localStorage.getItem('fixNationSelectedCity') || citySelects[0]?.value || 'Amritsar');
         } else {
           const savedLeads = JSON.parse(localStorage.getItem('fixNationDemoLeads') || '[]');
           savedLeads.push(payload);
@@ -546,5 +663,40 @@
         if (submitButton) submitButton.disabled = false;
       }
     });
+  });
+
+  window.addEventListener('online', retryPendingLeads);
+  retryPendingLeads();
+
+  const bookingStatusForm = document.querySelector('[data-booking-status-form]');
+  bookingStatusForm?.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const bookingId = String(new FormData(bookingStatusForm).get('bookingId') || '').trim().toUpperCase();
+    const result = document.querySelector('[data-booking-status-result]');
+    const endpoint = leadEndpoints.customer || leadEndpoints.all || leadEndpoints.googleSheetUrl;
+    if (!result || !/^TFN-\d{8}-[A-Z0-9]{4}$/.test(bookingId)) {
+      if (result) result.innerHTML = '<strong>Check the Booking ID</strong><span>Use the ID in format TFN-YYYYMMDD-XXXX.</span>';
+      return;
+    }
+
+    result.className = 'booking-status-result is-loading';
+    result.innerHTML = '<strong>Checking booking...</strong><span>Please wait a moment.</span>';
+    try {
+      const response = await fetch(`${endpoint}?action=status&bookingId=${encodeURIComponent(bookingId)}`, { cache: 'no-store' });
+      const data = await response.json();
+      if (!data.ok) throw new Error(data.error || 'Booking not found');
+      result.className = 'booking-status-result is-found';
+      result.innerHTML = `<strong>${data.leadStatus || 'Booking received'}</strong><span>${data.service || 'Service request'} in ${data.city || 'your city'} · Payment: ${data.paymentStatus || 'Pending verification'}</span>`;
+    } catch (error) {
+      let saved = null;
+      try { saved = JSON.parse(localStorage.getItem('fixNationLastBooking') || 'null'); } catch (storageError) {}
+      if (saved?.bookingId === bookingId) {
+        result.className = 'booking-status-result is-found';
+        result.innerHTML = `<strong>Booking received</strong><span>${saved.service} in ${saved.city} · Payment: ${saved.paymentStatus}</span>`;
+      } else {
+        result.className = 'booking-status-result is-error';
+        result.innerHTML = '<strong>Status not available yet</strong><span>Confirm the ID or contact support on WhatsApp.</span>';
+      }
+    }
   });
 });
