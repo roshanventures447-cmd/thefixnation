@@ -62,6 +62,13 @@
   </script>
 </head>
 <body>
+  <div class="service-bar">
+    <div class="container">
+      <span><b>Customer support</b> +91 94078 40541</span>
+      <span>Furniture assembly and repair across 42 service cities</span>
+      <span><b>Booking confirmation:</b> Rs 49</span>
+    </div>
+  </div>
   <nav class="nav">
     <div class="container">
       <a class="brand" href="index.html">
@@ -116,16 +123,16 @@
         <input placeholder="Search services here">
       </div>
       <div class="nav-actions">
-        <a class="chip" href="#why-us">Why Us</a>
+        <a class="chip" href="#why-us">Why choose us</a>
         <div class="nav-dropdown">
-          <a class="chip" href="#services">We Assemble</a>
+          <a class="chip" href="#services">Services</a>
           <div class="assemble-menu" aria-label="We assemble services">
             <a href="#services"><span>Furniture installation</span><small>Beds, tables, wardrobes and flat-pack products</small></a>
             <a href="#services"><span>Furniture repair</span><small>Hinges, drawers, handles and minor carpenter fixes</small></a>
           </div>
         </div>
         <a class="chip" href="about.html">About Us</a>
-        <a class="chip" href="#become-partner">Join a Pro</a>
+        <a class="chip" href="#become-partner">Join as a Pro</a>
         <a class="login-chip" href="bookings.html">My Bookings</a>
         <a class="header-cart" href="#services" data-cart-trigger aria-label="Open booking cart">Cart <span data-cart-count>0</span></a>
         <a class="whatsapp-chip" href="https://wa.me/919407840541" target="_blank" rel="noopener">WhatsApp</a>
@@ -182,33 +189,33 @@
         <div class="promo-banner" aria-label="Featured services slider">
           <div class="promo-slide">
             <img class="promo-photo" src="img/service-bed-assembly.png" alt="The Fix Nation worker assembling a bed" fetchpriority="high" decoding="async">
-            <div class="price-tag"><span>Home Visit</span><strong>Rs 49</strong></div>
-            <div class="promo-title"><h1>Furniture assembly</h1><p>Book a verified carpenter callback for beds, wardrobes, tables and flat-pack furniture</p><div class="promo-points"><span>Verified carpenter</span><span>Callback first</span></div></div>
+            <div class="price-tag"><span>Confirm visit</span><strong>Rs 49</strong></div>
+            <div class="promo-title"><span class="hero-kicker">Furniture care, booked properly</span><h1>Trusted furniture assembly at your doorstep.</h1><p>Select your city, add the furniture service and confirm a carpenter visit. The final work quote is shared only after the scope is checked.</p><div class="promo-points"><span>City-wise assignment</span><span>Clear quote before work</span></div></div>
           </div>
           <div class="promo-slide">
             <img class="promo-photo" src="img/service-furniture-repair.png" alt="The Fix Nation worker repairing furniture" loading="lazy" decoding="async">
             <div class="price-tag"><span>Repair Visit</span><strong>Quote</strong></div>
-            <div class="promo-title"><h2>Furniture repair</h2><p>Get support for hinges, drawers, handles, alignment and minor carpenter fixes</p><div class="promo-points"><span>Scope check</span><span>Final charge on visit</span></div></div>
+            <div class="promo-title"><span class="hero-kicker">Repair support</span><h2>Furniture repair with a clear visit process.</h2><p>Get support for hinges, drawers, handles, alignment and minor carpenter fixes.</p><div class="promo-points"><span>Scope check</span><span>Final charge on visit</span></div></div>
           </div>
           <div class="promo-slide">
             <img class="promo-photo" src="img/service-consultation.png" alt="The Fix Nation worker measuring furniture" loading="lazy" decoding="async">
             <div class="price-tag"><span>City Support</span><strong>India</strong></div>
-            <div class="promo-title"><h2>Local carpenter support</h2><p>Select your city, share the requirement and get a clear callback before visit</p><div class="promo-points"><span>City-wise service</span><span>Transparent flow</span></div></div>
+            <div class="promo-title"><span class="hero-kicker">Local coordination</span><h2>Carpenter support available city by city.</h2><p>Select your location, share the requirement and receive a callback before the visit.</p><div class="promo-points"><span>City-wise service</span><span>Transparent flow</span></div></div>
           </div>
           <div class="promo-dots"><span></span><span></span><span></span></div>
         </div>
 
         <div class="premium-detail-row" aria-label="Service highlights">
-          <div><span>01</span><strong>Book with Rs 49</strong><small>small confirmation charge before visit</small></div>
-          <div><span>02</span><strong>Clear scope check</strong><small>carpenter confirms final work charge on visit</small></div>
-          <div><span>03</span><strong>Direct support line</strong><small>callback and WhatsApp coordination</small></div>
+          <div><span>01</span><strong>Share your location</strong><small>city, complete address and contact number</small></div>
+          <div><span>02</span><strong>Add required services</strong><small>choose one or multiple furniture jobs</small></div>
+          <div><span>03</span><strong>Confirm for Rs 49</strong><small>receive Booking ID and callback coordination</small></div>
         </div>
 
         <section class="booking-start-panel" aria-label="Start booking">
           <div class="booking-start-copy">
-            <span class="tag">Start here</span>
-            <h2>First confirm your city and service address.</h2>
-            <p>Services unlock after city and address are added. This keeps the booking clean and helps us assign the right carpenter.</p>
+            <span class="booking-step">Step 1 of 3</span>
+            <h2>Where do you need the service?</h2>
+            <p>Add the visit location first. We use it to show available services and coordinate the right city professional.</p>
           </div>
           <form class="booking-location-form" data-booking-location-form>
             <label>City
@@ -260,10 +267,26 @@
             <label>Service address
               <input name="bookingAddress" required data-booking-address placeholder="House / flat, area, landmark">
             </label>
+            <div class="map-location-control">
+              <button class="map-location-button" type="button" data-use-location>
+                <span class="map-location-icon" aria-hidden="true">+</span>
+                <span><strong>Use my current location</strong><small>Pin the visit point accurately with Google Maps</small></span>
+              </button>
+              <a class="map-open-link" data-map-open href="https://www.google.com/maps" target="_blank" rel="noopener" hidden>Open in Google Maps</a>
+              <input type="hidden" name="latitude" data-booking-latitude>
+              <input type="hidden" name="longitude" data-booking-longitude>
+              <div class="map-preview" data-map-preview hidden>
+                <iframe data-map-frame title="Selected service location on Google Maps" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                <div><strong data-map-coordinates>Location selected</strong><span>Confirm house number and landmark in the address field above.</span></div>
+              </div>
+              <label class="map-share-field">Or paste a Google Maps shared location
+                <input name="googleMapsUrl" data-map-share-url type="url" inputmode="url" placeholder="https://maps.app.goo.gl/..."></label>
+              <p class="map-location-status" data-map-location-status aria-live="polite"></p>
+            </div>
             <label>Mobile number
               <input name="bookingPhone" required data-booking-phone inputmode="tel" maxlength="10" autocomplete="tel" placeholder="10 digit mobile number">
             </label>
-            <button class="btn primary" type="submit">Continue to services</button>
+            <button class="btn primary" type="submit">Save address and view services</button>
             <p class="booking-location-status" data-booking-location-status>City, complete address and mobile number are required before adding a service.</p>
           </form>
         </section>
@@ -332,14 +355,14 @@
         </section>
 
         <div class="services-home">
-          <h2>Furniture services in <span data-selected-city="">Amritsar</span></h2>
+          <div class="service-heading-row"><div><span class="booking-step">Step 2 of 3</span><h2>Choose services in <span data-selected-city="">Amritsar</span></h2></div><a href="#services">View detailed service menu</a></div>
           <div class="home-category-grid">
-            <a class="home-service-card" data-service="furniture" data-open-category="beds" href="#services"><img src="img/service-bed-assembly.png" alt="The Fix Nation worker assembling bed furniture"><strong>Bed Assembly</strong><small>Single, double, hydraulic and diwan beds</small></a>
-            <a class="home-service-card" data-service="furniture" data-open-category="wardrobe" href="#services"><img src="img/service-wardrobe-assembly.png" alt="The Fix Nation worker assembling wardrobe furniture"><strong>Wardrobe Assembly</strong><small>Sliding, modular and panel fitting</small></a>
-            <a class="home-service-card" data-service="furniture" data-open-category="tables" href="#services"><img src="img/service-table-chair.png" alt="The Fix Nation worker assembling table and chair"><strong>Table & Chair</strong><small>Dining, study and office furniture setup</small></a>
-            <a class="home-service-card" data-service="furniture" data-open-category="cabinets" href="#services"><img src="img/service-cabinet-shelf.png" alt="The Fix Nation worker installing cabinet shelf"><strong>Cabinet & Shelf</strong><small>Shoe rack, wall shelf and TV unit support</small></a>
-            <a class="home-service-card" data-service="repair" data-open-category="repair" href="#services"><img src="img/service-furniture-repair.png" alt="The Fix Nation worker repairing furniture hinge"><strong>Furniture Repair</strong><small>Hinges, drawers, handles and alignment</small></a>
-            <a class="home-service-card" data-service="repair" data-open-category="consultation" href="#services"><img src="img/service-consultation.png" alt="The Fix Nation worker measuring furniture"><strong>Visit Consultation</strong><small>Custom issue, dismantling and scope check</small></a>
+            <a class="home-service-card" data-service="furniture" data-open-category="beds" href="#services"><img src="img/service-bed-assembly.png" alt="The Fix Nation worker assembling bed furniture"><span>Most booked</span><strong>Bed Assembly</strong><small>Single, double, hydraulic and diwan beds</small></a>
+            <a class="home-service-card" data-service="furniture" data-open-category="wardrobe" href="#services"><img src="img/service-wardrobe-assembly.png" alt="The Fix Nation worker assembling wardrobe furniture"><span>Large furniture</span><strong>Wardrobe Assembly</strong><small>Sliding, modular and panel fitting</small></a>
+            <a class="home-service-card" data-service="furniture" data-open-category="tables" href="#services"><img src="img/service-table-chair.png" alt="The Fix Nation worker assembling table and chair"><span>Quick setup</span><strong>Table & Chair</strong><small>Dining, study and office furniture setup</small></a>
+            <a class="home-service-card" data-service="furniture" data-open-category="cabinets" href="#services"><img src="img/service-cabinet-shelf.png" alt="The Fix Nation worker installing cabinet shelf"><span>Storage setup</span><strong>Cabinet & Shelf</strong><small>Shoe rack, wall shelf and TV unit support</small></a>
+            <a class="home-service-card" data-service="repair" data-open-category="repair" href="#services"><img src="img/service-furniture-repair.png" alt="The Fix Nation worker repairing furniture hinge"><span>Repair visit</span><strong>Furniture Repair</strong><small>Hinges, drawers, handles and alignment</small></a>
+            <a class="home-service-card" data-service="repair" data-open-category="consultation" href="#services"><img src="img/service-consultation.png" alt="The Fix Nation worker measuring furniture"><span>Scope support</span><strong>Visit Consultation</strong><small>Custom issue, dismantling and scope check</small></a>
           </div>
         </div>
 
@@ -376,8 +399,9 @@
         </div>
 
         <aside class="quote-card">
-          <h2>Request customer callback</h2>
-          <p>Share your furniture requirement and our team will call back to confirm city, visit slot and booking process. Pay Rs 49 only after submitting details; the carpenter shares the final service charge after checking the work scope.</p>
+          <span class="booking-step">Need assistance?</span>
+          <h2>Talk to our booking team.</h2>
+          <p>Share your furniture requirement and our team will call to confirm the city, visit slot and next steps. The final service charge is shared after the carpenter checks the work scope.</p>
           <div class="contact-lines">
             <a href="tel:+919407840541">Call: +91 9407840541</a>
             <a href="mailto:roshanventures447@gmail.com">Email: roshanventures447@gmail.com</a>
@@ -397,7 +421,7 @@
             </div>
             <div><label>Requirement</label><input name="message" placeholder="Example: Bed assembly, wardrobe fitting, hinge repair"></div>
             <div><label>Preferred callback time</label><select name="callbackTime"><option>Any time today</option><option>Morning</option><option>Afternoon</option><option>Evening</option></select></div>
-            <button type="submit">Request Callback</button>
+            <button type="submit">Request a booking callback</button>
             <p class="form-status" aria-live="polite"></p>
           </form>
         </aside>
@@ -448,8 +472,8 @@
     <section class="section soft" id="services">
       <div class="container">
         <div class="section-head">
-          <div><span class="tag">Service menu</span><h2>Furniture work we can help you book.</h2></div>
-          <p>Every booking starts with basic details: city, furniture type, photos if available, preferred callback time and clear visit rules before assignment.</p>
+          <div><span class="booking-step">Step 2 of 3</span><h2>Select the exact furniture service.</h2></div>
+          <p>Add one or more jobs to your cart. A single Rs 49 confirmation charge applies to the complete visit request.</p>
         </div>
         <div class="real-strip">
           <div class="real-card"><strong>City-wise coverage</strong><span>confirmed through available carpenter support</span></div>
@@ -473,32 +497,32 @@
             <article class="service-card" data-service="furniture" data-category="beds" data-booking-service="Bed assembly">
               <img src="img/service-bed-assembly.png" alt="The Fix Nation worker assembling a wooden bed">
               <div><span class="rating">Most booked</span><h3>Bed assembly</h3><p>Single bed, double bed, hydraulic bed and diwan setup after product delivery.</p><div class="meta-line"><span class="mini-tag">60-120 min</span><span class="mini-tag">Basic tools</span><span class="mini-tag">Home visit</span></div><div class="price">Rs 49 booking, final quote on visit</div></div>
-              <button class="add">Add</button>
+              <button class="add">Add service</button>
             </article>
             <article class="service-card" data-service="furniture" data-category="wardrobe" data-booking-service="Wardrobe assembly">
               <img src="img/service-wardrobe-assembly.png" alt="The Fix Nation worker assembling a wardrobe">
               <div><span class="rating">Large item</span><h3>Wardrobe assembly</h3><p>Sliding wardrobe, modular wardrobe, cabinet panels, doors and shelf fitting.</p><div class="meta-line"><span class="mini-tag">2+ hrs</span><span class="mini-tag">Carpenter</span><span class="mini-tag">Parts check</span></div><div class="price">Scope checked before final quote</div></div>
-              <button class="add">Add</button>
+              <button class="add">Add service</button>
             </article>
             <article class="service-card" data-service="furniture" data-category="tables" data-booking-service="Table and chair assembly">
               <img src="img/service-table-chair.png" alt="The Fix Nation worker assembling table and chair">
               <div><span class="rating">Quick setup</span><h3>Table and chair assembly</h3><p>Study table, dining table, office table, dining chair and work chair setup.</p><div class="meta-line"><span class="mini-tag">60 min</span><span class="mini-tag">Assembly</span><span class="mini-tag">Clean finish</span></div><div class="price">Final quote after inspection</div></div>
-              <button class="add">Add</button>
+              <button class="add">Add service</button>
             </article>
             <article class="service-card" data-service="furniture" data-category="cabinets" data-booking-service="Cabinet and shelf assembly">
               <img src="img/service-cabinet-shelf.png" alt="The Fix Nation worker installing wall cabinet and shelf">
               <div><span class="rating">Storage setup</span><h3>Cabinet and shelf assembly</h3><p>Book shelf, wall cabinet, shoe rack, TV unit and storage furniture setup.</p><div class="meta-line"><span class="mini-tag">Drilling if needed</span><span class="mini-tag">Wall check</span><span class="mini-tag">Carpenter</span></div><div class="price">Quote depends on wall and parts</div></div>
-              <button class="add">Add</button>
+              <button class="add">Add service</button>
             </article>
             <article class="service-card" data-service="repair" data-category="repair" data-booking-service="Furniture repair">
               <img src="img/service-furniture-repair.png" alt="The Fix Nation worker repairing furniture hinge">
               <div><span class="rating">Repair support</span><h3>Furniture repair</h3><p>Hinges, drawers, handles, shelves, minor alignment and carpenter repair support.</p><div class="meta-line"><span class="mini-tag">Photos helpful</span><span class="mini-tag">Carpenter</span><span class="mini-tag">Parts note</span></div><div class="price">Final quote after inspection</div></div>
-              <button class="add">Add</button>
+              <button class="add">Add service</button>
             </article>
             <article class="service-card" data-service="repair" data-category="consultation" data-booking-service="Furniture consultation or uninstallation">
               <img src="img/service-consultation.png" alt="The Fix Nation worker measuring furniture for consultation">
               <div><span class="rating">Not sure?</span><h3>Consultation or uninstallation</h3><p>For complex furniture, moving preparation, partial dismantling or unclear scope.</p><div class="meta-line"><span class="mini-tag">Scope first</span><span class="mini-tag">Photo review</span><span class="mini-tag">Callback</span></div><div class="price">Start with Rs 49 booking</div></div>
-              <button class="add">Add</button>
+              <button class="add">Add service</button>
             </article>
           </div>
 
@@ -537,31 +561,31 @@
       </section>
     </div>
 
-    <section class="section">
+    <section class="section visual-process-section">
       <div class="container">
         <div class="section-head">
-          <div><span class="tag">How it works</span><h2>A simple booking process before every visit.</h2></div>
+          <div><span class="tag">How it works</span><h2>From service selection to completed visit.</h2></div>
         </div>
-        <div class="steps">
-          <article class="step"><b>1</b><h3>Share requirement</h3><p>Submit your name, phone, city, service type and furniture issue or assembly need.</p></article>
-          <article class="step"><b>2</b><h3>Callback confirmation</h3><p>Our team confirms city coverage, preferred slot and Rs 49 booking confirmation charge.</p></article>
-          <article class="step"><b>3</b><h3>Carpenter visit</h3><p>The carpenter checks the actual work scope, required tools, missing parts and fitting condition.</p></article>
-          <article class="step"><b>4</b><h3>Final quote and work</h3><p>Final service charge is shared after inspection. Work starts only after you approve the quote.</p></article>
+        <div class="visual-steps">
+          <article><img src="img/service-consultation.png" alt="Customer sharing furniture service details"><span>01</span><div><h3>Choose location</h3><p>Pin your home and add the address.</p></div></article>
+          <article><img src="img/service-bed-assembly.png" alt="Furniture service selection"><span>02</span><div><h3>Select services</h3><p>Add every required furniture job.</p></div></article>
+          <article><img src="img/service-furniture-repair.png" alt="Carpenter checking furniture scope"><span>03</span><div><h3>Confirm visit</h3><p>Pay Rs 49 and receive Booking ID.</p></div></article>
+          <article><img src="img/service-wardrobe-assembly.png" alt="Professional completing furniture assembly"><span>04</span><div><h3>Approve final quote</h3><p>Work begins after your approval.</p></div></article>
         </div>
       </div>
     </section>
 
-    <section class="section booking-safety">
+    <section class="section booking-safety visual-trust-section">
       <div class="container">
         <div class="section-head">
           <div><span class="tag">Booking safety guide</span><h2>What makes the booking feel clear and professional.</h2></div>
-          <p>We keep the customer journey simple, documented and easy to understand before any carpenter visit is confirmed.</p>
+          <p>Four clear safeguards keep the visit easy to understand.</p>
         </div>
         <div class="safety-grid">
-          <article class="safety-card"><span>01</span><h3>Callback before payment</h3><p>Your requirement and service city are checked before the Rs 49 booking confirmation step.</p></article>
-          <article class="safety-card"><span>02</span><h3>Final charge after inspection</h3><p>Furniture size, missing parts, drilling and repair condition are checked before the final quote.</p></article>
-          <article class="safety-card"><span>03</span><h3>Booking ID for tracking</h3><p>After form submit, a Booking ID is generated so payment note and sheet record stay connected.</p></article>
-          <article class="safety-card"><span>04</span><h3>Direct support line</h3><p>Customers can call or WhatsApp The Fix Nation team for booking clarification and city support.</p></article>
+          <article class="safety-card"><span>01</span><h3>Callback first</h3><p>Requirement checked before confirmation.</p></article>
+          <article class="safety-card"><span>02</span><h3>Quote on visit</h3><p>Scope checked before final charge.</p></article>
+          <article class="safety-card"><span>03</span><h3>Booking ID</h3><p>A clear reference for tracking.</p></article>
+          <article class="safety-card"><span>04</span><h3>Direct support</h3><p>Call or WhatsApp the booking team.</p></article>
         </div>
       </div>
     </section>
@@ -598,6 +622,8 @@
           <p>These pages explain furniture installation, carpenter visits and seller support so customers and search engines can understand the service clearly.</p>
         </div>
         <div class="seo-link-grid">
+          <a href="furniture-assembly-cost-guide.html"><strong>Furniture assembly cost guide</strong><span>Booking charge, quote factors and preparation</span></a>
+          <a href="carpenter-visit-checklist.html"><strong>Carpenter visit checklist</strong><span>Parts, photos, access and work approval</span></a>
           <a href="ecommerce-furniture-installation.html"><strong>Ecommerce furniture installation</strong><span>For online sellers and D2C brands</span></a>
           <a href="pan-india-carpenter-service.html"><strong>Pan India carpenter service</strong><span>City-wise carpenter visit coordination</span></a>
           <a href="furniture-installation-for-online-sellers.html"><strong>Furniture installation for online sellers</strong><span>Customer delivery ke baad installation support</span></a>

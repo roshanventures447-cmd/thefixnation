@@ -1,7 +1,7 @@
 ﻿document.addEventListener('DOMContentLoaded', () => {
   const searchInput = document.querySelector('.search input');
   const serviceCards = Array.from(document.querySelectorAll('.home-service-card, .service-card, .info-card'));
-  const citySelects = Array.from(document.querySelectorAll('.city-select, .city-service-select'));
+  const citySelects = Array.from(document.querySelectorAll('.city-select, .city-service-select, [data-booking-city]'));
   const selectedCityLabels = Array.from(document.querySelectorAll('[data-selected-city]'));
   const cityInputs = Array.from(document.querySelectorAll('input[name="city"]'));
   const footerCityLinks = Array.from(document.querySelectorAll('.footer-cities a'));
@@ -103,10 +103,8 @@
       label.textContent = activeCity;
     });
     cityInputs.forEach((input) => {
-      if (!input.value || input.dataset.citySynced === 'true') {
-        input.value = activeCity;
-        input.dataset.citySynced = 'true';
-      }
+      input.value = activeCity;
+      input.dataset.citySynced = 'true';
     });
     footerCityLinks.forEach((link) => {
       link.classList.toggle('is-active', link.textContent.trim() === activeCity);
@@ -127,17 +125,12 @@
       card.classList.toggle('is-unavailable', !isAvailable);
     });
     localStorage.setItem('fixNationSelectedCity', activeCity);
+    window.dispatchEvent(new CustomEvent('fixnation:citychange', { detail: { city: activeCity } }));
     applyServiceVisibility();
   };
 
   citySelects.forEach((select) => {
     select.addEventListener('change', () => setSelectedCity(select.value));
-  });
-
-  cityInputs.forEach((input) => {
-    input.addEventListener('input', () => {
-      input.dataset.citySynced = input.value ? 'false' : 'true';
-    });
   });
 
   footerCityLinks.forEach((link) => {
@@ -187,6 +180,15 @@
   const bookingCityInput = document.querySelector('[data-booking-city]');
   const bookingAddressInput = document.querySelector('[data-booking-address]');
   const bookingPhoneInput = document.querySelector('[data-booking-phone]');
+  const bookingLatitudeInput = document.querySelector('[data-booking-latitude]');
+  const bookingLongitudeInput = document.querySelector('[data-booking-longitude]');
+  const useLocationButton = document.querySelector('[data-use-location]');
+  const mapPreview = document.querySelector('[data-map-preview]');
+  const mapFrame = document.querySelector('[data-map-frame]');
+  const mapOpenLink = document.querySelector('[data-map-open]');
+  const mapCoordinates = document.querySelector('[data-map-coordinates]');
+  const mapLocationStatus = document.querySelector('[data-map-location-status]');
+  const mapShareUrlInput = document.querySelector('[data-map-share-url]');
   const bookingLocationStatus = document.querySelector('[data-booking-location-status]');
   const cartAddressNote = document.querySelector('[data-cart-address-note]');
   const cartPaymentStatus = document.querySelector('[data-cart-payment-status]');
@@ -202,14 +204,66 @@
   } catch (error) {
     selectedServices = [];
   }
-  let bookingLocation = { city: '', address: '', phone: '' };
+  let bookingLocation = { city: '', address: '', phone: '', latitude: '', longitude: '', googleMapsUrl: '' };
   try {
-    bookingLocation = JSON.parse(localStorage.getItem('fixNationBookingLocation') || 'null') || bookingLocation;
+    bookingLocation = Object.assign(bookingLocation, JSON.parse(localStorage.getItem('fixNationBookingLocation') || 'null') || {});
   } catch (error) {
     localStorage.removeItem('fixNationBookingLocation');
   }
 
   const persistSelectedServices = () => localStorage.setItem('fixNationSelectedServices', JSON.stringify(selectedServices));
+
+  const renderMapLocation = () => {
+    const latitude = Number(bookingLocation.latitude);
+    const longitude = Number(bookingLocation.longitude);
+    const hasCoordinates = Number.isFinite(latitude) && Number.isFinite(longitude) && latitude !== 0 && longitude !== 0;
+    if (bookingLatitudeInput) bookingLatitudeInput.value = hasCoordinates ? String(latitude) : '';
+    if (bookingLongitudeInput) bookingLongitudeInput.value = hasCoordinates ? String(longitude) : '';
+    if (!hasCoordinates) {
+      if (mapPreview) mapPreview.hidden = true;
+      if (mapOpenLink) mapOpenLink.hidden = true;
+      return;
+    }
+    const coordinateText = `${latitude.toFixed(6)}, ${longitude.toFixed(6)}`;
+    if (mapFrame) mapFrame.src = `https://maps.google.com/maps?q=${encodeURIComponent(`${latitude},${longitude}`)}&z=17&output=embed`;
+    if (mapOpenLink) {
+      mapOpenLink.href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${latitude},${longitude}`)}`;
+      mapOpenLink.hidden = false;
+    }
+    if (mapCoordinates) mapCoordinates.textContent = `Pinned at ${coordinateText}`;
+    if (mapPreview) mapPreview.hidden = false;
+  };
+
+  useLocationButton?.addEventListener('click', () => {
+    if (!navigator.geolocation) {
+      if (mapLocationStatus) mapLocationStatus.textContent = 'Location access is not supported on this device.';
+      return;
+    }
+    useLocationButton.disabled = true;
+    useLocationButton.classList.add('is-loading');
+    if (mapLocationStatus) mapLocationStatus.textContent = 'Finding your current location...';
+    navigator.geolocation.getCurrentPosition((position) => {
+      const latitude = Number(position.coords.latitude.toFixed(6));
+      const longitude = Number(position.coords.longitude.toFixed(6));
+      bookingLocation.latitude = latitude;
+      bookingLocation.longitude = longitude;
+      if (bookingAddressInput && !bookingAddressInput.value.trim()) {
+        bookingAddressInput.value = `GPS pin: ${latitude}, ${longitude}`;
+      }
+      renderMapLocation();
+      localStorage.setItem('fixNationBookingLocation', JSON.stringify(bookingLocation));
+      if (mapLocationStatus) mapLocationStatus.textContent = 'Accurate map location added. Please confirm house number and landmark.';
+      useLocationButton.disabled = false;
+      useLocationButton.classList.remove('is-loading');
+    }, (error) => {
+      const denied = error.code === 1;
+      if (mapLocationStatus) mapLocationStatus.textContent = denied
+        ? 'Location permission was not allowed. Enter the complete address manually.'
+        : 'Current location could not be detected. Try again or enter the address manually.';
+      useLocationButton.disabled = false;
+      useLocationButton.classList.remove('is-loading');
+    }, { enableHighAccuracy: true, timeout: 12000, maximumAge: 60000 });
+  });
 
   const renderCart = () => {
     const count = selectedServices.length;
@@ -227,7 +281,7 @@
       const card = button.closest('.service-card');
       const id = card?.dataset.category || card?.dataset.bookingService || '';
       const selected = selectedServices.some((service) => service.id === id);
-      button.textContent = selected ? 'Added' : 'Add';
+      button.textContent = selected ? 'Added to cart' : 'Add service';
       button.classList.toggle('is-added', selected);
       button.setAttribute('aria-pressed', selected ? 'true' : 'false');
     });
@@ -308,13 +362,15 @@
     if (bookingCityInput && bookingLocation.city) bookingCityInput.value = bookingLocation.city;
     if (bookingAddressInput && bookingLocation.address) bookingAddressInput.value = bookingLocation.address;
     if (bookingPhoneInput && bookingLocation.phone) bookingPhoneInput.value = bookingLocation.phone;
+    if (mapShareUrlInput && bookingLocation.googleMapsUrl) mapShareUrlInput.value = bookingLocation.googleMapsUrl;
+    renderMapLocation();
     if (bookingLocation.city) setSelectedCity(bookingLocation.city);
     const customerForm = document.querySelector('.quote-form[data-lead-form="customer"]');
     if (customerForm) {
       const cityInput = customerForm.querySelector('input[name="city"]');
       if (cityInput && bookingLocation.city) {
         cityInput.value = bookingLocation.city;
-        cityInput.dataset.citySynced = 'false';
+        cityInput.dataset.citySynced = 'true';
       }
     }
   };
@@ -338,6 +394,27 @@
     }
   };
 
+  window.addEventListener('fixnation:citychange', (event) => {
+    const nextCity = event.detail?.city;
+    if (!nextCity || bookingLocation.city === nextCity) return;
+    const hadDifferentCity = Boolean(bookingLocation.city);
+    bookingLocation.city = nextCity;
+    if (hadDifferentCity) {
+      bookingLocation.address = '';
+      bookingLocation.latitude = '';
+      bookingLocation.longitude = '';
+      bookingLocation.googleMapsUrl = '';
+      if (bookingAddressInput) bookingAddressInput.value = '';
+      if (mapShareUrlInput) mapShareUrlInput.value = '';
+      if (mapLocationStatus) mapLocationStatus.textContent = 'City changed. Add the new address or use current location again.';
+      renderMapLocation();
+      markLocationError(`${nextCity} selected. Confirm the new service address.`);
+    }
+    if (bookingCityInput) bookingCityInput.value = nextCity;
+    localStorage.setItem('fixNationBookingLocation', JSON.stringify(bookingLocation));
+    updateCartState();
+  });
+
   bookingLocationForm?.addEventListener('submit', (event) => {
     event.preventDefault();
     const city = bookingCityInput?.value || '';
@@ -355,7 +432,14 @@
       markLocationError('Enter a valid 10 digit mobile number.');
       return;
     }
-    bookingLocation = { city, address, phone };
+    bookingLocation = {
+      city,
+      address,
+      phone,
+      latitude: bookingLatitudeInput?.value || bookingLocation.latitude || '',
+      longitude: bookingLongitudeInput?.value || bookingLocation.longitude || '',
+      googleMapsUrl: mapShareUrlInput?.value.trim() || bookingLocation.googleMapsUrl || ''
+    };
     localStorage.setItem('fixNationBookingLocation', JSON.stringify(bookingLocation));
     syncBookingLocationToFields();
     updateCartState();
@@ -513,6 +597,11 @@
       phone: bookingLocation.phone,
       city: bookingLocation.city,
       address: bookingLocation.address,
+      latitude: bookingLocation.latitude || '',
+      longitude: bookingLocation.longitude || '',
+      googleMapsUrl: bookingLocation.googleMapsUrl || (bookingLocation.latitude && bookingLocation.longitude
+        ? `https://www.google.com/maps/search/?api=1&query=${bookingLocation.latitude},${bookingLocation.longitude}`
+        : ''),
       service: selectedServices.map((service) => service.name).join(' + '),
       serviceCount: selectedServices.length,
       message: selectedServices.map((service) => `${service.name}: ${service.note}`).join(' | '),

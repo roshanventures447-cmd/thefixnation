@@ -6,7 +6,8 @@ const NOTIFICATION_EMAIL = 'roshanventures447@gmail.com';
 
 const HEADERS = [
   'serverReceivedAt', 'submittedAt', 'submissionId', 'formType', 'source',
-  'pageUrl', 'name', 'email', 'phone', 'city', 'address', 'service', 'serviceCount',
+  'pageUrl', 'name', 'email', 'phone', 'city', 'address', 'latitude', 'longitude',
+  'googleMapsUrl', 'service', 'serviceCount',
   'skill', 'experience', 'serviceArea', 'ownTools', 'transport', 'availability',
   'workType', 'applicationId', 'consent', 'callbackTime', 'bookingId', 'bookingFee',
   'paymentStatus', 'leadStatus', 'paymentNote', 'message'
