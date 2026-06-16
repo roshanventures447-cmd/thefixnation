@@ -196,7 +196,10 @@
   const paymentLink = document.querySelector('[data-payment-link]');
   const paymentBookingId = document.querySelector('[data-payment-booking-id]');
   const paymentUpi = document.querySelector('[data-payment-upi]');
+  const paymentStatusLabel = document.querySelector('[data-payment-status]');
   const paymentDialogStatus = document.querySelector('[data-payment-dialog-status]');
+  const paymentReportForm = document.querySelector('[data-payment-report-form]');
+  let activePaymentBookingId = '';
   let selectedServices = [];
   try {
     const savedServices = JSON.parse(localStorage.getItem('fixNationSelectedServices') || '[]');
@@ -482,6 +485,15 @@
 
   const createSubmissionId = () => `SUB-${Date.now()}-${Math.random().toString(36).slice(2, 10).toUpperCase()}`;
 
+  const rememberBooking = (payload) => {
+    localStorage.setItem('fixNationLastBooking', JSON.stringify(payload));
+    let bookings = [];
+    try { bookings = JSON.parse(localStorage.getItem('fixNationBookings') || '[]'); } catch (error) {}
+    bookings = Array.isArray(bookings) ? bookings.filter((item) => item.bookingId !== payload.bookingId) : [];
+    bookings.unshift(payload);
+    localStorage.setItem('fixNationBookings', JSON.stringify(bookings.slice(0, 10)));
+  };
+
   const getPendingLeads = () => {
     try {
       const pending = JSON.parse(localStorage.getItem('fixNationPendingLeads') || '[]');
@@ -539,8 +551,10 @@
 
   const showPaymentModal = (bookingId) => {
     if (!paymentModal) return;
+    activePaymentBookingId = bookingId;
     if (paymentBookingId) paymentBookingId.textContent = bookingId;
     if (paymentUpi) paymentUpi.textContent = upiId;
+    if (paymentStatusLabel) paymentStatusLabel.textContent = 'Pending verification';
     if (paymentLink) paymentLink.href = createUpiLink(bookingId);
     paymentModal.hidden = false;
     document.body.classList.add('payment-modal-open');
@@ -565,6 +579,35 @@
         if (paymentDialogStatus) paymentDialogStatus.textContent = `Copy this value: ${value.trim()}`;
       }
     });
+  });
+
+  paymentReportForm?.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const endpoint = leadEndpoints.customer || leadEndpoints.all || leadEndpoints.googleSheetUrl;
+    const transactionReference = String(new FormData(paymentReportForm).get('transactionReference') || '').trim();
+    if (!activePaymentBookingId || !bookingLocation.phone) {
+      if (paymentDialogStatus) paymentDialogStatus.textContent = 'Booking phone or Booking ID is missing.';
+      return;
+    }
+    const button = paymentReportForm.querySelector('button[type="submit"]');
+    if (button) button.disabled = true;
+    if (paymentDialogStatus) paymentDialogStatus.textContent = 'Sending payment report for team verification...';
+    try {
+      await fetch(endpoint, {
+        method: 'POST',
+        mode: 'no-cors',
+        cache: 'no-store',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ action: 'report_payment', bookingId: activePaymentBookingId, phone: bookingLocation.phone, transactionReference })
+      });
+      if (paymentStatusLabel) paymentStatusLabel.textContent = 'Customer reported paid';
+      if (paymentDialogStatus) paymentDialogStatus.textContent = 'Payment report sent. Team verification will update your booking status.';
+      paymentReportForm.reset();
+    } catch (error) {
+      if (paymentDialogStatus) paymentDialogStatus.textContent = 'Payment report could not be sent. Keep the UPI reference and contact support.';
+    } finally {
+      if (button) button.disabled = false;
+    }
   });
 
   const handleInlinePayment = async () => {
@@ -617,7 +660,7 @@
 
     try {
       await submitLead(endpoint, payload);
-      localStorage.setItem('fixNationLastBooking', JSON.stringify(payload));
+      rememberBooking(payload);
       if (cartPaymentStatus) {
         cartPaymentStatus.className = 'cart-payment-status is-success';
         cartPaymentStatus.textContent = `Booking ID ${bookingId} saved. UPI note: ${bookingId}`;
@@ -691,6 +734,10 @@
         payload.bookingFee = bookingFee;
         payload.paymentStatus = upiId ? 'Pending verification' : 'UPI ID pending';
         payload.paymentNote = bookingId ? `${bookingId} booking confirmation` : '';
+        payload.address = payload.address || bookingLocation.address || '';
+        payload.latitude = payload.latitude || bookingLocation.latitude || '';
+        payload.longitude = payload.longitude || bookingLocation.longitude || '';
+        payload.googleMapsUrl = payload.googleMapsUrl || bookingLocation.googleMapsUrl || '';
       } else {
         if (!payload.consent) payload.consent = 'Yes - submitted worker application';
         payload.applicationId = `PRO-${Date.now()}-${Math.random().toString(36).slice(2, 6).toUpperCase()}`;
@@ -707,6 +754,7 @@
         if (endpoint) {
           await submitLead(endpoint, payload);
           if (formType === 'customer') {
+            rememberBooking(payload);
             if (status) status.textContent = `Details saved. Booking ID: ${bookingId}`;
             if (paymentBox) paymentBox.classList.add('is-ready');
             if (bookingIdLabel) bookingIdLabel.textContent = bookingId;
@@ -758,33 +806,45 @@
   retryPendingLeads();
 
   const bookingStatusForm = document.querySelector('[data-booking-status-form]');
+  const escapeHtml = (value) => String(value || '').replace(/[&<>"']/g, (character) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[character]));
+  const renderBookingTimeline = (timeline, scheduledAt) => {
+    const container = document.querySelector('[data-booking-timeline]');
+    if (!container || !timeline?.items?.length) return;
+    container.hidden = false;
+    container.innerHTML = timeline.items.map((item) => `<div class="booking-timeline-item is-${escapeHtml(item.state)}"><span></span><div><strong>${escapeHtml(item.label)}</strong><small>${item.state === 'current' ? 'Current status' : item.state === 'complete' ? 'Completed' : 'Pending'}</small></div></div>`).join('') + (scheduledAt ? `<p><strong>Scheduled:</strong> ${escapeHtml(scheduledAt)}</p>` : '');
+  };
   bookingStatusForm?.addEventListener('submit', async (event) => {
     event.preventDefault();
-    const bookingId = String(new FormData(bookingStatusForm).get('bookingId') || '').trim().toUpperCase();
+    const formData = new FormData(bookingStatusForm);
+    const bookingId = String(formData.get('bookingId') || '').trim().toUpperCase();
+    const phoneLast4 = String(formData.get('phoneLast4') || '').replace(/\D/g, '').slice(-4);
     const result = document.querySelector('[data-booking-status-result]');
+    const timeline = document.querySelector('[data-booking-timeline]');
     const endpoint = leadEndpoints.customer || leadEndpoints.all || leadEndpoints.googleSheetUrl;
-    if (!result || !/^TFN-\d{8}-[A-Z0-9]{4}$/.test(bookingId)) {
-      if (result) result.innerHTML = '<strong>Check the Booking ID</strong><span>Use the ID in format TFN-YYYYMMDD-XXXX.</span>';
+    if (timeline) timeline.hidden = true;
+    if (!result || !/^TFN-\d{8}-[A-Z0-9]{4}$/.test(bookingId) || !/^\d{4}$/.test(phoneLast4)) {
+      if (result) result.innerHTML = '<strong>Check booking details</strong><span>Use Booking ID format TFN-YYYYMMDD-XXXX and the phone number\'s last 4 digits.</span>';
       return;
     }
 
     result.className = 'booking-status-result is-loading';
     result.innerHTML = '<strong>Checking booking...</strong><span>Please wait a moment.</span>';
     try {
-      const response = await fetch(`${endpoint}?action=status&bookingId=${encodeURIComponent(bookingId)}`, { cache: 'no-store' });
+      const response = await fetch(`${endpoint}?action=status&bookingId=${encodeURIComponent(bookingId)}&phone=${encodeURIComponent(phoneLast4)}`, { cache: 'no-store' });
       const data = await response.json();
       if (!data.ok) throw new Error(data.error || 'Booking not found');
       result.className = 'booking-status-result is-found';
-      result.innerHTML = `<strong>${data.leadStatus || 'Booking received'}</strong><span>${data.service || 'Service request'} in ${data.city || 'your city'} · Payment: ${data.paymentStatus || 'Pending verification'}</span>`;
+      result.innerHTML = `<strong>${escapeHtml(data.leadStatus || 'Booking received')}</strong><span>${escapeHtml(data.service || 'Service request')} in ${escapeHtml(data.city || 'your city')} · Payment: ${escapeHtml(data.paymentStatus || 'Pending verification')}</span>${data.technicianAssigned ? `<small>Professional: ${escapeHtml(data.technicianName)} · ${escapeHtml(data.technicianPhoneMasked)}</small>` : '<small>Professional details appear after assignment.</small>'}`;
+      renderBookingTimeline(data.timeline, data.scheduledAt);
     } catch (error) {
       let saved = null;
       try { saved = JSON.parse(localStorage.getItem('fixNationLastBooking') || 'null'); } catch (storageError) {}
-      if (saved?.bookingId === bookingId) {
+      if (saved?.bookingId === bookingId && String(saved.phone || '').replace(/\D/g, '').slice(-4) === phoneLast4) {
         result.className = 'booking-status-result is-found';
-        result.innerHTML = `<strong>Booking received</strong><span>${saved.service} in ${saved.city} · Payment: ${saved.paymentStatus}</span>`;
+        result.innerHTML = `<strong>Booking received</strong><span>${escapeHtml(saved.service)} in ${escapeHtml(saved.city)} · Payment: ${escapeHtml(saved.paymentStatus)}</span><small>Live status is temporarily unavailable; this is the saved device record.</small>`;
       } else {
         result.className = 'booking-status-result is-error';
-        result.innerHTML = '<strong>Status not available yet</strong><span>Confirm the ID or contact support on WhatsApp.</span>';
+        result.innerHTML = '<strong>Booking could not be verified</strong><span>Confirm the Booking ID and phone digits, or contact support on WhatsApp.</span>';
       }
     }
   });

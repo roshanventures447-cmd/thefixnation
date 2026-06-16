@@ -638,9 +638,13 @@
           <div><span>Amount</span><strong>Rs 49</strong></div>
           <div><span>UPI ID</span><strong data-payment-upi>9165867685-5@ybl</strong><button type="button" data-copy-payment="upi">Copy</button></div>
           <div><span>Booking ID</span><strong data-payment-booking-id>Generating...</strong><button type="button" data-copy-payment="booking">Copy</button></div>
-          <div><span>Status</span><strong>Pending verification</strong></div>
+          <div><span>Status</span><strong data-payment-status>Pending verification</strong></div>
         </div>
         <a class="btn primary payment-open-upi" data-payment-link href="#">Open UPI app</a>
+        <form class="payment-report-form" data-payment-report-form>
+          <label>UPI transaction reference (optional)<input name="transactionReference" maxlength="80" placeholder="Example: 418765432109"></label>
+          <button class="btn" type="submit">I have completed payment</button>
+        </form>
         <a class="payment-track-link" href="bookings.html">Track this booking</a>
         <p class="payment-dialog-note" data-payment-dialog-status>Do not close your UPI app until the transaction result is shown.</p>
       </section>
