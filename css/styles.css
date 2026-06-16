@@ -3537,16 +3537,37 @@ footer h3,
 .booking-status-form { display: grid; gap: 10px; }
 .booking-status-form label { color: #26374b; font-size: 13px; font-weight: 900; text-transform: uppercase; }
 .booking-status-form > div { display: grid; grid-template-columns: 1fr auto; gap: 10px; }
+.booking-status-form > .booking-lookup-fields { grid-template-columns: 1.25fr .75fr auto; }
 .booking-status-form input { min-width: 0; min-height: 52px; padding: 0 16px; border: 1px solid #cedbe6; border-radius: 12px; font: inherit; text-transform: uppercase; }
 .booking-status-result { display: grid; gap: 4px; min-height: 72px; padding: 16px; border: 1px solid #dbe5ee; border-radius: 14px; background: #f7fafc; }
 .booking-status-result strong { color: #173043; }
 .booking-status-result span { color: #68798d; font-size: 14px; }
+.booking-status-result small { color: #52697a; font-size: 12px; }
 .booking-status-result.is-found { border-color: rgba(15, 143, 122, .3); background: #effaf6; }
 .booking-status-result.is-error { border-color: rgba(192, 55, 45, .25); background: #fff5f3; }
+.booking-timeline { display: grid; gap: 0; padding: 16px; border: 1px solid #dbe5ee; border-radius: 14px; background: #fff; }
+.booking-timeline[hidden] { display: none; }
+.booking-timeline-item { position: relative; display: grid; grid-template-columns: 22px 1fr; gap: 10px; min-height: 54px; }
+.booking-timeline-item > span { position: relative; width: 14px; height: 14px; margin-top: 3px; border: 3px solid #d5dfe3; border-radius: 50%; background: #fff; }
+.booking-timeline-item:not(:last-child) > span:after { content: ""; position: absolute; top: 12px; left: 3px; width: 2px; height: 38px; background: #dce5e8; }
+.booking-timeline-item strong,
+.booking-timeline-item small { display: block; }
+.booking-timeline-item strong { color: #314858; font-size: 13px; }
+.booking-timeline-item small { margin-top: 3px; color: #89969f; font-size: 10px; }
+.booking-timeline-item.is-complete > span { border-color: #0f8f7a; background: #0f8f7a; }
+.booking-timeline-item.is-complete:not(:last-child) > span:after { background: #0f8f7a; }
+.booking-timeline-item.is-current > span { border-color: #f0b94e; box-shadow: 0 0 0 4px rgba(240,185,78,.18); }
+.booking-timeline > p { margin: 4px 0 0 32px; color: #4e6473; font-size: 12px; }
+
+.payment-report-form { display: grid; gap: 10px; margin-top: 12px; padding: 14px; border: 1px solid #dbe5e6; border-radius: 8px; background: #f7faf9; }
+.payment-report-form label { display: grid; gap: 6px; color: #344b5c; font-size: 11px; font-weight: 850; }
+.payment-report-form input { width: 100%; min-height: 44px; padding: 0 12px; border: 1px solid #cfdcdf; border-radius: 6px; font: inherit; }
+.payment-report-form .btn { width: 100%; }
 
 @media (max-width: 760px) {
   .booking-lookup-wrap { grid-template-columns: 1fr; gap: 22px; padding: 22px; border-radius: 18px; }
   .booking-status-form > div { grid-template-columns: 1fr; }
+  .booking-status-form > .booking-lookup-fields { grid-template-columns: 1fr; }
   .booking-status-form .btn { width: 100%; }
 }
 

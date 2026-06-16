@@ -114,15 +114,16 @@
       <div class="booking-lookup-copy">
         <span class="tag">Live lookup</span>
         <h2>Track with your Booking ID.</h2>
-        <p>Enter the ID generated after booking. Payment remains pending verification until our team matches the UPI transaction.</p>
+        <p>Enter the Booking ID and last 4 digits of the mobile number used while booking. Your private address and complete phone number are never shown here.</p>
       </div>
       <form class="booking-status-form" data-booking-status-form>
         <label for="booking-id">Booking ID</label>
-        <div><input id="booking-id" name="bookingId" placeholder="TFN-20260613-AB12" autocomplete="off" required><button class="btn primary" type="submit">Check status</button></div>
+        <div class="booking-lookup-fields"><input id="booking-id" name="bookingId" placeholder="TFN-20260613-AB12" autocomplete="off" required><input name="phoneLast4" inputmode="numeric" maxlength="4" pattern="[0-9]{4}" placeholder="Phone last 4 digits" aria-label="Last 4 digits of booking phone" required><button class="btn primary" type="submit">Check status</button></div>
         <output class="booking-status-result" data-booking-status-result aria-live="polite"><strong>Ready to check</strong><span>Your latest booking can also be found on this device.</span></output>
+        <div class="booking-timeline" data-booking-timeline hidden></div>
       </form>
     </div>
-    <div class="container status-row"><div class="status-item"><span>1. Callback requested</span><b>Open</b></div><div class="status-item"><span>2. Technician assignment</span><b>After confirmation</b></div><div class="status-item"><span>3. Visit proof</span><b>On completion</b></div></div>
+    <div class="container status-row"><div class="status-item"><span>1. Request received</span><b>Booking created</b></div><div class="status-item"><span>2. Payment and callback</span><b>Team verification</b></div><div class="status-item"><span>3. Professional assignment</span><b>Scheduled visit</b></div><div class="status-item"><span>4. Work completion</span><b>Closure record</b></div></div>
   </section>
 </main>
 
