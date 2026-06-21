@@ -1603,6 +1603,8 @@
 .content-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
 .content-grid.two { grid-template-columns: repeat(2, 1fr); }
 .info-card { background: #fff; border: 1px solid #d7e4ee; border-radius: 18px; padding: 22px; box-shadow: 0 14px 34px rgba(15,44,72,.06); }
+a.info-card { display: block; color: inherit; text-decoration: none; transition: transform .18s ease, box-shadow .18s ease; }
+a.info-card:hover { transform: translateY(-3px); box-shadow: 0 28px 62px rgba(7,25,39,.13); }
 .info-card h2, .info-card h3 { margin: 0 0 10px; color: #10263d; font-size: 24px; line-height: 1.2; }
 .info-card p, .info-card li { color: #52657a; line-height: 1.65; font-weight: 600; }
 .info-card ul { margin: 12px 0 0; padding-left: 20px; }
