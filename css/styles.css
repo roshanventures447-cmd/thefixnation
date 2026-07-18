@@ -3660,6 +3660,26 @@ footer h3,
 .payment-detail-grid strong { display: block; overflow-wrap: anywhere; color: #183044; font-size: 14px; }
 .payment-detail-grid button { margin-top: 8px; padding: 5px 0; border: 0; color: #0f8f7a; background: transparent; font-weight: 900; cursor: pointer; }
 .payment-open-upi { width: 100%; }
+.payment-fallback-box {
+  display: grid;
+  gap: 8px;
+  margin: 12px 0;
+  padding: 14px;
+  border: 1px solid rgba(15,143,122,.18);
+  border-radius: 14px;
+  background: #f3faf7;
+}
+.payment-fallback-box strong { color: #173d55; font-size: 14px; }
+.payment-fallback-box span { color: #607286; font-size: 12px; font-weight: 750; line-height: 1.5; }
+.payment-copy-all {
+  min-height: 42px;
+  border: 1px solid #cbdde5;
+  border-radius: 11px;
+  color: #173d55;
+  background: #fff;
+  font-weight: 950;
+  cursor: pointer;
+}
 .payment-track-link { display: block; margin-top: 14px; color: #173d55; font-weight: 900; text-align: center; }
 .payment-dialog-note { margin-bottom: 0; font-size: 12px; text-align: center; }
 .payment-modal-open { overflow: hidden; }
