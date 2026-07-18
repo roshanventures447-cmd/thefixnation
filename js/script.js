@@ -199,6 +199,7 @@
   const paymentStatusLabel = document.querySelector('[data-payment-status]');
   const paymentDialogStatus = document.querySelector('[data-payment-dialog-status]');
   const paymentReportForm = document.querySelector('[data-payment-report-form]');
+  const paymentWhatsApp = document.querySelector('[data-payment-whatsapp]');
   let activePaymentBookingId = '';
   let selectedServices = [];
   try {
@@ -549,6 +550,45 @@
     return `upi://pay?${params.toString()}`;
   };
 
+  const isUpiIntentDevice = () => /Android|iPhone|iPad|iPod/i.test(navigator.userAgent || '');
+
+  const getPaymentDetailsText = (bookingId) => [
+    'The Fix Nation booking payment',
+    `Amount: Rs ${bookingFee}`,
+    `UPI ID: ${upiId}`,
+    `Booking ID / UPI note: ${bookingId}`,
+    `Payee: ${payeeName}`
+  ].join('\n');
+
+  const copyPaymentDetails = async (bookingId) => {
+    const text = getPaymentDetailsText(bookingId);
+    try {
+      await navigator.clipboard.writeText(text);
+      return true;
+    } catch (error) {
+      return false;
+    }
+  };
+
+  const openUpiOrFallback = async (bookingId, noteElement) => {
+    if (!bookingId || !upiId) return;
+    if (!isUpiIntentDevice()) {
+      const copied = await copyPaymentDetails(bookingId);
+      if (noteElement) {
+        noteElement.textContent = copied
+          ? `Desktop par UPI app open nahi hota. Payment details copied. Phone ke UPI app me Rs ${bookingFee} pay karke note me ${bookingId} add karo.`
+          : `Desktop par UPI app open nahi hota. Manually pay Rs ${bookingFee} to ${upiId} and use note: ${bookingId}`;
+      }
+      return;
+    }
+    window.location.href = createUpiLink(bookingId);
+    window.setTimeout(() => {
+      if (noteElement) {
+        noteElement.textContent = `If UPI app does not open, pay Rs ${bookingFee} to ${upiId} and use note: ${bookingId}`;
+      }
+    }, 700);
+  };
+
   const showPaymentModal = (bookingId) => {
     if (!paymentModal) return;
     activePaymentBookingId = bookingId;
@@ -556,9 +596,23 @@
     if (paymentUpi) paymentUpi.textContent = upiId;
     if (paymentStatusLabel) paymentStatusLabel.textContent = 'Pending verification';
     if (paymentLink) paymentLink.href = createUpiLink(bookingId);
+    if (paymentLink) paymentLink.textContent = isUpiIntentDevice() ? 'Open UPI app' : 'Copy payment details';
+    if (paymentWhatsApp) {
+      paymentWhatsApp.href = `https://wa.me/919407840541?text=${encodeURIComponent(getPaymentDetailsText(bookingId))}`;
+    }
+    if (paymentDialogStatus) {
+      paymentDialogStatus.textContent = isUpiIntentDevice()
+        ? 'UPI app me payment complete karo, phir payment report submit karo.'
+        : 'Desktop par payment details copy karo, phone ke UPI app me pay karo, phir payment report submit karo.';
+    }
     paymentModal.hidden = false;
     document.body.classList.add('payment-modal-open');
   };
+
+  paymentLink?.addEventListener('click', (event) => {
+    event.preventDefault();
+    openUpiOrFallback(activePaymentBookingId, paymentDialogStatus);
+  });
 
   document.querySelectorAll('[data-payment-close]').forEach((button) => {
     button.addEventListener('click', () => {
@@ -569,12 +623,14 @@
 
   document.querySelectorAll('[data-copy-payment]').forEach((button) => {
     button.addEventListener('click', async () => {
-      const value = button.dataset.copyPayment === 'upi' ? paymentUpi?.textContent : paymentBookingId?.textContent;
+      const value = button.dataset.copyPayment === 'all'
+        ? getPaymentDetailsText(activePaymentBookingId || paymentBookingId?.textContent || '')
+        : button.dataset.copyPayment === 'upi' ? paymentUpi?.textContent : paymentBookingId?.textContent;
       if (!value) return;
       try {
         await navigator.clipboard.writeText(value.trim());
         button.textContent = 'Copied';
-        if (paymentDialogStatus) paymentDialogStatus.textContent = `${button.dataset.copyPayment === 'upi' ? 'UPI ID' : 'Booking ID'} copied.`;
+        if (paymentDialogStatus) paymentDialogStatus.textContent = `${button.dataset.copyPayment === 'all' ? 'Payment details' : button.dataset.copyPayment === 'upi' ? 'UPI ID' : 'Booking ID'} copied.`;
       } catch (error) {
         if (paymentDialogStatus) paymentDialogStatus.textContent = `Copy this value: ${value.trim()}`;
       }
@@ -634,6 +690,7 @@
       bookingId,
       bookingFee,
       paymentStatus: upiId ? 'Pending verification' : 'UPI ID pending',
+      paymentMethod: 'UPI manual/intent',
       paymentNote: `${bookingId} booking confirmation`,
       name: '',
       email: '',
@@ -733,6 +790,7 @@
         payload.bookingId = bookingId;
         payload.bookingFee = bookingFee;
         payload.paymentStatus = upiId ? 'Pending verification' : 'UPI ID pending';
+        payload.paymentMethod = 'UPI manual/intent';
         payload.paymentNote = bookingId ? `${bookingId} booking confirmation` : '';
         payload.address = payload.address || bookingLocation.address || '';
         payload.latitude = payload.latitude || bookingLocation.latitude || '';
@@ -761,15 +819,9 @@
             if (upiDetails) upiDetails.hidden = false;
             if (payButton) {
               payButton.disabled = !upiId;
-              payButton.textContent = upiId ? `Pay Rs ${bookingFee} via UPI` : 'UPI ID pending';
+              payButton.textContent = upiId ? (isUpiIntentDevice() ? `Pay Rs ${bookingFee} via UPI` : `Copy Rs ${bookingFee} payment details`) : 'UPI ID pending';
               payButton.onclick = () => {
-                const upiLink = createUpiLink(bookingId);
-                window.location.href = upiLink;
-                window.setTimeout(() => {
-                  if (paymentNote) {
-                    paymentNote.textContent = `If UPI app does not open, pay Rs ${bookingFee} to ${upiId} and use note: ${bookingId}`;
-                  }
-                }, 700);
+                openUpiOrFallback(bookingId, paymentNote);
               };
             }
             if (paymentNote) {

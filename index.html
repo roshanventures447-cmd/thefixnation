@@ -641,10 +641,16 @@
           <div><span>Status</span><strong data-payment-status>Pending verification</strong></div>
         </div>
         <a class="btn primary payment-open-upi" data-payment-link href="#">Open UPI app</a>
+        <div class="payment-fallback-box">
+          <strong>Desktop par UPI app open nahi hua?</strong>
+          <span>PhonePe, GPay, Paytm ya bank UPI app me manual payment karo. Amount Rs 49, UPI ID aur Booking ID note same rakho.</span>
+          <button class="payment-copy-all" type="button" data-copy-payment="all">Copy payment details</button>
+        </div>
         <form class="payment-report-form" data-payment-report-form>
           <label>UPI transaction reference (optional)<input name="transactionReference" maxlength="80" placeholder="Example: 418765432109"></label>
           <button class="btn" type="submit">I have completed payment</button>
         </form>
+        <a class="payment-track-link" data-payment-whatsapp href="https://wa.me/919407840541" target="_blank" rel="noopener">Send details on WhatsApp</a>
         <a class="payment-track-link" href="bookings.html">Track this booking</a>
         <p class="payment-dialog-note" data-payment-dialog-status>Do not close your UPI app until the transaction result is shown.</p>
       </section>

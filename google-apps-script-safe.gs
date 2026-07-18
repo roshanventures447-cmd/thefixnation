@@ -3,7 +3,7 @@ var WORKER_SPREADSHEET_ID = '1nmu4BCtJ4pfC46-_YYDr25SEPEQ1TTXp7Tqed7F7T8I';
 var CUSTOMER_SHEET_NAME = 'Customer Leads';
 var WORKER_SHEET_NAME = 'Worker Leads';
 var NOTIFICATION_EMAIL = 'roshanventures447@gmail.com';
-var API_VERSION = '2.1-safe';
+var API_VERSION = '2.2-ops';
 
 var HEADERS = [
   'serverReceivedAt', 'updatedAt', 'submittedAt', 'submissionId', 'formType', 'source',
@@ -11,8 +11,9 @@ var HEADERS = [
   'googleMapsUrl', 'service', 'serviceCount', 'skill', 'experience', 'serviceArea',
   'ownTools', 'transport', 'availability', 'workType', 'applicationId', 'consent',
   'callbackTime', 'bookingId', 'bookingFee', 'paymentStatus', 'leadStatus',
-  'paymentNote', 'transactionReference', 'paymentReportedAt', 'technicianName',
-  'technicianPhone', 'scheduledAt', 'completedAt', 'cancellationReason',
+  'paymentMethod', 'paymentNote', 'transactionReference', 'paymentReportedAt',
+  'paymentVerificationNote', 'technicianName', 'technicianPhone', 'scheduledAt',
+  'assignedBy', 'completedAt', 'cancellationReason', 'priority', 'customerLast4',
   'statusHistory', 'message'
 ];
 
@@ -54,6 +55,9 @@ function createLead_(input) {
     payload.updatedAt = now;
     payload.leadStatus = payload.leadStatus || (payload.formType === 'worker' ? 'Application received' : 'New');
     payload.paymentStatus = payload.paymentStatus || (payload.formType === 'worker' ? 'Not started' : 'Pending verification');
+    payload.paymentMethod = payload.paymentMethod || (payload.formType === 'worker' ? '' : 'UPI manual/intent');
+    payload.customerLast4 = payload.phone ? payload.phone.slice(-4) : '';
+    payload.priority = payload.priority || computePriority_(payload);
     payload.statusHistory = historyEntry_(payload.leadStatus, 'Booking request created', now);
     var headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getDisplayValues()[0];
     var row = [];
@@ -196,11 +200,11 @@ function buildTimeline_(status, paymentStatus, history) {
 }
 
 function markPaymentVerified(bookingId, transactionId) {
-  return updateBooking_(bookingId, { paymentStatus: 'Verified', transactionReference: transactionId || '', leadStatus: 'Confirmed' }, 'Payment verified');
+  return updateBooking_(bookingId, { paymentStatus: 'Verified', transactionReference: transactionId || '', paymentVerificationNote: 'Verified by operations', leadStatus: 'Confirmed' }, 'Payment verified');
 }
 
 function assignProfessional(bookingId, name, phone, scheduledAt) {
-  return updateBooking_(bookingId, { technicianName: name, technicianPhone: digits_(phone).slice(-10), scheduledAt: scheduledAt || '', leadStatus: 'Assigned' }, 'Professional assigned');
+  return updateBooking_(bookingId, { technicianName: name, technicianPhone: digits_(phone).slice(-10), scheduledAt: scheduledAt || '', assignedBy: Session.getActiveUser().getEmail() || 'Ops team', leadStatus: 'Assigned' }, 'Professional assigned');
 }
 
 function updateLeadStatus(bookingId, leadStatus, note) {
@@ -235,6 +239,9 @@ function setupBackend() {
   var worker = getLeadSheet_('worker');
   applyStatusValidation_(customer, CUSTOMER_STATUSES);
   applyStatusValidation_(worker, WORKER_STATUSES);
+  applyOpsFormatting_(customer);
+  applyOpsFormatting_(worker);
+  setupOpsDashboard_();
   customer.autoResizeColumns(1, customer.getLastColumn());
   worker.autoResizeColumns(1, worker.getLastColumn());
   return 'The Fix Nation backend ' + API_VERSION + ' is ready.';
@@ -243,12 +250,97 @@ function setupBackend() {
 function onOpen() {
   SpreadsheetApp.getUi().createMenu('The Fix Nation')
     .addItem('Setup / repair backend', 'setupBackend')
+    .addItem('Verify selected payment', 'verifySelectedPayment')
+    .addItem('Assign selected professional', 'assignSelectedProfessional')
+    .addItem('Mark selected callback pending', 'markSelectedCallbackPending')
     .addItem('Show backend help', 'showBackendHelp')
     .addToUi();
 }
 
 function showBackendHelp() {
-  SpreadsheetApp.getUi().alert('Use setupBackend once. Then update leadStatus and paymentStatus from dropdowns, or run helper functions like markPaymentVerified and assignProfessional.');
+  SpreadsheetApp.getUi().alert('Use setupBackend once. Customer sheet statuses: New > Callback pending > Confirmed > Assigned > Professional on the way > Work in progress > Completed. Select a booking row, then use The Fix Nation menu to verify payment or assign a professional.');
+}
+
+function verifySelectedPayment() {
+  var selected = getSelectedCustomerBooking_();
+  var ui = SpreadsheetApp.getUi();
+  var response = ui.prompt('Verify payment for ' + selected.bookingId, 'Enter UPI transaction/reference ID:', ui.ButtonSet.OK_CANCEL);
+  if (response.getSelectedButton() !== ui.Button.OK) return;
+  ui.alert(markPaymentVerified(selected.bookingId, response.getResponseText()));
+}
+
+function assignSelectedProfessional() {
+  var selected = getSelectedCustomerBooking_();
+  var ui = SpreadsheetApp.getUi();
+  var response = ui.prompt('Assign professional to ' + selected.bookingId, 'Enter: Name, Phone, Schedule (example: Ramesh, 9876543210, Today 5 PM)', ui.ButtonSet.OK_CANCEL);
+  if (response.getSelectedButton() !== ui.Button.OK) return;
+  var parts = response.getResponseText().split(',');
+  if (parts.length < 2) throw new Error('Enter at least name and phone.');
+  ui.alert(assignProfessional(selected.bookingId, parts[0], parts[1], parts.slice(2).join(',').trim()));
+}
+
+function markSelectedCallbackPending() {
+  var selected = getSelectedCustomerBooking_();
+  SpreadsheetApp.getUi().alert(updateLeadStatus(selected.bookingId, 'Callback pending', 'Ops team started callback'));
+}
+
+function getSelectedCustomerBooking_() {
+  var sheet = SpreadsheetApp.getActiveSheet();
+  if (sheet.getName() !== CUSTOMER_SHEET_NAME) throw new Error('Open Customer Leads sheet and select a booking row.');
+  var rowNumber = sheet.getActiveRange().getRow();
+  if (rowNumber < 2) throw new Error('Select a customer booking row.');
+  var map = headerMap_(sheet);
+  var bookingId = sheet.getRange(rowNumber, map.bookingId + 1).getDisplayValue();
+  if (!bookingId) throw new Error('Selected row does not have Booking ID.');
+  return { sheet: sheet, rowNumber: rowNumber, bookingId: bookingId };
+}
+
+function applyOpsFormatting_(sheet) {
+  if (!sheet.getFilter()) sheet.getRange(1, 1, Math.max(sheet.getLastRow(), 2), sheet.getLastColumn()).createFilter();
+  var map = headerMap_(sheet);
+  if (map.priority !== undefined) sheet.getRange(2, map.priority + 1, Math.max(sheet.getMaxRows() - 1, 1), 1).setDataValidation(SpreadsheetApp.newDataValidation().requireValueInList(['High', 'Normal', 'Worker growth', 'Low'], true).build());
+}
+
+function setupOpsDashboard_() {
+  var ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+  var sheet = ss.getSheetByName('Ops Dashboard') || ss.insertSheet('Ops Dashboard');
+  var customer = getLeadSheet_('customer');
+  var map = headerMap_(customer);
+  var leadStatusColumn = columnLetter_(map.leadStatus + 1);
+  var paymentStatusColumn = columnLetter_(map.paymentStatus + 1);
+  var priorityColumn = columnLetter_(map.priority + 1);
+  sheet.clear();
+  sheet.getRange(1, 1, 1, 2).setValues([['The Fix Nation Ops Dashboard', API_VERSION]]);
+  sheet.getRange(3, 1, 9, 2).setValues([
+    ['New bookings', '=COUNTIF(\'' + CUSTOMER_SHEET_NAME + '\'!' + leadStatusColumn + ':' + leadStatusColumn + ',"New")'],
+    ['Callback pending', '=COUNTIF(\'' + CUSTOMER_SHEET_NAME + '\'!' + leadStatusColumn + ':' + leadStatusColumn + ',"Callback pending")'],
+    ['Confirmed', '=COUNTIF(\'' + CUSTOMER_SHEET_NAME + '\'!' + leadStatusColumn + ':' + leadStatusColumn + ',"Confirmed")'],
+    ['Assigned', '=COUNTIF(\'' + CUSTOMER_SHEET_NAME + '\'!' + leadStatusColumn + ':' + leadStatusColumn + ',"Assigned")'],
+    ['Completed', '=COUNTIF(\'' + CUSTOMER_SHEET_NAME + '\'!' + leadStatusColumn + ':' + leadStatusColumn + ',"Completed")'],
+    ['Payment reported', '=COUNTIF(\'' + CUSTOMER_SHEET_NAME + '\'!' + paymentStatusColumn + ':' + paymentStatusColumn + ',"Customer reported paid")'],
+    ['Payment verified', '=COUNTIF(\'' + CUSTOMER_SHEET_NAME + '\'!' + paymentStatusColumn + ':' + paymentStatusColumn + ',"Verified")'],
+    ['High priority', '=COUNTIF(\'' + CUSTOMER_SHEET_NAME + '\'!' + priorityColumn + ':' + priorityColumn + ',"High")'],
+    ['Last setup', new Date().toISOString()]
+  ]);
+  sheet.getRange(1, 1, 1, 2).setFontWeight('bold').setBackground('#173d55').setFontColor('#ffffff');
+  sheet.autoResizeColumns(1, 2);
+}
+
+function computePriority_(payload) {
+  if (payload.formType === 'worker') return 'Worker growth';
+  var city = String(payload.city || '').toLowerCase();
+  if (['chennai', 'bangalore', 'hyderabad', 'mumbai'].indexOf(city) !== -1) return 'High';
+  return 'Normal';
+}
+
+function columnLetter_(columnNumber) {
+  var letter = '';
+  while (columnNumber > 0) {
+    var temp = (columnNumber - 1) % 26;
+    letter = String.fromCharCode(temp + 65) + letter;
+    columnNumber = Math.floor((columnNumber - temp - 1) / 26);
+  }
+  return letter;
 }
 
 function onEdit(e) {
