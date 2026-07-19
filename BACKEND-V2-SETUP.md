@@ -49,6 +49,6 @@ Open `Customer Leads`, select a booking row, then use:
 
 ## Payment fallback
 
-Mobile users can open the UPI app directly. Desktop users should copy payment details, pay from their phone UPI app, and submit the payment report with the Booking ID in the note.
+The site uses a no-redirect manual confirmation flow to avoid Chrome and mobile UPI intent errors. If a payment app shows a risk warning, the customer should not pay and should confirm with WhatsApp support first.
 
 Payment is not automatically verified by a plain UPI link. The customer can report payment, but the team must match the transaction and mark it `Verified`. Automatic verification requires a payment gateway with a signed webhook.
