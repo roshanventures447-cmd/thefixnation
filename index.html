@@ -615,12 +615,12 @@
             <div class="cart-head"><div><small>Service cart</small><h3>Your booking <span class="cart-count" data-cart-count>0</span></h3></div><button class="cart-close" type="button" aria-label="Close booking panel">x</button></div>
             <div class="cart-empty" data-cart-empty><strong>No service selected</strong><span>Use the Add button on any service.</span></div>
             <div class="cart-service-items" data-cart-items></div>
-            <div class="cart-item"><div><strong>Booking confirmation</strong><small>One confirmation charge for the complete visit request</small></div><b>Rs 49</b></div>
+            <div class="cart-item"><div><strong>Booking confirmation</strong><small>One manual confirmation charge for the complete visit request</small></div><b>Rs 49</b></div>
             <div class="cart-item"><div><strong>Final carpenter charge</strong><small>Shared after product size, parts and work scope check</small></div><b>On visit</b></div>
             <div class="cart-box" data-cart-address-note>City and address must be added before payment.</div>
             <div class="total-row"><span>Amount payable now</span><span>Rs 49</span></div>
             <div class="payment-assurance"><span>Secure UPI intent</span><span>Unique Booking ID</span><span>Payment verification</span></div>
-            <button class="btn booking-pay-inline" type="button" disabled>Confirm booking and pay Rs 49</button>
+            <button class="btn booking-pay-inline" type="button" disabled>Save booking and get Booking ID</button>
             <p class="cart-payment-status" data-cart-payment-status aria-live="polite"></p>
           </aside>
         </div>
@@ -632,19 +632,19 @@
       <section class="payment-dialog" role="dialog" aria-modal="true" aria-labelledby="payment-title">
         <button class="payment-dialog-close" type="button" data-payment-close aria-label="Close payment">x</button>
         <span class="tag">Booking created</span>
-        <h2 id="payment-title">Complete Rs 49 booking payment.</h2>
-        <p>Your service request is saved. Use the exact Booking ID in the UPI note so our team can match the payment.</p>
+        <h2 id="payment-title">Booking ID generated.</h2>
+        <p>Your service request is saved. Use the exact Booking ID if the team asks you to confirm the Rs 49 booking charge manually.</p>
         <div class="payment-detail-grid">
           <div><span>Amount</span><strong>Rs 49</strong></div>
           <div><span>UPI ID</span><strong data-payment-upi>9165867685-5@ybl</strong><button type="button" data-copy-payment="upi">Copy</button></div>
           <div><span>Booking ID</span><strong data-payment-booking-id>Generating...</strong><button type="button" data-copy-payment="booking">Copy</button></div>
           <div><span>Status</span><strong data-payment-status>Pending verification</strong></div>
         </div>
-        <a class="btn primary payment-open-upi" data-payment-link href="#">Open UPI app</a>
+        <button class="btn primary payment-open-upi" data-payment-link type="button">Copy confirmation details</button>
         <div class="payment-fallback-box">
-          <strong>Desktop par UPI app open nahi hua?</strong>
-          <span>PhonePe, GPay, Paytm ya bank UPI app me manual payment karo. Amount Rs 49, UPI ID aur Booking ID note same rakho.</span>
-          <button class="payment-copy-all" type="button" data-copy-payment="all">Copy payment details</button>
+          <strong>No redirect, manual confirmation only</strong>
+          <span>Site kisi payment app ko open nahi karegi. Agar payment app risk warning dikhaye to payment mat karo; WhatsApp par support se confirm karo.</span>
+          <button class="payment-copy-all" type="button" data-copy-payment="all">Copy confirmation details</button>
         </div>
         <form class="payment-report-form" data-payment-report-form>
           <label>UPI transaction reference (optional)<input name="transactionReference" maxlength="80" placeholder="Example: 418765432109"></label>
@@ -652,7 +652,7 @@
         </form>
         <a class="payment-track-link" data-payment-whatsapp href="https://wa.me/919407840541" target="_blank" rel="noopener">Send details on WhatsApp</a>
         <a class="payment-track-link" href="bookings.html">Track this booking</a>
-        <p class="payment-dialog-note" data-payment-dialog-status>Do not close your UPI app until the transaction result is shown.</p>
+        <p class="payment-dialog-note" data-payment-dialog-status>Booking details saved. Team verification ke baad status update hoga.</p>
       </section>
     </div>
 
@@ -664,7 +664,7 @@
         <div class="visual-steps">
           <article><img src="img/service-consultation.png" alt="Customer sharing furniture service details"><span>01</span><div><h3>Choose location</h3><p>Pin your home and add the address.</p></div></article>
           <article><img src="img/service-bed-assembly.png" alt="Home service selection"><span>02</span><div><h3>Select services</h3><p>Add every required job to one booking.</p></div></article>
-          <article><img src="img/service-furniture-repair.png" alt="Carpenter checking furniture scope"><span>03</span><div><h3>Confirm visit</h3><p>Pay Rs 49 and receive Booking ID.</p></div></article>
+          <article><img src="img/service-furniture-repair.png" alt="Carpenter checking furniture scope"><span>03</span><div><h3>Confirm visit</h3><p>Receive Booking ID and confirmation details.</p></div></article>
           <article><img src="img/service-wardrobe-assembly.png" alt="Professional completing furniture assembly"><span>04</span><div><h3>Approve final quote</h3><p>Work begins after your approval.</p></div></article>
         </div>
       </div>

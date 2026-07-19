@@ -390,7 +390,7 @@
     if (bookingPayInline) {
       bookingPayInline.disabled = !(locationReady && selectedServices.length);
       if (!selectedServices.length) bookingPayInline.textContent = 'Select at least one service';
-      else bookingPayInline.textContent = `Confirm ${selectedServices.length} service${selectedServices.length > 1 ? 's' : ''} and pay Rs 49`;
+      else bookingPayInline.textContent = `Save ${selectedServices.length} service${selectedServices.length > 1 ? 's' : ''} and get Booking ID`;
     }
     if (bookingLocationStatus && locationReady) {
       bookingLocationStatus.className = 'booking-location-status is-ready';
@@ -539,24 +539,11 @@
     }
   };
 
-  const createUpiLink = (bookingId) => {
-    const params = new URLSearchParams({
-      pa: upiId,
-      pn: payeeName,
-      am: String(bookingFee),
-      cu: 'INR',
-      tn: `${bookingId} booking confirmation`
-    });
-    return `upi://pay?${params.toString()}`;
-  };
-
-  const isUpiIntentDevice = () => /Android|iPhone|iPad|iPod/i.test(navigator.userAgent || '');
-
   const getPaymentDetailsText = (bookingId) => [
-    'The Fix Nation booking payment',
-    `Amount: Rs ${bookingFee}`,
-    `UPI ID: ${upiId}`,
-    `Booking ID / UPI note: ${bookingId}`,
+    'The Fix Nation booking confirmation',
+    `Booking charge: Rs ${bookingFee}`,
+    `UPI ID, only if support asks: ${upiId}`,
+    `Booking ID: ${bookingId}`,
     `Payee: ${payeeName}`
   ].join('\n');
 
@@ -570,23 +557,14 @@
     }
   };
 
-  const openUpiOrFallback = async (bookingId, noteElement) => {
+  const copyPaymentOrShowManual = async (bookingId, noteElement) => {
     if (!bookingId || !upiId) return;
-    if (!isUpiIntentDevice()) {
-      const copied = await copyPaymentDetails(bookingId);
-      if (noteElement) {
-        noteElement.textContent = copied
-          ? `Desktop par UPI app open nahi hota. Payment details copied. Phone ke UPI app me Rs ${bookingFee} pay karke note me ${bookingId} add karo.`
-          : `Desktop par UPI app open nahi hota. Manually pay Rs ${bookingFee} to ${upiId} and use note: ${bookingId}`;
-      }
-      return;
+    const copied = await copyPaymentDetails(bookingId);
+    if (noteElement) {
+      noteElement.textContent = copied
+        ? `Confirmation details copied. Agar payment app risk warning dikhaye to payment mat karo; WhatsApp support se confirm karo.`
+        : `Booking ID ${bookingId}. Rs ${bookingFee} confirmation ke liye support se WhatsApp par confirm karo.`;
     }
-    window.location.href = createUpiLink(bookingId);
-    window.setTimeout(() => {
-      if (noteElement) {
-        noteElement.textContent = `If UPI app does not open, pay Rs ${bookingFee} to ${upiId} and use note: ${bookingId}`;
-      }
-    }, 700);
   };
 
   const showPaymentModal = (bookingId) => {
@@ -595,15 +573,12 @@
     if (paymentBookingId) paymentBookingId.textContent = bookingId;
     if (paymentUpi) paymentUpi.textContent = upiId;
     if (paymentStatusLabel) paymentStatusLabel.textContent = 'Pending verification';
-    if (paymentLink) paymentLink.href = createUpiLink(bookingId);
-    if (paymentLink) paymentLink.textContent = isUpiIntentDevice() ? 'Open UPI app' : 'Copy payment details';
+    if (paymentLink) paymentLink.textContent = 'Copy confirmation details';
     if (paymentWhatsApp) {
       paymentWhatsApp.href = `https://wa.me/919407840541?text=${encodeURIComponent(getPaymentDetailsText(bookingId))}`;
     }
     if (paymentDialogStatus) {
-      paymentDialogStatus.textContent = isUpiIntentDevice()
-        ? 'UPI app me payment complete karo, phir payment report submit karo.'
-        : 'Desktop par payment details copy karo, phone ke UPI app me pay karo, phir payment report submit karo.';
+      paymentDialogStatus.textContent = 'Site payment app open nahi karegi. Risk warning aaye to payment mat karo; WhatsApp support se confirm karo.';
     }
     paymentModal.hidden = false;
     document.body.classList.add('payment-modal-open');
@@ -611,7 +586,7 @@
 
   paymentLink?.addEventListener('click', (event) => {
     event.preventDefault();
-    openUpiOrFallback(activePaymentBookingId, paymentDialogStatus);
+    copyPaymentOrShowManual(activePaymentBookingId, paymentDialogStatus);
   });
 
   document.querySelectorAll('[data-payment-close]').forEach((button) => {
@@ -630,7 +605,7 @@
       try {
         await navigator.clipboard.writeText(value.trim());
         button.textContent = 'Copied';
-        if (paymentDialogStatus) paymentDialogStatus.textContent = `${button.dataset.copyPayment === 'all' ? 'Payment details' : button.dataset.copyPayment === 'upi' ? 'UPI ID' : 'Booking ID'} copied.`;
+        if (paymentDialogStatus) paymentDialogStatus.textContent = `${button.dataset.copyPayment === 'all' ? 'Confirmation details' : button.dataset.copyPayment === 'upi' ? 'UPI ID' : 'Booking ID'} copied.`;
       } catch (error) {
         if (paymentDialogStatus) paymentDialogStatus.textContent = `Copy this value: ${value.trim()}`;
       }
@@ -711,7 +686,7 @@
     applySelectedBookingToForm();
     if (cartPaymentStatus) {
       cartPaymentStatus.className = 'cart-payment-status';
-      cartPaymentStatus.textContent = 'Saving booking details and generating payment note...';
+      cartPaymentStatus.textContent = 'Saving booking details and generating Booking ID...';
     }
     if (bookingPayInline) bookingPayInline.disabled = true;
 
@@ -720,11 +695,11 @@
       rememberBooking(payload);
       if (cartPaymentStatus) {
         cartPaymentStatus.className = 'cart-payment-status is-success';
-        cartPaymentStatus.textContent = `Booking ID ${bookingId} saved. UPI note: ${bookingId}`;
+        cartPaymentStatus.textContent = `Booking ID ${bookingId} saved. Confirmation details are ready.`;
       }
       if (bookingPayInline) {
         bookingPayInline.disabled = false;
-        bookingPayInline.textContent = 'Open UPI payment';
+        bookingPayInline.textContent = 'Booking saved';
       }
       showPaymentModal(bookingId);
     } catch (error) {
@@ -747,16 +722,16 @@
     box.className = 'booking-payment-box';
     box.innerHTML = `
       <div>
-        <strong>Confirm booking with Rs ${bookingFee}</strong>
-        <small>First submit your details. After Booking ID is generated, pay Rs ${bookingFee} to confirm the visit. Carpenter will share final work charge after checking the furniture.</small>
+        <strong>Booking confirmation: Rs ${bookingFee}</strong>
+        <small>First submit your details. After Booking ID is generated, support may ask for manual confirmation. If any payment app shows a risk warning, do not pay and contact WhatsApp support.</small>
       </div>
-      <button class="booking-pay-btn" type="button" disabled>Pay Rs ${bookingFee} via UPI</button>
+      <button class="booking-pay-btn" type="button" disabled>Copy confirmation details</button>
       <div class="booking-upi-details" hidden>
         <div><span>UPI ID</span><strong data-upi-id>${upiId}</strong></div>
         <div><span>Amount</span><strong>Rs ${bookingFee}</strong></div>
         <div><span>Booking ID</span><strong data-booking-id>Generated after submit</strong></div>
       </div>
-      <p class="booking-payment-note">Payment button activates after callback form submit.</p>
+      <p class="booking-payment-note">Confirmation details activate after callback form submit.</p>
     `;
     if (button) {
       button.insertAdjacentElement('afterend', box);
@@ -819,14 +794,14 @@
             if (upiDetails) upiDetails.hidden = false;
             if (payButton) {
               payButton.disabled = !upiId;
-              payButton.textContent = upiId ? (isUpiIntentDevice() ? `Pay Rs ${bookingFee} via UPI` : `Copy Rs ${bookingFee} payment details`) : 'UPI ID pending';
+              payButton.textContent = upiId ? `Copy confirmation details` : 'UPI ID pending';
               payButton.onclick = () => {
-                openUpiOrFallback(bookingId, paymentNote);
+                copyPaymentOrShowManual(bookingId, paymentNote);
               };
             }
             if (paymentNote) {
               paymentNote.textContent = upiId
-                ? `Use Booking ID ${bookingId} in UPI note. Sheet status: Pending verification.`
+                ? `Booking ID ${bookingId} generated. Payment status: Pending verification.`
                 : `Booking ID ${bookingId} generated. Add UPI ID in lead-config.js to activate payment button.`;
             }
           } else if (status) {
