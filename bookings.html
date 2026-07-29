@@ -112,14 +112,15 @@
   <section class="content-section">
     <div class="container booking-lookup-wrap">
       <div class="booking-lookup-copy">
-        <span class="tag">Live lookup</span>
-        <h2>Track with your Booking ID.</h2>
-        <p>Enter the Booking ID and last 4 digits of the mobile number used while booking. Your private address and complete phone number are never shown here.</p>
+        <span class="tag">Booking lookup</span>
+        <h2>Your latest booking can be tracked automatically.</h2>
+        <p>If you booked on this device, use the recent booking card below. The reference field is only for support cases; customers do not need to remember it.</p>
       </div>
       <form class="booking-status-form" data-booking-status-form>
-        <label for="booking-id">Booking ID</label>
-        <div class="booking-lookup-fields"><input id="booking-id" name="bookingId" placeholder="TFN-20260613-AB12" autocomplete="off" required><input name="phoneLast4" inputmode="numeric" maxlength="4" pattern="[0-9]{4}" placeholder="Phone last 4 digits" aria-label="Last 4 digits of booking phone" required><button class="btn primary" type="submit">Check status</button></div>
+        <label for="booking-id">Support reference</label>
+        <div class="booking-lookup-fields"><input id="booking-id" name="bookingId" placeholder="Auto reference from payment page" autocomplete="off" required><input name="phoneLast4" inputmode="numeric" maxlength="4" pattern="[0-9]{4}" placeholder="Phone last 4 digits" aria-label="Last 4 digits of booking phone" required><button class="btn primary" type="submit">Check status</button></div>
         <output class="booking-status-result" data-booking-status-result aria-live="polite"><strong>Ready to check</strong><span>Your latest booking can also be found on this device.</span></output>
+        <div class="recent-booking-helper" data-recent-booking hidden></div>
         <div class="booking-timeline" data-booking-timeline hidden></div>
       </form>
     </div>

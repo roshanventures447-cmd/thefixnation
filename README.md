@@ -51,5 +51,24 @@ Booking payment flow:
 - Booking confirmation charge: `Rs 49`
 - Customer form generates a Booking ID.
 - Details are saved to Google Sheet with `paymentStatus: Pending verification`.
-- UPI button opens payment with Booking ID in the payment note.
+- Site uses no-redirect manual UPI confirmation. It copies the Booking ID and UPI details, then the team verifies payment manually.
 - Redeploy the customer Apps Script after updating `google-apps-script.gs` so the new booking/payment columns are saved.
+
+Day 1 stability update:
+- Booking form validates phone, city, service and worker skill before sending.
+- Payment no longer opens any UPI app or redirect link.
+- Manual payment reporting updates the saved booking on the same device.
+- Pending leads are stored locally and retried when the device is online.
+- Bookings page can fill the most recent Booking ID automatically on the same device.
+
+Day 2 backend update:
+- Backend version is `2.4-day2`.
+- Customer Sheet now has Paytm-ready columns: `paymentProvider`, `paymentGatewayOrderId`, `paymentGatewayTxnId`, `paymentGatewayStatus`.
+- Worker applications get a saved reference receipt on the website.
+- Apps Script now supports worker status lookup via `action=worker_status`.
+- Ops menu includes worker review, approve and reject actions.
+
+Paytm note:
+- Paytm Merchant Key must stay on backend only.
+- Do not paste Paytm Merchant Key in `index.html`, `js/script.js` or `js/lead-config.js`.
+- Use `PAYTM-GATEWAY-SETUP.md` before adding the gateway.

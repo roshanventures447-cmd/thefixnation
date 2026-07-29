@@ -3,7 +3,7 @@ var WORKER_SPREADSHEET_ID = '1nmu4BCtJ4pfC46-_YYDr25SEPEQ1TTXp7Tqed7F7T8I';
 var CUSTOMER_SHEET_NAME = 'Customer Leads';
 var WORKER_SHEET_NAME = 'Worker Leads';
 var NOTIFICATION_EMAIL = 'roshanventures447@gmail.com';
-var API_VERSION = '2.2-ops';
+var API_VERSION = '2.4-day2';
 
 var HEADERS = [
   'serverReceivedAt', 'updatedAt', 'submittedAt', 'submissionId', 'formType', 'source',
@@ -11,6 +11,7 @@ var HEADERS = [
   'googleMapsUrl', 'service', 'serviceCount', 'skill', 'experience', 'serviceArea',
   'ownTools', 'transport', 'availability', 'workType', 'applicationId', 'consent',
   'callbackTime', 'bookingId', 'bookingFee', 'paymentStatus', 'leadStatus',
+  'paymentProvider', 'paymentGatewayOrderId', 'paymentGatewayTxnId', 'paymentGatewayStatus',
   'paymentMethod', 'paymentNote', 'transactionReference', 'paymentReportedAt',
   'paymentVerificationNote', 'technicianName', 'technicianPhone', 'scheduledAt',
   'assignedBy', 'completedAt', 'cancellationReason', 'priority', 'customerLast4',
@@ -36,6 +37,7 @@ function doPost(e) {
 function doGet(e) {
   var params = e && e.parameter ? e.parameter : {};
   if (params.action === 'status') return json_(getBookingStatus_(String(params.bookingId || ''), String(params.phone || '')));
+  if (params.action === 'worker_status') return json_(getWorkerStatus_(String(params.applicationId || ''), String(params.phone || '')));
   return json_({ ok: true, service: 'The Fix Nation booking API', apiVersion: API_VERSION, status: 'live', timestamp: new Date().toISOString() });
 }
 
@@ -47,15 +49,16 @@ function createLead_(input) {
   lock.waitLock(20000);
   try {
     var sheet = getLeadSheet_(payload.formType);
-    var duplicate = findDuplicate_(sheet, payload.submissionId, payload.bookingId);
-    if (duplicate) return { ok: true, duplicate: true, bookingId: duplicate.bookingId, apiVersion: API_VERSION };
+    var duplicate = findDuplicate_(sheet, payload.submissionId, payload.bookingId, payload.applicationId);
+    if (duplicate) return { ok: true, duplicate: true, bookingId: duplicate.bookingId || '', applicationId: duplicate.applicationId || '', apiVersion: API_VERSION };
     if (isRateLimited_(payload)) return { ok: false, error: 'Please wait before submitting another request.', apiVersion: API_VERSION };
     var now = new Date().toISOString();
     payload.serverReceivedAt = now;
     payload.updatedAt = now;
     payload.leadStatus = payload.leadStatus || (payload.formType === 'worker' ? 'Application received' : 'New');
     payload.paymentStatus = payload.paymentStatus || (payload.formType === 'worker' ? 'Not started' : 'Pending verification');
-    payload.paymentMethod = payload.paymentMethod || (payload.formType === 'worker' ? '' : 'UPI manual/intent');
+    payload.paymentProvider = payload.paymentProvider || (payload.formType === 'worker' ? '' : 'UPI direct');
+    payload.paymentMethod = payload.paymentMethod || (payload.formType === 'worker' ? '' : 'UPI manual confirmation');
     payload.customerLast4 = payload.phone ? payload.phone.slice(-4) : '';
     payload.priority = payload.priority || computePriority_(payload);
     payload.statusHistory = historyEntry_(payload.leadStatus, 'Booking request created', now);
@@ -119,6 +122,28 @@ function getBookingStatus_(bookingId, phoneInput) {
   };
 }
 
+function getWorkerStatus_(applicationId, phoneInput) {
+  applicationId = String(applicationId || '').trim().toUpperCase();
+  var phone = digits_(phoneInput);
+  if (!/^PRO-\d{13}-[A-Z0-9]{4}$/.test(applicationId)) return { ok: false, error: 'Valid application reference is required.' };
+  if (phone.length < 4) return { ok: false, error: 'Enter the last 4 digits of the worker phone.' };
+  var found = findWorkerApplication_(applicationId);
+  if (!found) return { ok: false, error: 'Worker application not found.' };
+  var savedPhone = digits_(found.row[found.map.phone]);
+  if (savedPhone.slice(-4) !== phone.slice(-4)) return { ok: false, error: 'Application reference and phone do not match.' };
+  return {
+    ok: true,
+    apiVersion: API_VERSION,
+    applicationId: applicationId,
+    name: getRowValue_(found, 'name', ''),
+    city: getRowValue_(found, 'city', ''),
+    skill: getRowValue_(found, 'skill', ''),
+    leadStatus: getRowValue_(found, 'leadStatus', 'Application received'),
+    updatedAt: getRowValue_(found, 'updatedAt', getRowValue_(found, 'serverReceivedAt', '')),
+    timeline: buildWorkerTimeline_(getRowValue_(found, 'leadStatus', 'Application received'), getRowValue_(found, 'statusHistory', ''))
+  };
+}
+
 function normalizePayload_(input) {
   var payload = Object.assign({}, input || {});
   payload.formType = payload.formType === 'worker' ? 'worker' : 'customer';
@@ -176,12 +201,23 @@ function findBooking_(bookingId) {
   return null;
 }
 
-function findDuplicate_(sheet, submissionId, bookingId) {
+function findWorkerApplication_(applicationId) {
+  var sheet = getLeadSheet_('worker');
+  if (sheet.getLastRow() < 2) return null;
+  var map = headerMap_(sheet);
+  var values = sheet.getRange(2, 1, sheet.getLastRow() - 1, sheet.getLastColumn()).getDisplayValues();
+  for (var i = values.length - 1; i >= 0; i -= 1) {
+    if (values[i][map.applicationId] === applicationId) return { sheet: sheet, map: map, row: values[i], rowNumber: i + 2 };
+  }
+  return null;
+}
+
+function findDuplicate_(sheet, submissionId, bookingId, applicationId) {
   if (sheet.getLastRow() < 2) return null;
   var map = headerMap_(sheet);
   var values = sheet.getRange(2, 1, sheet.getLastRow() - 1, sheet.getLastColumn()).getDisplayValues();
   for (var i = values.length - 1; i >= Math.max(0, values.length - 1000); i -= 1) {
-    if ((submissionId && values[i][map.submissionId] === submissionId) || (bookingId && values[i][map.bookingId] === bookingId)) return { bookingId: values[i][map.bookingId] || bookingId };
+    if ((submissionId && values[i][map.submissionId] === submissionId) || (bookingId && values[i][map.bookingId] === bookingId) || (applicationId && values[i][map.applicationId] === applicationId)) return { bookingId: values[i][map.bookingId] || bookingId, applicationId: values[i][map.applicationId] || applicationId };
   }
   return null;
 }
@@ -197,6 +233,19 @@ function buildTimeline_(status, paymentStatus, history) {
   }
   if (status === 'Cancelled') items.push({ label: 'Cancelled', state: 'current' });
   return { items: items, paymentStatus: paymentStatus, history: parseHistory_(history).slice(-8) };
+}
+
+function buildWorkerTimeline_(status, history) {
+  var order = ['Application received', 'Under review', 'Document check', 'Skill verification', 'Approved'];
+  var current = Math.max(order.indexOf(status), 0);
+  var items = [];
+  for (var i = 0; i < order.length; i += 1) {
+    var state = i < current ? 'complete' : (i === current ? 'current' : 'pending');
+    if (status === 'Rejected') state = i === 0 ? 'complete' : 'pending';
+    items.push({ label: order[i], state: state });
+  }
+  if (status === 'Rejected') items.push({ label: 'Rejected', state: 'current' });
+  return { items: items, history: parseHistory_(history).slice(-8) };
 }
 
 function markPaymentVerified(bookingId, transactionId) {
@@ -253,6 +302,10 @@ function onOpen() {
     .addItem('Verify selected payment', 'verifySelectedPayment')
     .addItem('Assign selected professional', 'assignSelectedProfessional')
     .addItem('Mark selected callback pending', 'markSelectedCallbackPending')
+    .addSeparator()
+    .addItem('Mark selected worker under review', 'markSelectedWorkerUnderReview')
+    .addItem('Approve selected worker', 'approveSelectedWorker')
+    .addItem('Reject selected worker', 'rejectSelectedWorker')
     .addItem('Show backend help', 'showBackendHelp')
     .addToUi();
 }
@@ -284,6 +337,21 @@ function markSelectedCallbackPending() {
   SpreadsheetApp.getUi().alert(updateLeadStatus(selected.bookingId, 'Callback pending', 'Ops team started callback'));
 }
 
+function markSelectedWorkerUnderReview() {
+  var selected = getSelectedWorkerApplication_();
+  SpreadsheetApp.getUi().alert(updateWorkerStatus_(selected.applicationId, 'Under review', 'Ops team started worker review'));
+}
+
+function approveSelectedWorker() {
+  var selected = getSelectedWorkerApplication_();
+  SpreadsheetApp.getUi().alert(updateWorkerStatus_(selected.applicationId, 'Approved', 'Worker approved by ops'));
+}
+
+function rejectSelectedWorker() {
+  var selected = getSelectedWorkerApplication_();
+  SpreadsheetApp.getUi().alert(updateWorkerStatus_(selected.applicationId, 'Rejected', 'Worker rejected by ops'));
+}
+
 function getSelectedCustomerBooking_() {
   var sheet = SpreadsheetApp.getActiveSheet();
   if (sheet.getName() !== CUSTOMER_SHEET_NAME) throw new Error('Open Customer Leads sheet and select a booking row.');
@@ -293,6 +361,30 @@ function getSelectedCustomerBooking_() {
   var bookingId = sheet.getRange(rowNumber, map.bookingId + 1).getDisplayValue();
   if (!bookingId) throw new Error('Selected row does not have Booking ID.');
   return { sheet: sheet, rowNumber: rowNumber, bookingId: bookingId };
+}
+
+function getSelectedWorkerApplication_() {
+  var sheet = SpreadsheetApp.getActiveSheet();
+  if (sheet.getName() !== WORKER_SHEET_NAME) throw new Error('Open Worker Leads sheet and select an application row.');
+  var rowNumber = sheet.getActiveRange().getRow();
+  if (rowNumber < 2) throw new Error('Select a worker application row.');
+  var map = headerMap_(sheet);
+  var applicationId = sheet.getRange(rowNumber, map.applicationId + 1).getDisplayValue();
+  if (!applicationId) throw new Error('Selected row does not have Application ID.');
+  return { sheet: sheet, rowNumber: rowNumber, applicationId: applicationId };
+}
+
+function updateWorkerStatus_(applicationId, leadStatus, note) {
+  if (WORKER_STATUSES.indexOf(leadStatus) === -1) throw new Error('Unsupported worker status.');
+  var found = findWorkerApplication_(String(applicationId || '').trim().toUpperCase());
+  if (!found) throw new Error('Worker application not found: ' + applicationId);
+  var now = new Date().toISOString();
+  updateRow_(found.sheet, found.rowNumber, found.map, {
+    leadStatus: leadStatus,
+    updatedAt: now,
+    statusHistory: appendHistory_(found.row[found.map.statusHistory], historyEntry_(leadStatus, note || leadStatus, now))
+  });
+  return 'Updated ' + applicationId + ' to ' + leadStatus;
 }
 
 function applyOpsFormatting_(sheet) {

@@ -164,6 +164,16 @@
       <label class="worker-consent"><input type="checkbox" name="consent" value="Yes" required><span>I confirm these details are correct and allow The Fix Nation team to contact me for profile verification and suitable work opportunities.</span></label>
       <button class="btn submit-btn" type="submit">Submit professional application</button>
       <p class="form-status" aria-live="polite"></p>
+      <div class="worker-application-receipt" data-worker-application-receipt hidden></div>
+    </form>
+    <form class="worker-status-form" data-worker-status-form>
+      <strong>Already applied?</strong>
+      <div class="booking-lookup-fields">
+        <input name="applicationId" placeholder="PRO application reference" autocomplete="off">
+        <input name="phoneLast4" inputmode="numeric" maxlength="4" pattern="[0-9]{4}" placeholder="Phone last 4">
+        <button class="btn" type="submit">Check application</button>
+      </div>
+      <output class="booking-status-result" data-worker-status-result aria-live="polite"><strong>Application status</strong><span>Use your reference if our team asks for it.</span></output>
     </form>
   </div></div></section>
 </main>
