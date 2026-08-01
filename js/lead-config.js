@@ -12,3 +12,15 @@ window.FIX_NATION_PAYMENT = {
   upiId: "9165867685-5@ybl",
   payeeName: "The Fix Nation"
 };
+
+window.FIX_NATION_PAYTM = {
+  enabled: false,
+  // Paytm secret/Merchant Key must stay on backend only. Never paste it in this file.
+  createOrderUrl: "",
+  verifyPaymentUrl: "",
+  mode: "production"
+};
+
+// Add approved B2B brand names here. Example:
+// window.FIX_NATION_BRANDS = ["Brand One", "Brand Two", "Brand Three"];
+window.FIX_NATION_BRANDS = [];

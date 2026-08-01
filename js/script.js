@@ -1,5 +1,5 @@
 ﻿document.addEventListener('DOMContentLoaded', () => {
-  const searchInput = document.querySelector('.search input');
+  const searchInputs = Array.from(document.querySelectorAll('.search input, [data-service-search]'));
   const serviceCards = Array.from(document.querySelectorAll('.home-service-card, .service-card, .info-card'));
   const citySelects = Array.from(document.querySelectorAll('.city-select, .city-service-select, [data-booking-city]'));
   const selectedCityLabels = Array.from(document.querySelectorAll('[data-selected-city]'));
@@ -13,6 +13,53 @@
   const serviceOpeners = Array.from(document.querySelectorAll('[data-open-category]'));
   let currentSearchQuery = '';
   let activeCategory = categoryButtons.find((button) => button.classList.contains('active'))?.dataset.categoryFilter || 'beds';
+
+  const installCallConversionBar = () => {
+    if (document.querySelector('.call-conversion-bar')) return;
+    const bar = document.createElement('div');
+    bar.className = 'call-conversion-bar';
+    bar.innerHTML = `
+      <a href="index.html#book" data-conversion-action="home">Home</a>
+      <a href="index.html#services" data-conversion-action="categories">Categories</a>
+      <a href="bookings.html" data-conversion-action="bookings">My Bookings</a>
+      <a href="index.html#become-partner" data-conversion-action="account">Account</a>
+    `;
+    document.body.appendChild(bar);
+  };
+
+  installCallConversionBar();
+
+  const renderBrandPartners = () => {
+    const brandGrid = document.querySelector('[data-brand-grid]');
+    const brandCount = document.querySelector('[data-brand-count]');
+    if (!brandGrid) return;
+    const configuredBrands = Array.isArray(window.FIX_NATION_BRANDS)
+      ? window.FIX_NATION_BRANDS.map((brand) => String(brand || '').trim()).filter(Boolean)
+      : [];
+    if (brandCount) brandCount.textContent = configuredBrands.length ? `${configuredBrands.length}+` : 'B2B';
+    if (!configuredBrands.length) {
+      brandGrid.innerHTML = `
+        <span>Furniture brands</span>
+        <span>Ecommerce sellers</span>
+        <span>Local dealers</span>
+        <span>Office furniture teams</span>
+      `;
+      return;
+    }
+    brandGrid.innerHTML = configuredBrands.map((brand) => `<span>${brand.replace(/[&<>"']/g, (character) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[character]))}</span>`).join('');
+  };
+
+  renderBrandPartners();
+
+  document.addEventListener('click', (event) => {
+    const target = event.target.closest('a[href^="tel:"], a[href*="wa.me"], [data-conversion-action]');
+    if (!target || typeof window.gtag !== 'function') return;
+    window.gtag('event', 'lead_action', {
+      action_type: target.dataset.conversionAction || (target.href.includes('wa.me') ? 'whatsapp' : 'phone'),
+      link_url: target.href || '',
+      page_path: window.location.pathname
+    });
+  });
 
   const serviceLabels = {
     furniture: 'Furniture assembly',
@@ -160,11 +207,14 @@
 
   setSelectedCity(localStorage.getItem('fixNationSelectedCity') || citySelects[0]?.value || 'Amritsar');
 
-  if (searchInput) {
-    searchInput.addEventListener('input', () => {
-      currentSearchQuery = searchInput.value.trim().toLowerCase();
+  if (searchInputs.length) {
+    searchInputs.forEach((input) => input.addEventListener('input', () => {
+      currentSearchQuery = input.value.trim().toLowerCase();
+      searchInputs.forEach((otherInput) => {
+        if (otherInput !== input) otherInput.value = input.value;
+      });
       applyServiceVisibility();
-    });
+    }));
   }
 
   const marketplace = document.querySelector('.marketplace');
@@ -200,6 +250,7 @@
   const paymentDialogStatus = document.querySelector('[data-payment-dialog-status]');
   const paymentReportForm = document.querySelector('[data-payment-report-form]');
   const paymentWhatsApp = document.querySelector('[data-payment-whatsapp]');
+  const paymentIntentButton = document.querySelector('[data-payment-intent]');
   let activePaymentBookingId = '';
   let selectedServices = [];
   try {
@@ -390,7 +441,7 @@
     if (bookingPayInline) {
       bookingPayInline.disabled = !(locationReady && selectedServices.length);
       if (!selectedServices.length) bookingPayInline.textContent = 'Select at least one service';
-      else bookingPayInline.textContent = `Save ${selectedServices.length} service${selectedServices.length > 1 ? 's' : ''} and get Booking ID`;
+      else bookingPayInline.textContent = `Confirm ${selectedServices.length} service${selectedServices.length > 1 ? 's' : ''} and pay Rs ${bookingFee}`;
     }
     if (bookingLocationStatus && locationReady) {
       bookingLocationStatus.className = 'booking-location-status is-ready';
@@ -476,6 +527,7 @@
   const bookingFee = Number(paymentConfig.bookingFee || 49);
   const upiId = paymentConfig.upiId || '9165867685-5@ybl';
   const payeeName = paymentConfig.payeeName || 'The Fix Nation';
+  const escapeHtml = (value) => String(value || '').replace(/[&<>"']/g, (character) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[character]));
 
   const createBookingId = () => {
     const now = new Date();
@@ -487,12 +539,40 @@
   const createSubmissionId = () => `SUB-${Date.now()}-${Math.random().toString(36).slice(2, 10).toUpperCase()}`;
 
   const rememberBooking = (payload) => {
-    localStorage.setItem('fixNationLastBooking', JSON.stringify(payload));
+    const savedPayload = Object.assign({ savedAt: new Date().toISOString() }, payload);
+    localStorage.setItem('fixNationLastBooking', JSON.stringify(savedPayload));
     let bookings = [];
     try { bookings = JSON.parse(localStorage.getItem('fixNationBookings') || '[]'); } catch (error) {}
     bookings = Array.isArray(bookings) ? bookings.filter((item) => item.bookingId !== payload.bookingId) : [];
-    bookings.unshift(payload);
+    bookings.unshift(savedPayload);
     localStorage.setItem('fixNationBookings', JSON.stringify(bookings.slice(0, 10)));
+  };
+
+  const rememberWorkerApplication = (payload) => {
+    const savedPayload = Object.assign({ savedAt: new Date().toISOString() }, payload);
+    localStorage.setItem('fixNationLastWorkerApplication', JSON.stringify(savedPayload));
+    let applications = [];
+    try { applications = JSON.parse(localStorage.getItem('fixNationWorkerApplications') || '[]'); } catch (error) {}
+    applications = Array.isArray(applications) ? applications.filter((item) => item.applicationId !== payload.applicationId) : [];
+    applications.unshift(savedPayload);
+    localStorage.setItem('fixNationWorkerApplications', JSON.stringify(applications.slice(0, 10)));
+  };
+
+  const updateStoredBooking = (bookingId, changes) => {
+    if (!bookingId) return null;
+    let updated = null;
+    let bookings = [];
+    try { bookings = JSON.parse(localStorage.getItem('fixNationBookings') || '[]'); } catch (error) {}
+    bookings = Array.isArray(bookings) ? bookings.map((item) => {
+      if (item.bookingId !== bookingId) return item;
+      updated = Object.assign({}, item, changes, { updatedAt: new Date().toISOString() });
+      return updated;
+    }) : [];
+    if (updated) {
+      localStorage.setItem('fixNationBookings', JSON.stringify(bookings.slice(0, 10)));
+      localStorage.setItem('fixNationLastBooking', JSON.stringify(updated));
+    }
+    return updated;
   };
 
   const getPendingLeads = () => {
@@ -508,6 +588,7 @@
   const savePendingLeads = (leads) => localStorage.setItem('fixNationPendingLeads', JSON.stringify(leads.slice(-25)));
 
   const queueLead = (endpoint, payload) => {
+    if (!endpoint) return;
     const pending = getPendingLeads().filter((item) => item.payload?.submissionId !== payload.submissionId);
     pending.push({ endpoint, payload, queuedAt: new Date().toISOString() });
     savePendingLeads(pending);
@@ -532,6 +613,7 @@
     const pending = getPendingLeads();
     for (const item of pending.slice(0, 5)) {
       try {
+        if (!item.endpoint) continue;
         await submitLead(item.endpoint, item.payload);
       } catch (error) {
         break;
@@ -539,13 +621,57 @@
     }
   };
 
+  const normalizePhone = (value) => String(value || '').replace(/\D/g, '').slice(-10);
+
+  if (bookingPhoneInput) {
+    bookingPhoneInput.addEventListener('input', () => {
+      bookingPhoneInput.value = normalizePhone(bookingPhoneInput.value);
+    });
+  }
+
+  document.querySelectorAll('.lead-form input[name="phone"]').forEach((input) => {
+    input.addEventListener('input', () => {
+      input.value = normalizePhone(input.value);
+    });
+  });
+
+  const validateLeadPayload = (payload, formType) => {
+    payload.phone = normalizePhone(payload.phone);
+    payload.city = String(payload.city || '').trim();
+    payload.name = String(payload.name || '').trim();
+    payload.service = String(payload.service || '').trim();
+    payload.skill = String(payload.skill || '').trim();
+    if (!/^\d{10}$/.test(payload.phone)) return 'Enter a valid 10 digit mobile number.';
+    if (!payload.city) return 'Enter service city.';
+    if (formType === 'customer') {
+      if (!payload.name) return 'Enter customer name.';
+      if (!payload.service) return 'Select a service.';
+    }
+    if (formType === 'worker') {
+      if (!payload.name) return 'Enter worker name.';
+      if (!payload.skill) return 'Select primary skill.';
+    }
+    return '';
+  };
+
   const getPaymentDetailsText = (bookingId) => [
     'The Fix Nation booking confirmation',
     `Booking charge: Rs ${bookingFee}`,
-    `UPI ID, only if support asks: ${upiId}`,
-    `Booking ID: ${bookingId}`,
+    `UPI ID: ${upiId}`,
+    `Auto reference: ${bookingId}`,
     `Payee: ${payeeName}`
   ].join('\n');
+
+  const getUpiIntentUrl = (bookingId) => {
+    const params = new URLSearchParams({
+      pa: upiId,
+      pn: payeeName,
+      am: String(bookingFee),
+      cu: 'INR',
+      tn: `The Fix Nation ${bookingId}`
+    });
+    return `upi://pay?${params.toString()}`;
+  };
 
   const copyPaymentDetails = async (bookingId) => {
     const text = getPaymentDetailsText(bookingId);
@@ -562,8 +688,8 @@
     const copied = await copyPaymentDetails(bookingId);
     if (noteElement) {
       noteElement.textContent = copied
-        ? `Confirmation details copied. Agar payment app risk warning dikhaye to payment mat karo; WhatsApp support se confirm karo.`
-        : `Booking ID ${bookingId}. Rs ${bookingFee} confirmation ke liye support se WhatsApp par confirm karo.`;
+        ? `UPI details copied. If direct payment does not open, paste these details in your UPI app or WhatsApp support.`
+        : `Auto reference ${bookingId}. Rs ${bookingFee} confirmation ke liye support se WhatsApp par confirm karo.`;
     }
   };
 
@@ -573,12 +699,16 @@
     if (paymentBookingId) paymentBookingId.textContent = bookingId;
     if (paymentUpi) paymentUpi.textContent = upiId;
     if (paymentStatusLabel) paymentStatusLabel.textContent = 'Pending verification';
-    if (paymentLink) paymentLink.textContent = 'Copy confirmation details';
+    if (paymentLink) paymentLink.textContent = 'Copy UPI details instead';
+    if (paymentIntentButton) {
+      paymentIntentButton.disabled = !upiId;
+      paymentIntentButton.textContent = upiId ? `Pay Rs ${bookingFee} with UPI app` : 'UPI payment unavailable';
+    }
     if (paymentWhatsApp) {
       paymentWhatsApp.href = `https://wa.me/919407840541?text=${encodeURIComponent(getPaymentDetailsText(bookingId))}`;
     }
     if (paymentDialogStatus) {
-      paymentDialogStatus.textContent = 'Site payment app open nahi karegi. Risk warning aaye to payment mat karo; WhatsApp support se confirm karo.';
+      paymentDialogStatus.textContent = 'UPI app open hoga. Payment complete hone ke baad “I have paid Rs 49” press karein.';
     }
     paymentModal.hidden = false;
     document.body.classList.add('payment-modal-open');
@@ -587,6 +717,15 @@
   paymentLink?.addEventListener('click', (event) => {
     event.preventDefault();
     copyPaymentOrShowManual(activePaymentBookingId, paymentDialogStatus);
+  });
+
+  paymentIntentButton?.addEventListener('click', () => {
+    if (!activePaymentBookingId || !upiId) return;
+    updateStoredBooking(activePaymentBookingId, { paymentStatus: 'UPI app opened' });
+    if (paymentDialogStatus) {
+      paymentDialogStatus.textContent = 'Opening UPI app. Payment complete hone ke baad wapas aakar “I have paid Rs 49” press karein.';
+    }
+    window.location.href = getUpiIntentUrl(activePaymentBookingId);
   });
 
   document.querySelectorAll('[data-payment-close]').forEach((button) => {
@@ -605,7 +744,7 @@
       try {
         await navigator.clipboard.writeText(value.trim());
         button.textContent = 'Copied';
-        if (paymentDialogStatus) paymentDialogStatus.textContent = `${button.dataset.copyPayment === 'all' ? 'Confirmation details' : button.dataset.copyPayment === 'upi' ? 'UPI ID' : 'Booking ID'} copied.`;
+        if (paymentDialogStatus) paymentDialogStatus.textContent = `${button.dataset.copyPayment === 'all' ? 'Confirmation details' : button.dataset.copyPayment === 'upi' ? 'UPI ID' : 'Auto reference'} copied.`;
       } catch (error) {
         if (paymentDialogStatus) paymentDialogStatus.textContent = `Copy this value: ${value.trim()}`;
       }
@@ -617,25 +756,45 @@
     const endpoint = leadEndpoints.customer || leadEndpoints.all || leadEndpoints.googleSheetUrl;
     const transactionReference = String(new FormData(paymentReportForm).get('transactionReference') || '').trim();
     if (!activePaymentBookingId || !bookingLocation.phone) {
-      if (paymentDialogStatus) paymentDialogStatus.textContent = 'Booking phone or Booking ID is missing.';
+      if (paymentDialogStatus) paymentDialogStatus.textContent = 'Booking phone or auto reference is missing.';
       return;
     }
     const button = paymentReportForm.querySelector('button[type="submit"]');
     if (button) button.disabled = true;
     if (paymentDialogStatus) paymentDialogStatus.textContent = 'Sending payment report for team verification...';
+    const reportPayload = {
+      submissionId: createSubmissionId(),
+      action: 'report_payment',
+      formType: 'customer',
+      bookingId: activePaymentBookingId,
+      phone: bookingLocation.phone,
+      transactionReference
+    };
     try {
-      await fetch(endpoint, {
-        method: 'POST',
-        mode: 'no-cors',
-        cache: 'no-store',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({ action: 'report_payment', bookingId: activePaymentBookingId, phone: bookingLocation.phone, transactionReference })
+      if (endpoint) {
+        await submitLead(endpoint, reportPayload);
+      } else {
+        localStorage.setItem('fixNationLastPaymentReport', JSON.stringify(reportPayload));
+      }
+      updateStoredBooking(activePaymentBookingId, {
+        paymentStatus: 'Customer reported paid',
+        transactionReference,
+        paymentReportedAt: new Date().toISOString()
       });
       if (paymentStatusLabel) paymentStatusLabel.textContent = 'Customer reported paid';
       if (paymentDialogStatus) paymentDialogStatus.textContent = 'Payment report sent. Team verification will update your booking status.';
       paymentReportForm.reset();
     } catch (error) {
-      if (paymentDialogStatus) paymentDialogStatus.textContent = 'Payment report could not be sent. Keep the UPI reference and contact support.';
+      queueLead(endpoint, reportPayload);
+      localStorage.setItem('fixNationLastPaymentReport', JSON.stringify(reportPayload));
+      updateStoredBooking(activePaymentBookingId, {
+        paymentStatus: 'Customer reported paid',
+        transactionReference,
+        paymentReportedAt: new Date().toISOString(),
+        syncStatus: 'Payment report retry pending'
+      });
+      if (paymentStatusLabel) paymentStatusLabel.textContent = 'Customer reported paid';
+      if (paymentDialogStatus) paymentDialogStatus.textContent = 'Payment report saved on this device. Keep the UPI reference and send details on WhatsApp if team has not called.';
     } finally {
       if (button) button.disabled = false;
     }
@@ -665,7 +824,10 @@
       bookingId,
       bookingFee,
       paymentStatus: upiId ? 'Pending verification' : 'UPI ID pending',
-      paymentMethod: 'UPI manual/intent',
+      paymentProvider: 'UPI direct',
+      paymentGatewayOrderId: bookingId,
+      paymentGatewayStatus: 'Created',
+      paymentMethod: 'UPI manual confirmation',
       paymentNote: `${bookingId} booking confirmation`,
       name: '',
       email: '',
@@ -685,8 +847,8 @@
 
     applySelectedBookingToForm();
     if (cartPaymentStatus) {
-      cartPaymentStatus.className = 'cart-payment-status';
-      cartPaymentStatus.textContent = 'Saving booking details and generating Booking ID...';
+        cartPaymentStatus.className = 'cart-payment-status';
+      cartPaymentStatus.textContent = 'Saving booking details and preparing payment...';
     }
     if (bookingPayInline) bookingPayInline.disabled = true;
 
@@ -695,7 +857,7 @@
       rememberBooking(payload);
       if (cartPaymentStatus) {
         cartPaymentStatus.className = 'cart-payment-status is-success';
-        cartPaymentStatus.textContent = `Booking ID ${bookingId} saved. Confirmation details are ready.`;
+        cartPaymentStatus.textContent = `Booking saved. Payment is ready.`;
       }
       if (bookingPayInline) {
         bookingPayInline.disabled = false;
@@ -703,11 +865,13 @@
       }
       showPaymentModal(bookingId);
     } catch (error) {
+      rememberBooking(Object.assign({}, payload, { syncStatus: 'Retry pending' }));
       if (cartPaymentStatus) {
         cartPaymentStatus.className = 'cart-payment-status is-error';
-        cartPaymentStatus.textContent = 'Could not save booking. Please try again or WhatsApp us.';
+        cartPaymentStatus.textContent = `Booking reference saved on this device. Internet/Sheet sync issue hai; details WhatsApp par bhej do.`;
       }
       if (bookingPayInline) bookingPayInline.disabled = false;
+      showPaymentModal(bookingId);
     }
   };
 
@@ -723,13 +887,13 @@
     box.innerHTML = `
       <div>
         <strong>Booking confirmation: Rs ${bookingFee}</strong>
-        <small>First submit your details. After Booking ID is generated, support may ask for manual confirmation. If any payment app shows a risk warning, do not pay and contact WhatsApp support.</small>
+        <small>First submit your details. The site will create an auto reference for payment/support. If any payment app shows a risk warning, do not pay and contact WhatsApp support.</small>
       </div>
       <button class="booking-pay-btn" type="button" disabled>Copy confirmation details</button>
       <div class="booking-upi-details" hidden>
         <div><span>UPI ID</span><strong data-upi-id>${upiId}</strong></div>
         <div><span>Amount</span><strong>Rs ${bookingFee}</strong></div>
-        <div><span>Booking ID</span><strong data-booking-id>Generated after submit</strong></div>
+        <div><span>Auto reference</span><strong data-booking-id>Generated after submit</strong></div>
       </div>
       <p class="booking-payment-note">Confirmation details activate after callback form submit.</p>
     `;
@@ -739,6 +903,22 @@
       form.appendChild(box);
     }
   };
+
+  const renderWorkerApplicationReceipt = (payload) => {
+    const receipt = document.querySelector('[data-worker-application-receipt]');
+    if (!receipt || !payload?.applicationId) return;
+    receipt.hidden = false;
+    receipt.innerHTML = `
+      <strong>Application received</strong>
+      <span>Reference: ${escapeHtml(payload.applicationId)}</span>
+      <small>${escapeHtml(payload.skill || 'Worker profile')} · ${escapeHtml(payload.city || 'Service city')} · Status: ${escapeHtml(payload.leadStatus || 'Application received')}</small>
+      <a href="https://wa.me/919407840541?text=${encodeURIComponent(`The Fix Nation worker application ${payload.applicationId}`)}" target="_blank" rel="noopener">Send reference on WhatsApp</a>
+    `;
+  };
+
+  try {
+    renderWorkerApplicationReceipt(JSON.parse(localStorage.getItem('fixNationLastWorkerApplication') || 'null'));
+  } catch (error) {}
 
   document.querySelectorAll('.lead-form').forEach((form) => {
     ensurePaymentBox(form);
@@ -756,6 +936,14 @@
       const payload = Object.fromEntries(new FormData(form).entries());
       const bookingId = formType === 'customer' ? createBookingId() : '';
       if (payload.website) return;
+      const validationError = validateLeadPayload(payload, formType);
+      if (validationError) {
+        if (status) {
+          status.classList.add('is-error');
+          status.textContent = validationError;
+        }
+        return;
+      }
       payload.submissionId = createSubmissionId();
       payload.formType = formType;
       payload.source = 'The Fix Nation website';
@@ -765,7 +953,10 @@
         payload.bookingId = bookingId;
         payload.bookingFee = bookingFee;
         payload.paymentStatus = upiId ? 'Pending verification' : 'UPI ID pending';
-        payload.paymentMethod = 'UPI manual/intent';
+        payload.paymentProvider = 'UPI direct';
+        payload.paymentGatewayOrderId = bookingId;
+        payload.paymentGatewayStatus = 'Created';
+        payload.paymentMethod = 'UPI manual confirmation';
         payload.paymentNote = bookingId ? `${bookingId} booking confirmation` : '';
         payload.address = payload.address || bookingLocation.address || '';
         payload.latitude = payload.latitude || bookingLocation.latitude || '';
@@ -779,7 +970,7 @@
 
       if (status) {
         status.classList.remove('is-error');
-        status.textContent = formType === 'customer' ? 'Saving details and generating booking ID...' : 'Saving your details...';
+        status.textContent = formType === 'customer' ? 'Saving details and preparing confirmation...' : 'Saving your details...';
       }
       if (submitButton) submitButton.disabled = true;
 
@@ -788,7 +979,7 @@
           await submitLead(endpoint, payload);
           if (formType === 'customer') {
             rememberBooking(payload);
-            if (status) status.textContent = `Details saved. Booking ID: ${bookingId}`;
+            if (status) status.textContent = `Details saved. Reference: ${bookingId}`;
             if (paymentBox) paymentBox.classList.add('is-ready');
             if (bookingIdLabel) bookingIdLabel.textContent = bookingId;
             if (upiDetails) upiDetails.hidden = false;
@@ -801,11 +992,13 @@
             }
             if (paymentNote) {
               paymentNote.textContent = upiId
-                ? `Booking ID ${bookingId} generated. Payment status: Pending verification.`
-                : `Booking ID ${bookingId} generated. Add UPI ID in lead-config.js to activate payment button.`;
+                ? `Reference ${bookingId} generated. Payment status: Pending verification.`
+                : `Reference ${bookingId} generated. Add UPI ID in lead-config.js to activate payment button.`;
             }
-          } else if (status) {
-            status.textContent = `Application submitted. Reference: ${payload.applicationId}. Our onboarding team will review it.`;
+          } else {
+            rememberWorkerApplication(payload);
+            if (status) status.textContent = `Application submitted. Reference: ${payload.applicationId}. Our onboarding team will review it.`;
+            renderWorkerApplicationReceipt(payload);
           }
           form.reset();
           setSelectedCity(localStorage.getItem('fixNationSelectedCity') || citySelects[0]?.value || 'Amritsar');
@@ -819,9 +1012,15 @@
           }
         }
       } catch (error) {
+        if (formType === 'worker') {
+          rememberWorkerApplication(Object.assign({}, payload, { syncStatus: 'Retry pending' }));
+          renderWorkerApplicationReceipt(payload);
+        }
         if (status) {
           status.classList.add('is-error');
-          status.textContent = 'Submission failed. Please try again or contact us on WhatsApp.';
+          status.textContent = formType === 'worker'
+            ? `Application saved on this device. Reference: ${payload.applicationId}. If team does not call, WhatsApp this reference.`
+            : 'Submission failed. Please try again or contact us on WhatsApp.';
         }
       } finally {
         if (submitButton) submitButton.disabled = false;
@@ -833,7 +1032,24 @@
   retryPendingLeads();
 
   const bookingStatusForm = document.querySelector('[data-booking-status-form]');
-  const escapeHtml = (value) => String(value || '').replace(/[&<>"']/g, (character) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[character]));
+  const recentBookingHelper = document.querySelector('[data-recent-booking]');
+  if (bookingStatusForm && recentBookingHelper) {
+    try {
+      const lastBooking = JSON.parse(localStorage.getItem('fixNationLastBooking') || 'null');
+      if (lastBooking?.bookingId && lastBooking?.phone) {
+        const last4 = String(lastBooking.phone || '').replace(/\D/g, '').slice(-4);
+        recentBookingHelper.hidden = false;
+        recentBookingHelper.innerHTML = `<strong>Recent booking: ${escapeHtml(lastBooking.bookingId)}</strong><span>${escapeHtml(lastBooking.service || 'Service request')} · ${escapeHtml(lastBooking.city || '')}</span><button type="button" data-fill-recent-booking>Use this booking</button>`;
+        recentBookingHelper.querySelector('[data-fill-recent-booking]')?.addEventListener('click', () => {
+          const bookingInput = bookingStatusForm.querySelector('input[name="bookingId"]');
+          const phoneInput = bookingStatusForm.querySelector('input[name="phoneLast4"]');
+          if (bookingInput) bookingInput.value = lastBooking.bookingId;
+          if (phoneInput) phoneInput.value = last4;
+          bookingStatusForm.requestSubmit();
+        });
+      }
+    } catch (error) {}
+  }
   const renderBookingTimeline = (timeline, scheduledAt) => {
     const container = document.querySelector('[data-booking-timeline]');
     if (!container || !timeline?.items?.length) return;
@@ -850,7 +1066,7 @@
     const endpoint = leadEndpoints.customer || leadEndpoints.all || leadEndpoints.googleSheetUrl;
     if (timeline) timeline.hidden = true;
     if (!result || !/^TFN-\d{8}-[A-Z0-9]{4}$/.test(bookingId) || !/^\d{4}$/.test(phoneLast4)) {
-      if (result) result.innerHTML = '<strong>Check booking details</strong><span>Use Booking ID format TFN-YYYYMMDD-XXXX and the phone number\'s last 4 digits.</span>';
+      if (result) result.innerHTML = '<strong>Check booking details</strong><span>Use the auto reference and the phone number\'s last 4 digits.</span>';
       return;
     }
 
@@ -865,13 +1081,56 @@
       renderBookingTimeline(data.timeline, data.scheduledAt);
     } catch (error) {
       let saved = null;
-      try { saved = JSON.parse(localStorage.getItem('fixNationLastBooking') || 'null'); } catch (storageError) {}
+      try {
+        const storedBookings = JSON.parse(localStorage.getItem('fixNationBookings') || '[]');
+        saved = Array.isArray(storedBookings)
+          ? storedBookings.find((item) => item.bookingId === bookingId)
+          : JSON.parse(localStorage.getItem('fixNationLastBooking') || 'null');
+      } catch (storageError) {
+        try { saved = JSON.parse(localStorage.getItem('fixNationLastBooking') || 'null'); } catch (lastError) {}
+      }
       if (saved?.bookingId === bookingId && String(saved.phone || '').replace(/\D/g, '').slice(-4) === phoneLast4) {
         result.className = 'booking-status-result is-found';
         result.innerHTML = `<strong>Booking received</strong><span>${escapeHtml(saved.service)} in ${escapeHtml(saved.city)} · Payment: ${escapeHtml(saved.paymentStatus)}</span><small>Live status is temporarily unavailable; this is the saved device record.</small>`;
       } else {
         result.className = 'booking-status-result is-error';
-        result.innerHTML = '<strong>Booking could not be verified</strong><span>Confirm the Booking ID and phone digits, or contact support on WhatsApp.</span>';
+        result.innerHTML = '<strong>Booking could not be verified</strong><span>Confirm the reference and phone digits, or contact support on WhatsApp.</span>';
+      }
+    }
+  });
+
+  const workerStatusForm = document.querySelector('[data-worker-status-form]');
+  workerStatusForm?.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const formData = new FormData(workerStatusForm);
+    const applicationId = String(formData.get('applicationId') || '').trim().toUpperCase();
+    const phoneLast4 = String(formData.get('phoneLast4') || '').replace(/\D/g, '').slice(-4);
+    const result = document.querySelector('[data-worker-status-result]');
+    const endpoint = leadEndpoints.worker || leadEndpoints.all || leadEndpoints.googleSheetUrl;
+    if (!result || !/^PRO-\d{13}-[A-Z0-9]{4}$/.test(applicationId) || !/^\d{4}$/.test(phoneLast4)) {
+      if (result) result.innerHTML = '<strong>Check application details</strong><span>Use your PRO reference and phone last 4 digits.</span>';
+      return;
+    }
+    result.className = 'booking-status-result is-loading';
+    result.innerHTML = '<strong>Checking application...</strong><span>Please wait a moment.</span>';
+    try {
+      const response = await fetch(`${endpoint}?action=worker_status&applicationId=${encodeURIComponent(applicationId)}&phone=${encodeURIComponent(phoneLast4)}`, { cache: 'no-store' });
+      const data = await response.json();
+      if (!data.ok) throw new Error(data.error || 'Application not found');
+      result.className = 'booking-status-result is-found';
+      result.innerHTML = `<strong>${escapeHtml(data.leadStatus || 'Application received')}</strong><span>${escapeHtml(data.skill || 'Worker profile')} in ${escapeHtml(data.city || 'your city')}</span><small>Updated: ${escapeHtml(data.updatedAt || 'Pending update')}</small>`;
+    } catch (error) {
+      let saved = null;
+      try {
+        const applications = JSON.parse(localStorage.getItem('fixNationWorkerApplications') || '[]');
+        saved = Array.isArray(applications) ? applications.find((item) => item.applicationId === applicationId) : null;
+      } catch (storageError) {}
+      if (saved?.applicationId === applicationId && String(saved.phone || '').replace(/\D/g, '').slice(-4) === phoneLast4) {
+        result.className = 'booking-status-result is-found';
+        result.innerHTML = `<strong>${escapeHtml(saved.leadStatus || 'Application received')}</strong><span>${escapeHtml(saved.skill || 'Worker profile')} in ${escapeHtml(saved.city || 'your city')}</span><small>Live status temporarily unavailable; this is the saved device record.</small>`;
+      } else {
+        result.className = 'booking-status-result is-error';
+        result.innerHTML = '<strong>Application could not be verified</strong><span>Confirm the reference and phone digits, or contact support on WhatsApp.</span>';
       }
     }
   });
