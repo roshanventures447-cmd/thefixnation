@@ -49,17 +49,19 @@ Current configured endpoints:
 Booking payment flow:
 - UPI ID: `9165867685-5@ybl`
 - Booking confirmation charge: `Rs 49`
-- Customer form generates a Booking ID.
+- Customer form generates an automatic booking reference.
 - Details are saved to Google Sheet with `paymentStatus: Pending verification`.
-- Site uses no-redirect manual UPI confirmation. It copies the Booking ID and UPI details, then the team verifies payment manually.
+- Current free payment flow opens the customer's installed UPI app with amount and reference prefilled.
+- If the UPI app cannot open, the site shows the UPI ID, amount and auto reference for manual payment.
+- Customer does not need to type a booking reference manually during booking.
 - Redeploy the customer Apps Script after updating `google-apps-script.gs` so the new booking/payment columns are saved.
 
 Day 1 stability update:
 - Booking form validates phone, city, service and worker skill before sending.
-- Payment no longer opens any UPI app or redirect link.
+- Payment uses direct UPI intent with fallback payment details.
 - Manual payment reporting updates the saved booking on the same device.
 - Pending leads are stored locally and retried when the device is online.
-- Bookings page can fill the most recent Booking ID automatically on the same device.
+- Bookings page can fill the most recent reference automatically on the same device.
 
 Day 2 backend update:
 - Backend version is `2.4-day2`.
@@ -67,6 +69,14 @@ Day 2 backend update:
 - Worker applications get a saved reference receipt on the website.
 - Apps Script now supports worker status lookup via `action=worker_status`.
 - Ops menu includes worker review, approve and reject actions.
+
+Day 4 free growth update:
+- Homepage SEO title and description improved for priority service searches.
+- FAQ schema and priority service ItemList schema added on the homepage.
+- Customer confidence, local search intent and worker network growth sections added.
+- Worker page improved for carpenter, handyman, AC technician, electrician and plumber applications.
+- Customer-facing payment/reference language now uses automatic reference wording.
+- Sitemap lastmod updated to `2026-08-01`.
 
 Paytm note:
 - Paytm Merchant Key must stay on backend only.
