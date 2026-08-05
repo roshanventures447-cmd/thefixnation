@@ -29,6 +29,45 @@
 
   installCallConversionBar();
 
+  const serviceSlider = document.querySelector('[data-service-slider]');
+  if (serviceSlider) {
+    const slides = Array.from(serviceSlider.querySelectorAll('[data-service-slide]'));
+    const dots = Array.from(serviceSlider.querySelectorAll('[data-service-dot]'));
+    let sliderIndex = 0;
+    let sliderTimer;
+
+    const showServiceSlide = (index) => {
+      if (!slides.length) return;
+      sliderIndex = (index + slides.length) % slides.length;
+      slides.forEach((slide, slideIndex) => {
+        const isActive = slideIndex === sliderIndex;
+        slide.classList.toggle('is-active', isActive);
+        slide.setAttribute('aria-hidden', isActive ? 'false' : 'true');
+      });
+      dots.forEach((dot, dotIndex) => {
+        dot.classList.toggle('is-active', dotIndex === sliderIndex);
+      });
+    };
+
+    const startServiceSlider = () => {
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      window.clearInterval(sliderTimer);
+      sliderTimer = window.setInterval(() => showServiceSlide(sliderIndex + 1), 2000);
+    };
+
+    dots.forEach((dot) => {
+      dot.addEventListener('click', () => {
+        showServiceSlide(Number(dot.dataset.serviceDot || 0));
+        startServiceSlider();
+      });
+    });
+
+    serviceSlider.addEventListener('mouseenter', () => window.clearInterval(sliderTimer));
+    serviceSlider.addEventListener('mouseleave', startServiceSlider);
+    showServiceSlide(0);
+    startServiceSlider();
+  }
+
   const renderBrandPartners = () => {
     const brandGrid = document.querySelector('[data-brand-grid]');
     const brandCount = document.querySelector('[data-brand-count]');
