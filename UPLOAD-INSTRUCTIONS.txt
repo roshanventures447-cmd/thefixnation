@@ -1,0 +1,15 @@
+The Fix Nation - Part 2 SEO Pages, 90 File Upload Batches
+
+Upload these folders one by one to the GitHub repository root.
+Do not upload the folder name itself as a folder inside the repo.
+Open each batch folder, select all files inside it, then upload.
+
+Suggested order:
+- 01-upload-to-github-root: 90 files
+- 02-upload-to-github-root: 90 files
+- 03-upload-to-github-root: 90 files
+- 04-upload-to-github-root: 90 files
+- 05-upload-to-github-root: 90 files
+- 06-upload-to-github-root: 21 files
+
+After all batches are uploaded, submit sitemap.xml again in Google Search Console.
