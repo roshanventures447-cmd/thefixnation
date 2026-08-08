@@ -76,9 +76,27 @@ Day 4 free growth update:
 - Customer confidence, local search intent and worker network growth sections added.
 - Worker page improved for carpenter, handyman, AC technician, electrician and plumber applications.
 - Customer-facing payment/reference language now uses automatic reference wording.
-- Sitemap lastmod updated to `2026-08-01`.
+- Homepage service slider added for bed installation, sofa installation, sofa repair and bed repair.
+- New SEO guide pages added for sofa installation, sofa repair and bed repair.
+- Blogs page, homepage helpful links and sitemap now link to these new guides.
+- Sitemap lastmod updated to `2026-08-09`.
+
+Final free launch docs:
+- `FINAL-FREE-LAUNCH-CHECKLIST.md`
+- `SEARCH-CONSOLE-URLS-20260809.md`
+- `GOOGLE-BUSINESS-FREE-SETUP.md`
+- `PRIORITY-CITY-SEO-PLAN.md`
+- `SEARCH-CONSOLE-PRIORITY-CITIES-20260809.md`
 
 Paytm note:
 - Paytm Merchant Key must stay on backend only.
 - Do not paste Paytm Merchant Key in `index.html`, `js/script.js` or `js/lead-config.js`.
 - Use `PAYTM-GATEWAY-SETUP.md` before adding the gateway.
+
+City SEO expansion update:
+- Added normalized service cities for dropdown support.
+- Added city-wise SEO hub: `city-service-pages.html`.
+- Added 70 cities x 6 service pages = 420 city-service SEO pages.
+- Priority SEO cities: Chennai, Bangalore, Indore, Jaipur, Churu, Jodhpur, Kolkata, Bhubaneswar, Dewas, Rau, Mhow, Delhi, Delhi NCR, Noida and Gurugram.
+- Services covered: bed assembly, bed repair, furniture assembly, furniture repair, sofa repair and sofa assembly.
+- Sitemap updated with 421 generated SEO URLs.

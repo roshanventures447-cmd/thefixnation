@@ -153,6 +153,20 @@
     "Visakhapatnam": ['furniture', 'repair', 'electrician', 'plumber', 'ac']
   };
 
+  const configuredCities = Array.isArray(window.FIX_NATION_CITIES)
+    ? window.FIX_NATION_CITIES.map((city) => String(city || '').trim()).filter(Boolean)
+    : [];
+  configuredCities.forEach((city) => {
+    if (!cityServices[city]) cityServices[city] = ['furniture', 'repair', 'electrician', 'plumber', 'ac'];
+  });
+  const allServiceCities = Object.keys(cityServices).sort((a, b) => a.localeCompare(b));
+  citySelects.forEach((select) => {
+    allServiceCities.forEach((city) => {
+      const exists = Array.from(select.options).some((option) => option.value === city || option.textContent.trim() === city);
+      if (!exists) select.add(new Option(city, city));
+    });
+  });
+
   const applyServiceVisibility = () => {
     serviceCards.forEach((card) => {
       const serviceKey = card.dataset.service;
