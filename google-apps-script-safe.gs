@@ -2,7 +2,7 @@ var SPREADSHEET_ID = '1Czn3xP1VHtUHuMLaYfMG-b_VmvonSN2cpnDhfRFI4oo';
 var WORKER_SPREADSHEET_ID = '1nmu4BCtJ4pfC46-_YYDr25SEPEQ1TTXp7Tqed7F7T8I';
 var CUSTOMER_SHEET_NAME = 'Customer Leads';
 var WORKER_SHEET_NAME = 'Worker Leads';
-var NOTIFICATION_EMAIL = 'roshanventures447@gmail.com';
+var NOTIFICATION_EMAIL = 'roshanvenures447@gmail.com';
 var API_VERSION = '2.2-ops';
 
 var HEADERS = [

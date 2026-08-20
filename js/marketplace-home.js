@@ -160,6 +160,26 @@
     grid.innerHTML = brands.map((brand) => `<span>${escapeHtml(brand)}</span>`).join('');
   }
 
+  function installWhatsappAction() {
+    if ($('[data-floating-whatsapp]')) return;
+    const message = `Hi The Fix Nation, I need service help from ${document.title} - ${window.location.href}`;
+    const button = document.createElement('a');
+    button.className = 'floating-whatsapp-action';
+    button.href = `https://wa.me/919407840541?text=${encodeURIComponent(message)}`;
+    button.target = '_blank';
+    button.rel = 'noopener';
+    button.setAttribute('aria-label', 'Chat with The Fix Nation on WhatsApp');
+    button.setAttribute('data-floating-whatsapp', '');
+    button.setAttribute('data-conversion-action', 'whatsapp_float');
+    button.innerHTML = `
+      <svg viewBox="0 0 64 64" aria-hidden="true" focusable="false">
+        <path d="M32 8.5c-12.7 0-23 9.8-23 21.9 0 4.1 1.2 8 3.4 11.3L9 55.5l14.2-3.2c2.8 1.3 5.8 2 8.8 2 12.7 0 23-9.8 23-21.9S44.7 8.5 32 8.5Z"/>
+        <path d="M24.1 20.8c-.6-1.2-1.1-1.2-1.7-1.2h-1.4c-.5 0-1.3.2-2 1-.7.8-2.6 2.5-2.6 6 0 3.6 2.7 7 3.1 7.5.4.5 5.2 8.1 12.9 11 6.4 2.5 7.7 2 9.1 1.9 1.4-.1 4.5-1.8 5.1-3.6.6-1.8.6-3.3.4-3.6-.2-.3-.7-.5-1.5-.9l-5.2-2.5c-.8-.4-1.4-.6-2 .3-.6.8-2.3 2.6-2.8 3.1-.5.6-1 .6-1.8.2-.8-.4-3.5-1.2-6.6-3.9-2.4-2.1-4.1-4.7-4.6-5.5-.5-.8-.1-1.3.3-1.7.4-.4.8-1 1.2-1.5.4-.5.5-.8.8-1.4.3-.6.1-1.1-.1-1.5l-2.4-5.7Z"/>
+      </svg>
+      <span>WhatsApp</span>`;
+    document.body.appendChild(button);
+  }
+
   function applyFilter(category) {
     activeFilter = category || '';
     const query = ($('[data-service-search]')?.value || '').trim().toLowerCase();
@@ -223,6 +243,44 @@
     if (upiLink) upiLink.href = `upi://pay?${upiParams.toString()}`;
     if (waLink) waLink.href = `https://wa.me/919407840541?text=${encodeURIComponent(`The Fix Nation booking\nBooking ID: ${id}\nAmount: Rs ${bookingFee}\nUPI: ${upiId}`)}`;
     if (modal) modal.hidden = false;
+  }
+
+  function initHeroSlider() {
+    const slider = $('[data-hero-slider]');
+    if (!slider) return;
+    const slides = $$('[data-hero-slide]', slider);
+    const dots = $$('[data-hero-dot]', slider);
+    if (slides.length < 2) return;
+    let index = slides.findIndex((slide) => slide.classList.contains('is-active'));
+    if (index < 0) index = 0;
+    let timer;
+
+    const show = (next) => {
+      index = (next + slides.length) % slides.length;
+      slides.forEach((slide, i) => {
+        const active = i === index;
+        slide.classList.toggle('is-active', active);
+        slide.setAttribute('aria-hidden', active ? 'false' : 'true');
+      });
+      dots.forEach((dot, i) => dot.classList.toggle('is-active', i === index));
+    };
+
+    const start = () => {
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      window.clearInterval(timer);
+      timer = window.setInterval(() => show(index + 1), 2000);
+    };
+
+    dots.forEach((dot) => {
+      dot.addEventListener('click', () => {
+        show(Number(dot.dataset.heroDot || 0));
+        start();
+      });
+    });
+    slider.addEventListener('mouseenter', () => window.clearInterval(timer));
+    slider.addEventListener('mouseleave', start);
+    show(index);
+    start();
   }
 
   function initEvents() {
@@ -329,8 +387,10 @@
 
   document.addEventListener('DOMContentLoaded', () => {
     initCities();
+    initHeroSlider();
     initEvents();
     renderBrandPartners();
+    installWhatsappAction();
     renderCart();
     applyFilter('');
   });
