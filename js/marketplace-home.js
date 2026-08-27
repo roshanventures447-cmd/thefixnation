@@ -245,6 +245,45 @@
     if (modal) modal.hidden = false;
   }
 
+  async function submitInstantCallback(form) {
+    const status = $('[data-instant-callback-status]');
+    const data = Object.fromEntries(new FormData(form).entries());
+    const cleanPhone = phone(data.phone);
+    if (!data.name || cleanPhone.length !== 10 || !data.service) {
+      if (status) status.textContent = 'Name, valid 10 digit mobile and service select karo.';
+      return;
+    }
+    const id = bookingId();
+    const payload = {
+      submissionId: `SUB-${Date.now()}`,
+      submittedAt: new Date().toISOString(),
+      formType: 'customer',
+      source: 'Homepage direct callback form',
+      pageUrl: window.location.href,
+      bookingId: id,
+      name: data.name,
+      phone: cleanPhone,
+      city: selectedCity,
+      address: '',
+      callbackTime: 'Call as soon as possible',
+      bookingFee,
+      paymentStatus: 'Not started',
+      service: data.service,
+      message: `Direct callback requested for ${data.service} in ${selectedCity}`
+    };
+    if (status) status.textContent = 'Saving details...';
+    try {
+      await submitLead(payload, 'customer');
+      localStorage.setItem('fixNationLastBooking', JSON.stringify(payload));
+      form.reset();
+      $$('[data-city-select]').forEach((select) => { if (select.value !== selectedCity) select.value = selectedCity; });
+      if (status) status.textContent = `Request saved. Team will call from 9407840541. Ref: ${id}`;
+    } catch (error) {
+      if (status) status.textContent = 'Agar callback na aaye to WhatsApp ya call button use karo. Details device par saved hain.';
+      localStorage.setItem('fixNationPendingCallback', JSON.stringify(payload));
+    }
+  }
+
   function initHeroSlider() {
     const slider = $('[data-hero-slider]');
     if (!slider) return;
@@ -333,9 +372,18 @@
     });
     $('[data-close-payment]')?.addEventListener('click', () => { $('[data-payment-modal]').hidden = true; });
     $('[data-open-custom]')?.addEventListener('click', openCart);
+    $('[data-open-callback]')?.addEventListener('click', () => {
+      $('#book')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      window.setTimeout(() => $('[data-instant-callback-form] input[name="phone"]')?.focus(), 320);
+    });
+    $('[data-instant-callback-form]')?.addEventListener('submit', (event) => {
+      event.preventDefault();
+      submitInstantCallback(event.currentTarget);
+    });
     $('[data-checkout-form]')?.addEventListener('submit', async (event) => {
       event.preventDefault();
       if (!cart.length) return;
+      const checkoutStatus = $('[data-checkout-status]');
       const data = Object.fromEntries(new FormData(event.currentTarget).entries());
       const id = bookingId();
       const payload = {
@@ -355,7 +403,13 @@
         service: cart.map((item) => item.name).join(' + '),
         message: cart.map((item) => `${item.name} (${item.category})`).join(' | ')
       };
-      try { await submitLead(payload, 'customer'); } catch (error) {}
+      if (checkoutStatus) checkoutStatus.textContent = 'Saving booking details...';
+      try {
+        await submitLead(payload, 'customer');
+        if (checkoutStatus) checkoutStatus.textContent = `Booking details saved. Ref: ${id}`;
+      } catch (error) {
+        if (checkoutStatus) checkoutStatus.textContent = 'Network issue. Payment/WhatsApp screen open ho rahi hai; support ko booking reference bhej dena.';
+      }
       localStorage.setItem('fixNationLastBooking', JSON.stringify(payload));
       cart.splice(0, cart.length);
       renderCart();

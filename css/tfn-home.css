@@ -95,7 +95,9 @@ button {
 .fb-left-nav a,
 .fb-city,
 .fb-cart,
-.fb-login {
+.fb-login,
+.fb-call,
+.fb-whatsapp {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -111,9 +113,16 @@ button {
 }
 
 .fb-left-nav a.active,
-.fb-login {
+.fb-login,
+.fb-call {
   background: var(--blue);
   border-color: var(--blue);
+  color: #ffffff;
+}
+
+.fb-whatsapp {
+  border-color: rgba(37, 211, 102, 0.28);
+  background: #25d366;
   color: #ffffff;
 }
 
@@ -217,6 +226,102 @@ button {
 .hero-slider-dots button.is-active {
   width: 28px;
   background: var(--primary);
+}
+
+.fb-quick-contact {
+  display: grid;
+  grid-template-columns: 1.05fr auto 1.25fr;
+  align-items: center;
+  gap: 22px;
+  max-width: 1420px;
+  margin: 0 auto 30px;
+  padding: 28px;
+  border: 1px solid rgba(74, 157, 160, 0.22);
+  border-radius: 26px;
+  background: linear-gradient(135deg, rgba(255,255,255,0.94), rgba(238,248,252,0.95));
+  box-shadow: var(--shadow);
+}
+
+.fb-quick-contact span {
+  color: var(--primary-dark);
+  font-size: 13px;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.fb-quick-contact h2 {
+  margin: 7px 0 8px;
+  color: #1d2931;
+  font-size: clamp(26px, 3.2vw, 42px);
+  line-height: 1.04;
+}
+
+.fb-quick-contact p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.fb-quick-actions {
+  display: grid;
+  gap: 10px;
+  min-width: 190px;
+}
+
+.fb-quick-call,
+.fb-quick-wa,
+.fb-instant-form button {
+  display: inline-grid;
+  min-height: 52px;
+  place-items: center;
+  border-radius: 14px;
+  font-weight: 900;
+  text-align: center;
+}
+
+.fb-quick-call {
+  background: var(--blue);
+  color: #ffffff;
+}
+
+.fb-quick-wa {
+  background: #25d366;
+  color: #ffffff;
+}
+
+.fb-instant-form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.fb-instant-form input,
+.fb-instant-form select {
+  min-height: 52px;
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: #ffffff;
+  color: var(--ink);
+  padding: 0 15px;
+  outline: none;
+}
+
+.fb-instant-form button {
+  border: 0;
+  background: var(--accent-strong);
+  color: #121b22;
+}
+
+.fb-instant-form p,
+.checkout-form p[data-checkout-status] {
+  grid-column: 1 / -1;
+  min-height: 20px;
+  margin: 0;
+  color: var(--primary-dark);
+  font-size: 14px;
+  font-weight: 800;
 }
 
 .fb-categories,
@@ -825,6 +930,7 @@ button {
   }
 
   .fb-promo,
+  .fb-quick-contact,
   .fb-categories,
   .fb-popular,
   .fb-seo,
@@ -848,6 +954,14 @@ button {
   .city-link-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+
+  .fb-quick-contact {
+    grid-template-columns: 1fr;
+  }
+
+  .fb-quick-actions {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 @media (max-width: 680px) {
@@ -858,7 +972,9 @@ button {
   .fb-left-nav a,
   .fb-city,
   .fb-cart,
-  .fb-login {
+  .fb-login,
+  .fb-call,
+  .fb-whatsapp {
     min-height: 36px;
     padding: 0 11px;
     font-size: 13px;
@@ -870,15 +986,13 @@ button {
     margin: 0 -2px;
   }
 
-  .fb-actions {
-    display: grid;
-    grid-template-columns: 1.15fr 0.85fr 0.85fr;
-  }
-
   .fb-city,
   .fb-cart,
-  .fb-login {
-    width: 100%;
+  .fb-login,
+  .fb-call,
+  .fb-whatsapp {
+    flex: 0 0 auto;
+    width: auto;
   }
 
   .fb-brand {
@@ -943,6 +1057,9 @@ button {
   .fb-service-grid,
   .fb-provider,
   .fb-provider form,
+  .fb-quick-contact,
+  .fb-quick-actions,
+  .fb-instant-form,
   .fb-footer,
   .fb-cta,
   .fb-link-grid,
@@ -953,6 +1070,7 @@ button {
 
   .fb-cta,
   .fb-provider,
+  .fb-quick-contact,
   .fb-seo {
     padding: 24px 18px;
     border-radius: 22px;
