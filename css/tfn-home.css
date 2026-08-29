@@ -326,6 +326,7 @@ button {
 
 .fb-categories,
 .fb-popular,
+.priority-seo-cluster,
 .fb-seo,
 .fb-provider {
   max-width: 1420px;
@@ -575,6 +576,79 @@ button {
   border-radius: 12px;
   background: var(--accent-strong);
   font-weight: 900;
+}
+
+.priority-seo-cluster,
+.priority-area-cluster {
+  padding: 34px;
+  border: 1px solid rgba(74, 157, 160, 0.24);
+  border-radius: 26px;
+  background: #ffffff;
+  box-shadow: var(--shadow);
+}
+
+.priority-city-grid,
+.priority-area-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.priority-city-card,
+.priority-area-card {
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: linear-gradient(180deg, #ffffff, #f5fbfd);
+  padding: 18px;
+}
+
+.priority-city-card h3,
+.priority-area-card h3 {
+  margin: 0 0 8px;
+  color: #1d2931;
+  font-size: 22px;
+}
+
+.priority-city-card p,
+.priority-area-card p {
+  min-height: 44px;
+  margin: 0 0 14px;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.priority-city-card div,
+.priority-area-card div {
+  display: grid;
+  gap: 8px;
+}
+
+.priority-city-card a,
+.priority-area-card a {
+  display: block;
+  border: 1px solid #dbe8ee;
+  border-radius: 12px;
+  background: #ffffff;
+  color: #314651;
+  font-size: 14px;
+  font-weight: 800;
+  padding: 10px 12px;
+}
+
+.priority-city-card a:hover,
+.priority-area-card a:hover {
+  border-color: var(--primary);
+  color: var(--primary-dark);
+}
+
+.priority-area-card div {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.priority-area-card a {
+  font-size: 13px;
+  padding: 9px 10px;
 }
 
 .fb-seo {
@@ -933,6 +1007,8 @@ button {
   .fb-quick-contact,
   .fb-categories,
   .fb-popular,
+  .priority-seo-cluster,
+  .priority-area-cluster,
   .fb-seo,
   .fb-provider,
   .fb-cta {
@@ -951,7 +1027,9 @@ button {
 
   .fb-link-grid,
   .selected-city-links,
-  .city-link-grid {
+  .city-link-grid,
+  .priority-city-grid,
+  .priority-area-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
@@ -1064,13 +1142,18 @@ button {
   .fb-cta,
   .fb-link-grid,
   .selected-city-links,
-  .city-link-grid {
+  .city-link-grid,
+  .priority-city-grid,
+  .priority-area-grid,
+  .priority-area-card div {
     grid-template-columns: 1fr;
   }
 
   .fb-cta,
   .fb-provider,
   .fb-quick-contact,
+  .priority-seo-cluster,
+  .priority-area-cluster,
   .fb-seo {
     padding: 24px 18px;
     border-radius: 22px;
