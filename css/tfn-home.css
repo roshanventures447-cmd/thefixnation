@@ -177,12 +177,73 @@ button {
   position: relative;
   max-width: 1420px;
   min-height: 520px;
-  margin: 30px auto 28px;
+  margin: 18px auto 28px;
   border-radius: 24px;
   overflow: hidden;
   background: #daf7d2;
   border: 1px solid rgba(74, 157, 160, 0.18);
   box-shadow: var(--shadow);
+}
+
+.lead-capture-strip {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  align-items: center;
+  gap: 14px;
+  max-width: 1420px;
+  margin: 20px auto 0;
+  padding: 14px 16px 14px 20px;
+  border: 1px solid rgba(10, 76, 232, 0.14);
+  border-radius: 20px;
+  background: linear-gradient(135deg, #ffffff, #eef9fc);
+  box-shadow: 0 14px 40px rgba(23, 61, 85, 0.08);
+}
+
+.lead-capture-strip div {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px 14px;
+}
+
+.lead-capture-strip span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  border-radius: 999px;
+  background: rgba(169, 237, 0, 0.22);
+  color: #285f24;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.03em;
+  padding: 0 10px;
+  text-transform: uppercase;
+}
+
+.lead-capture-strip strong {
+  color: #122433;
+  font-size: 18px;
+  font-weight: 900;
+}
+
+.lead-capture-strip small {
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.lead-capture-strip a {
+  display: inline-grid;
+  min-width: 128px;
+  min-height: 46px;
+  place-items: center;
+  border-radius: 14px;
+  background: var(--blue);
+  color: #ffffff;
+  font-weight: 900;
+}
+
+.lead-capture-strip .strip-whatsapp {
+  background: #25d366;
 }
 
 .hero-slide {
@@ -308,6 +369,10 @@ button {
   outline: none;
 }
 
+.fb-instant-form .fb-address-field {
+  grid-column: span 2;
+}
+
 .fb-instant-form button {
   border: 0;
   background: var(--accent-strong);
@@ -322,6 +387,59 @@ button {
   color: var(--primary-dark);
   font-size: 14px;
   font-weight: 800;
+}
+
+.seo-fast-lanes {
+  max-width: 1420px;
+  margin: 0 auto 30px;
+  padding: 26px;
+  display: grid;
+  grid-template-columns: 0.82fr 1.18fr;
+  gap: 24px;
+  border: 1px solid rgba(15, 45, 62, 0.1);
+  border-radius: 26px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(239, 251, 247, 0.94));
+  box-shadow: 0 18px 54px rgba(15, 45, 62, 0.08);
+}
+
+.seo-fast-lanes span {
+  color: var(--primary);
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.seo-fast-lanes h2 {
+  margin: 8px 0 8px;
+  font-size: clamp(28px, 4vw, 48px);
+  line-height: 1.02;
+}
+
+.seo-fast-lanes p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.seo-fast-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.seo-fast-grid a {
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  padding: 12px 14px;
+  border: 1px solid rgba(74, 157, 160, 0.2);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.82);
+  color: #173d55;
+  font-size: 14px;
+  font-weight: 900;
+  text-decoration: none;
 }
 
 .fb-categories,
@@ -503,6 +621,61 @@ button {
   padding: 0 24px;
 }
 
+.fb-brand-partners {
+  max-width: 1420px;
+  margin: 0 auto 30px;
+  padding: 34px;
+  border: 1px solid rgba(74, 157, 160, 0.24);
+  border-radius: 26px;
+  background: linear-gradient(135deg, #ffffff, #f4fbf8);
+  box-shadow: var(--shadow);
+}
+
+.fb-brand-partners code {
+  border-radius: 8px;
+  background: #eaf4f6;
+  color: #173d55;
+  padding: 2px 6px;
+}
+
+.brand-partner-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.brand-partner-grid span {
+  display: grid;
+  min-height: 70px;
+  align-items: center;
+  border: 1px solid #dbe8ee;
+  border-radius: 16px;
+  background: #ffffff;
+  color: #1d2931;
+  font-size: 16px;
+  font-weight: 900;
+  padding: 16px;
+}
+
+.brand-partner-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.brand-partner-actions a {
+  display: inline-flex;
+  min-height: 46px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: #173d55;
+  font-weight: 900;
+  padding: 0 18px;
+}
+
 .fb-popular {
   padding: 10px 0;
 }
@@ -563,10 +736,26 @@ button {
   justify-content: space-between;
   gap: 12px;
   margin-top: 14px;
+  flex-wrap: wrap;
 }
 
 .fb-service-card strong {
   color: #1d2931;
+  margin-right: auto;
+}
+
+.fb-service-card footer .card-call {
+  min-width: 64px;
+  min-height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(15, 45, 62, 0.14);
+  border-radius: 12px;
+  color: var(--ink);
+  background: #fff;
+  font-weight: 900;
+  text-decoration: none;
 }
 
 .fb-service-card footer button {
@@ -962,6 +1151,37 @@ button {
   color: #118c3d;
 }
 
+.payment-confirm-form {
+  display: grid;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.payment-confirm-form input {
+  width: 100%;
+  min-height: 48px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 0 14px;
+  font: inherit;
+}
+
+.payment-confirm-form button {
+  min-height: 50px;
+  border: 0;
+  border-radius: 12px;
+  background: #173d55;
+  color: #ffffff;
+  font-weight: 900;
+}
+
+.payment-confirm-form p {
+  min-height: 20px;
+  margin: 0;
+  color: var(--muted);
+  font-weight: 800;
+}
+
 .floating-whatsapp-action {
   position: fixed;
   right: 22px;
@@ -985,6 +1205,49 @@ button {
   fill: currentColor;
 }
 
+.lead-mobile-dock {
+  position: fixed;
+  left: 12px;
+  right: 12px;
+  bottom: 12px;
+  z-index: 72;
+  display: none;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  padding: 8px;
+  border: 1px solid rgba(216, 227, 232, 0.95);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: 0 18px 48px rgba(18, 36, 51, 0.18);
+  backdrop-filter: blur(16px);
+}
+
+.lead-mobile-dock a,
+.lead-mobile-dock button {
+  display: grid;
+  min-height: 48px;
+  place-items: center;
+  border: 0;
+  border-radius: 13px;
+  background: #eef8fc;
+  color: #122433;
+  font-weight: 900;
+}
+
+.lead-mobile-dock a:first-child {
+  background: var(--blue);
+  color: #ffffff;
+}
+
+.lead-mobile-dock a:nth-child(2) {
+  background: #25d366;
+  color: #ffffff;
+}
+
+.lead-mobile-dock button {
+  background: var(--accent-strong);
+}
+
 @media (max-width: 980px) {
   .fb-header-inner {
     grid-template-columns: 1fr;
@@ -1004,7 +1267,9 @@ button {
   }
 
   .fb-promo,
+  .lead-capture-strip,
   .fb-quick-contact,
+  .seo-fast-lanes,
   .fb-categories,
   .fb-popular,
   .priority-seo-cluster,
@@ -1037,6 +1302,18 @@ button {
     grid-template-columns: 1fr;
   }
 
+  .seo-fast-lanes {
+    grid-template-columns: 1fr;
+  }
+
+  .seo-fast-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .lead-capture-strip {
+    grid-template-columns: 1fr auto auto;
+  }
+
   .fb-quick-actions {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -1045,6 +1322,10 @@ button {
 @media (max-width: 680px) {
   .fb-header {
     padding: 8px 10px;
+  }
+
+  body {
+    padding-bottom: 78px;
   }
 
   .fb-left-nav a,
@@ -1088,6 +1369,23 @@ button {
     height: auto;
     margin-top: 16px;
     border-radius: 18px;
+  }
+
+  .lead-capture-strip {
+    grid-template-columns: 1fr;
+    width: calc(100% - 28px);
+    padding: 16px;
+    border-radius: 18px;
+  }
+
+  .lead-capture-strip div {
+    display: grid;
+    gap: 6px;
+  }
+
+  .lead-capture-strip a {
+    min-width: 0;
+    width: 100%;
   }
 
   .hero-slider-dots {
@@ -1136,6 +1434,8 @@ button {
   .fb-provider,
   .fb-provider form,
   .fb-quick-contact,
+  .seo-fast-lanes,
+  .seo-fast-grid,
   .fb-quick-actions,
   .fb-instant-form,
   .fb-footer,
@@ -1149,9 +1449,14 @@ button {
     grid-template-columns: 1fr;
   }
 
+  .fb-instant-form .fb-address-field {
+    grid-column: auto;
+  }
+
   .fb-cta,
   .fb-provider,
   .fb-quick-contact,
+  .seo-fast-lanes,
   .priority-seo-cluster,
   .priority-area-cluster,
   .fb-seo {
@@ -1181,8 +1486,8 @@ button {
   }
 
   .floating-whatsapp-action {
-    right: 14px;
-    bottom: 8px;
+    right: 16px;
+    bottom: 82px;
     width: 48px;
     height: 48px;
     min-height: 48px;
@@ -1197,5 +1502,9 @@ button {
   .floating-whatsapp-action svg {
     width: 34px;
     height: 34px;
+  }
+
+  .lead-mobile-dock {
+    display: grid;
   }
 }
