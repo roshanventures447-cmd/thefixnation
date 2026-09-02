@@ -13,6 +13,7 @@
   const cart = [];
   const config = window.FIX_NATION_LEADS || {};
   const payment = window.FIX_NATION_PAYMENT || {};
+  const paytm = window.FIX_NATION_PAYTM || {};
   const cities = window.FIX_NATION_CITIES || ['Bangalore', 'Chennai', 'Hyderabad', 'Mumbai', 'Delhi NCR', 'Noida', 'Gurugram', 'Pune'];
   const bookingFee = Number(payment.bookingFee || 49);
   const upiId = payment.upiId || '9165867685-5@ybl';
@@ -50,6 +51,22 @@
     return type === 'worker' ? (config.worker || config.all) : (config.customer || config.all || config.googleSheetUrl);
   }
 
+  function rememberLead(payload) {
+    try {
+      const leads = JSON.parse(localStorage.getItem('fixNationLeadBackup') || '[]');
+      leads.push(Object.assign({ savedAt: new Date().toISOString() }, payload));
+      localStorage.setItem('fixNationLeadBackup', JSON.stringify(leads.slice(-80)));
+    } catch (error) {}
+  }
+
+  function lastBookingPhone() {
+    try {
+      return JSON.parse(localStorage.getItem('fixNationLastBooking') || '{}').phone || '';
+    } catch (error) {
+      return '';
+    }
+  }
+
   function citySlug(city) {
     const aliases = {
       Banglore: 'bangalore',
@@ -75,15 +92,54 @@
 
   async function submitLead(payload, type) {
     const endpoint = endpointFor(type);
-    if (!endpoint) return;
+    if (!endpoint) throw new Error('Lead endpoint missing');
+    rememberLead(payload);
+    const body = JSON.stringify(payload);
+    if (navigator.sendBeacon && body.length < 60000) {
+      const blob = new Blob([body], { type: 'text/plain;charset=utf-8' });
+      if (navigator.sendBeacon(endpoint, blob)) return;
+    }
     await fetch(endpoint, {
       method: 'POST',
       mode: 'no-cors',
       cache: 'no-store',
       keepalive: true,
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify(payload)
+      body
     });
+  }
+
+  function trackLeadAction(action, data = {}) {
+    const eventData = Object.assign({
+      action_type: action,
+      city: selectedCity,
+      page_path: window.location.pathname,
+      page_title: document.title
+    }, data);
+    if (typeof window.gtag === 'function') {
+      window.gtag('event', 'lead_action', eventData);
+    }
+    try {
+      const events = JSON.parse(localStorage.getItem('fixNationLeadEvents') || '[]');
+      events.push(Object.assign({ at: new Date().toISOString() }, eventData));
+      localStorage.setItem('fixNationLeadEvents', JSON.stringify(events.slice(-60)));
+    } catch (error) {}
+  }
+
+  async function reportPayment(bookingId, phoneNumber, transactionReference) {
+    await submitLead({
+      submissionId: `PAY-${Date.now()}`,
+      submittedAt: new Date().toISOString(),
+      action: 'report_payment',
+      formType: 'customer',
+      source: 'Payment confirmation modal',
+      pageUrl: window.location.href,
+      bookingId,
+      phone: phone(phoneNumber),
+      transactionReference: transactionReference || 'Customer clicked paid on website',
+      paymentProvider: paytm.enabled ? 'Paytm' : 'UPI direct',
+      paymentStatus: 'Customer reported paid'
+    }, 'customer');
   }
 
   function initCities() {
@@ -216,6 +272,7 @@
     const service = services.find((item) => item.id === id);
     if (!service) return;
     cart.push(Object.assign({}, service, { cartId: `${id}-${Date.now()}-${cart.length}` }));
+    trackLeadAction('add_service', { service: service.name, service_count: cart.length });
     renderCart();
     openCart();
   }
@@ -242,6 +299,8 @@
     const upiParams = new URLSearchParams({ pa: upiId, pn: payeeName, am: String(bookingFee), cu: 'INR', tn: `The Fix Nation ${id}` });
     if (upiLink) upiLink.href = `upi://pay?${upiParams.toString()}`;
     if (waLink) waLink.href = `https://wa.me/919407840541?text=${encodeURIComponent(`The Fix Nation booking\nBooking ID: ${id}\nAmount: Rs ${bookingFee}\nUPI: ${upiId}`)}`;
+    if ($('[data-payment-phone]')) $('[data-payment-phone]').value = lastBookingPhone();
+    trackLeadAction('payment_modal_open', { booking_id: id, amount: bookingFee });
     if (modal) modal.hidden = false;
   }
 
@@ -249,8 +308,9 @@
     const status = $('[data-instant-callback-status]');
     const data = Object.fromEntries(new FormData(form).entries());
     const cleanPhone = phone(data.phone);
-    if (!data.name || cleanPhone.length !== 10 || !data.service) {
-      if (status) status.textContent = 'Name, valid 10 digit mobile and service select karo.';
+    const serviceName = data.service || activeFilter || 'Home service callback';
+    if (cleanPhone.length !== 10) {
+      if (status) status.textContent = 'Valid 10 digit mobile number dal do, team call karegi.';
       return;
     }
     const id = bookingId();
@@ -261,27 +321,29 @@
       source: 'Homepage direct callback form',
       pageUrl: window.location.href,
       bookingId: id,
-      name: data.name,
+      name: data.name || 'Customer',
       phone: cleanPhone,
       city: selectedCity,
-      address: '',
+      address: data.address || '',
       callbackTime: 'Call as soon as possible',
       bookingFee,
       paymentStatus: 'Not started',
-      service: data.service,
-      message: `Direct callback requested for ${data.service} in ${selectedCity}`
+      service: serviceName,
+      message: `Direct callback requested for ${serviceName} in ${selectedCity}${data.address ? `, area/address: ${data.address}` : ''}`
     };
     if (status) status.textContent = 'Saving details...';
-    try {
-      await submitLead(payload, 'customer');
-      localStorage.setItem('fixNationLastBooking', JSON.stringify(payload));
-      form.reset();
-      $$('[data-city-select]').forEach((select) => { if (select.value !== selectedCity) select.value = selectedCity; });
-      if (status) status.textContent = `Request saved. Team will call from 9407840541. Ref: ${id}`;
-    } catch (error) {
-      if (status) status.textContent = 'Agar callback na aaye to WhatsApp ya call button use karo. Details device par saved hain.';
-      localStorage.setItem('fixNationPendingCallback', JSON.stringify(payload));
-    }
+      try {
+        await submitLead(payload, 'customer');
+        trackLeadAction('callback_submit_success', { booking_id: id, service: data.service });
+        localStorage.setItem('fixNationLastBooking', JSON.stringify(payload));
+        form.reset();
+        $$('[data-city-select]').forEach((select) => { if (select.value !== selectedCity) select.value = selectedCity; });
+        if (status) status.textContent = `Request saved. Team will call from 9407840541. Ref: ${id}`;
+      } catch (error) {
+        trackLeadAction('callback_submit_fallback', { booking_id: id, service: data.service });
+        if (status) status.textContent = 'Agar callback na aaye to WhatsApp ya call button use karo. Details device par saved hain.';
+        localStorage.setItem('fixNationPendingCallback', JSON.stringify(payload));
+      }
   }
 
   function initHeroSlider() {
@@ -323,6 +385,14 @@
   }
 
   function initEvents() {
+    document.addEventListener('click', (event) => {
+      const target = event.target.closest('[data-conversion-action], a[href^="tel:"], a[href*="wa.me"]');
+      if (!target) return;
+      trackLeadAction(target.dataset.conversionAction || 'contact_click', {
+        href: target.href || '',
+        label: target.textContent.trim().slice(0, 60)
+      });
+    });
     $$('[data-filter]').forEach((button) => {
       button.addEventListener('click', () => {
         applyFilter(button.dataset.filter || '');
@@ -372,10 +442,11 @@
     });
     $('[data-close-payment]')?.addEventListener('click', () => { $('[data-payment-modal]').hidden = true; });
     $('[data-open-custom]')?.addEventListener('click', openCart);
-    $('[data-open-callback]')?.addEventListener('click', () => {
+    const focusCallbackForm = () => {
       $('#book')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
       window.setTimeout(() => $('[data-instant-callback-form] input[name="phone"]')?.focus(), 320);
-    });
+    };
+    $$('[data-open-callback]').forEach((button) => button.addEventListener('click', focusCallbackForm));
     $('[data-instant-callback-form]')?.addEventListener('submit', (event) => {
       event.preventDefault();
       submitInstantCallback(event.currentTarget);
@@ -385,6 +456,11 @@
       if (!cart.length) return;
       const checkoutStatus = $('[data-checkout-status]');
       const data = Object.fromEntries(new FormData(event.currentTarget).entries());
+      const cleanPhone = phone(data.phone);
+      if (cleanPhone.length !== 10) {
+        if (checkoutStatus) checkoutStatus.textContent = 'Valid 10 digit mobile number required hai.';
+        return;
+      }
       const id = bookingId();
       const payload = {
         submissionId: `SUB-${Date.now()}`,
@@ -393,8 +469,8 @@
         source: 'Marketplace static homepage',
         pageUrl: window.location.href,
         bookingId: id,
-        name: data.name,
-        phone: phone(data.phone),
+        name: data.name || 'Customer',
+        phone: cleanPhone,
         city: selectedCity,
         address: data.address,
         callbackTime: data.callbackTime,
@@ -406,8 +482,10 @@
       if (checkoutStatus) checkoutStatus.textContent = 'Saving booking details...';
       try {
         await submitLead(payload, 'customer');
+        trackLeadAction('checkout_submit_success', { booking_id: id, service_count: cart.length, amount: bookingFee });
         if (checkoutStatus) checkoutStatus.textContent = `Booking details saved. Ref: ${id}`;
       } catch (error) {
+        trackLeadAction('checkout_submit_fallback', { booking_id: id, service_count: cart.length, amount: bookingFee });
         if (checkoutStatus) checkoutStatus.textContent = 'Network issue. Payment/WhatsApp screen open ho rahi hai; support ko booking reference bhej dena.';
       }
       localStorage.setItem('fixNationLastBooking', JSON.stringify(payload));
@@ -431,11 +509,38 @@
         city: data.city,
         skill: data.skill,
         service: data.skill,
+        consent: 'Yes',
+        applicationId: `PRO-${Date.now()}-${Math.random().toString(36).slice(2, 6).toUpperCase()}`,
         message: 'Worker application from homepage'
       };
-      try { await submitLead(payload, 'worker'); } catch (error) {}
-      if (status) status.textContent = 'Application submitted. Team verification ke baad call karegi.';
+      try {
+        await submitLead(payload, 'worker');
+        trackLeadAction('worker_submit_success', { application_id: payload.applicationId, skill: data.skill, city: data.city });
+        if (status) status.textContent = `Application submitted. Ref: ${payload.applicationId}. Team verification ke baad call karegi.`;
+      } catch (error) {
+        trackLeadAction('worker_submit_fallback', { application_id: payload.applicationId, skill: data.skill, city: data.city });
+        if (status) status.textContent = `Application saved on device. Ref: ${payload.applicationId}. Direct WhatsApp bhi kar sakte ho.`;
+      }
       event.currentTarget.reset();
+    });
+    $('[data-payment-confirm-form]')?.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const status = $('[data-payment-confirm-status]');
+      const data = Object.fromEntries(new FormData(event.currentTarget).entries());
+      const phoneNumber = phone(data.phone || lastBookingPhone());
+      if (!activeBookingId || phoneNumber.length !== 10) {
+        if (status) status.textContent = 'Valid booking phone number required hai.';
+        return;
+      }
+      if (status) status.textContent = 'Payment report saving...';
+      try {
+        await reportPayment(activeBookingId, phoneNumber, data.transactionReference);
+        trackLeadAction('payment_report_success', { booking_id: activeBookingId });
+        if (status) status.textContent = 'Payment report saved. Team verification ke baad booking confirm hogi.';
+      } catch (error) {
+        trackLeadAction('payment_report_fallback', { booking_id: activeBookingId });
+        if (status) status.textContent = 'Report save nahi hua. WhatsApp button se booking ID aur payment detail bhej do.';
+      }
     });
   }
 
