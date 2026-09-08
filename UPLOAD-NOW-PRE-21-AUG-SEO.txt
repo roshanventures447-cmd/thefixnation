@@ -1,0 +1,42 @@
+The Fix Nation - Pre 21 August SEO Recovery Package
+
+Upload target:
+Upload the contents of this folder to the public root of thefixnation.com.
+
+Why this package:
+This version is based on the 17 August SEO structure, before the Search Console traffic drop around 21 August. It keeps the older city/service landing pages, titles, descriptions, canonicals, sitemap structure, booking endpoint and contact flow.
+
+Important fixes included:
+1. Google Analytics tag G-D22JKWJGLT is added on all HTML pages.
+2. Noindex has been removed from public pages.
+3. Sitemap lastmod is updated to 2026-09-08.
+4. Phone is kept as 9407840541.
+5. Booking backend URL is kept as the current Apps Script exec URL.
+6. Local internal links and structured data have been checked.
+
+If your upload panel allows full folder upload:
+Upload the full contents of this folder.
+
+If your upload panel allows only 90 files at a time:
+Use the separate batch zip files from:
+outputs/tfn-pre-21-aug-seo-upload-batches-20260908-v2
+
+Upload part-01, then part-02, then continue in order until the last part.
+Keep the same folder structure while uploading.
+
+After upload:
+1. Open https://thefixnation.com/sitemap.xml and confirm it loads.
+2. In Google Search Console, submit sitemap.xml again.
+3. Use URL Inspection and request indexing for:
+   https://thefixnation.com/
+   https://thefixnation.com/bed-assembly-chennai.html
+   https://thefixnation.com/bed-assembly-bangalore.html
+   https://thefixnation.com/bed-assembly-delhi-ncr.html
+   https://thefixnation.com/furniture-assembly-chennai.html
+   https://thefixnation.com/furniture-assembly-bangalore.html
+   https://thefixnation.com/furniture-assembly-delhi-ncr.html
+   https://thefixnation.com/sofa-repair-chennai.html
+   https://thefixnation.com/handyman-service-bangalore.html
+   https://thefixnation.com/city-service-pages.html
+
+Keep this version stable for at least 10 to 14 days. Do not change theme, URLs, titles, sitemap, or delete pages during recovery.
