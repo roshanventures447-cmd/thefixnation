@@ -5965,3 +5965,7 @@ footer h3,
     grid-template-columns: 1fr;
   }
 }
+
+/* Green visual refresh; existing content and forms retained. */
+
+:root{--brand:#39875b;--accent:#39875b;--primary:#39875b}body{background:#fff;color:#303735;font-family:Arial,Helvetica,sans-serif}.nav{background:#fff;border-color:#e0eee4;box-shadow:0 2px 12px #25533808}.nav .brand-name,.brand-name span{color:#367a50}.page-hero,.content-section.soft{background:#eff8f1}.page-hero h1{color:#253b2b}.tag,.pill{background:#def0e3;color:#326d47}.btn.primary,.submit-btn{background:#39875b;border-color:#39875b;color:#fff}.btn{border-radius:8px}.info-card,.quote-form,.lead-form,.service-card{border-color:#dceade;border-radius:12px;box-shadow:0 4px 20px #173c2607}.seo-link-grid a{background:#f7fbf8;border-color:#dceade;color:#316f49}input,select,textarea{accent-color:#39875b}footer{background:#f3f8f4}
