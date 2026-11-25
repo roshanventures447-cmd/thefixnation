@@ -29,45 +29,6 @@
 
   installCallConversionBar();
 
-  const serviceSlider = document.querySelector('[data-service-slider]');
-  if (serviceSlider) {
-    const slides = Array.from(serviceSlider.querySelectorAll('[data-service-slide]'));
-    const dots = Array.from(serviceSlider.querySelectorAll('[data-service-dot]'));
-    let sliderIndex = 0;
-    let sliderTimer;
-
-    const showServiceSlide = (index) => {
-      if (!slides.length) return;
-      sliderIndex = (index + slides.length) % slides.length;
-      slides.forEach((slide, slideIndex) => {
-        const isActive = slideIndex === sliderIndex;
-        slide.classList.toggle('is-active', isActive);
-        slide.setAttribute('aria-hidden', isActive ? 'false' : 'true');
-      });
-      dots.forEach((dot, dotIndex) => {
-        dot.classList.toggle('is-active', dotIndex === sliderIndex);
-      });
-    };
-
-    const startServiceSlider = () => {
-      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-      window.clearInterval(sliderTimer);
-      sliderTimer = window.setInterval(() => showServiceSlide(sliderIndex + 1), 2000);
-    };
-
-    dots.forEach((dot) => {
-      dot.addEventListener('click', () => {
-        showServiceSlide(Number(dot.dataset.serviceDot || 0));
-        startServiceSlider();
-      });
-    });
-
-    serviceSlider.addEventListener('mouseenter', () => window.clearInterval(sliderTimer));
-    serviceSlider.addEventListener('mouseleave', startServiceSlider);
-    showServiceSlide(0);
-    startServiceSlider();
-  }
-
   const renderBrandPartners = () => {
     const brandGrid = document.querySelector('[data-brand-grid]');
     const brandCount = document.querySelector('[data-brand-count]');
@@ -783,7 +744,7 @@
       try {
         await navigator.clipboard.writeText(value.trim());
         button.textContent = 'Copied';
-        if (paymentDialogStatus) paymentDialogStatus.textContent = `${button.dataset.copyPayment === 'all' ? 'Confirmation details' : button.dataset.copyPayment === 'upi' ? 'UPI ID' : 'Auto reference'} copied.`;
+        if (paymentDialogStatus) paymentDialogStatus.textContent = `${button.dataset.copyPayment === 'all' ? 'Confirmation details' : button.dataset.copyPayment === 'upi' ? 'UPI ID' : 'Booking ID'} copied.`;
       } catch (error) {
         if (paymentDialogStatus) paymentDialogStatus.textContent = `Copy this value: ${value.trim()}`;
       }
@@ -795,7 +756,7 @@
     const endpoint = leadEndpoints.customer || leadEndpoints.all || leadEndpoints.googleSheetUrl;
     const transactionReference = String(new FormData(paymentReportForm).get('transactionReference') || '').trim();
     if (!activePaymentBookingId || !bookingLocation.phone) {
-      if (paymentDialogStatus) paymentDialogStatus.textContent = 'Booking phone or auto reference is missing.';
+      if (paymentDialogStatus) paymentDialogStatus.textContent = 'Booking phone or Booking ID is missing.';
       return;
     }
     const button = paymentReportForm.querySelector('button[type="submit"]');
@@ -926,13 +887,13 @@
     box.innerHTML = `
       <div>
         <strong>Booking confirmation: Rs ${bookingFee}</strong>
-        <small>First submit your details. The site will create an auto reference for payment/support. If any payment app shows a risk warning, do not pay and contact WhatsApp support.</small>
+        <small>First submit your details. After Booking ID is generated, support may ask for manual confirmation. If any payment app shows a risk warning, do not pay and contact WhatsApp support.</small>
       </div>
       <button class="booking-pay-btn" type="button" disabled>Copy confirmation details</button>
       <div class="booking-upi-details" hidden>
         <div><span>UPI ID</span><strong data-upi-id>${upiId}</strong></div>
         <div><span>Amount</span><strong>Rs ${bookingFee}</strong></div>
-        <div><span>Auto reference</span><strong data-booking-id>Generated after submit</strong></div>
+        <div><span>Booking ID</span><strong data-booking-id>Generated after submit</strong></div>
       </div>
       <p class="booking-payment-note">Confirmation details activate after callback form submit.</p>
     `;
@@ -1009,7 +970,7 @@
 
       if (status) {
         status.classList.remove('is-error');
-        status.textContent = formType === 'customer' ? 'Saving details and preparing confirmation...' : 'Saving your details...';
+        status.textContent = formType === 'customer' ? 'Saving details and generating booking ID...' : 'Saving your details...';
       }
       if (submitButton) submitButton.disabled = true;
 
@@ -1018,7 +979,7 @@
           await submitLead(endpoint, payload);
           if (formType === 'customer') {
             rememberBooking(payload);
-            if (status) status.textContent = `Details saved. Reference: ${bookingId}`;
+            if (status) status.textContent = `Details saved. Booking ID: ${bookingId}`;
             if (paymentBox) paymentBox.classList.add('is-ready');
             if (bookingIdLabel) bookingIdLabel.textContent = bookingId;
             if (upiDetails) upiDetails.hidden = false;
@@ -1031,8 +992,8 @@
             }
             if (paymentNote) {
               paymentNote.textContent = upiId
-                ? `Reference ${bookingId} generated. Payment status: Pending verification.`
-                : `Reference ${bookingId} generated. Add UPI ID in lead-config.js to activate payment button.`;
+                ? `Booking ID ${bookingId} generated. Payment status: Pending verification.`
+                : `Booking ID ${bookingId} generated. Add UPI ID in lead-config.js to activate payment button.`;
             }
           } else {
             rememberWorkerApplication(payload);
@@ -1105,7 +1066,7 @@
     const endpoint = leadEndpoints.customer || leadEndpoints.all || leadEndpoints.googleSheetUrl;
     if (timeline) timeline.hidden = true;
     if (!result || !/^TFN-\d{8}-[A-Z0-9]{4}$/.test(bookingId) || !/^\d{4}$/.test(phoneLast4)) {
-      if (result) result.innerHTML = '<strong>Check booking details</strong><span>Use the auto reference and the phone number\'s last 4 digits.</span>';
+      if (result) result.innerHTML = '<strong>Check booking details</strong><span>Use Booking ID format TFN-YYYYMMDD-XXXX and the phone number\'s last 4 digits.</span>';
       return;
     }
 
@@ -1133,7 +1094,7 @@
         result.innerHTML = `<strong>Booking received</strong><span>${escapeHtml(saved.service)} in ${escapeHtml(saved.city)} · Payment: ${escapeHtml(saved.paymentStatus)}</span><small>Live status is temporarily unavailable; this is the saved device record.</small>`;
       } else {
         result.className = 'booking-status-result is-error';
-        result.innerHTML = '<strong>Booking could not be verified</strong><span>Confirm the reference and phone digits, or contact support on WhatsApp.</span>';
+        result.innerHTML = '<strong>Booking could not be verified</strong><span>Confirm the Booking ID and phone digits, or contact support on WhatsApp.</span>';
       }
     }
   });
